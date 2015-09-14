@@ -1,0 +1,16 @@
+//
+   Created by user on 14/09/2015.
+
+extends layout
+
+block content
+    h1= title
+    form(name="login_details", method="post")
+        div.input
+            span.label username
+            input(type="text", name="username")
+        div.input
+            span.label password
+            input(type="password", name="password")
+        div.actions
+            input(type="submit", value="Login")
