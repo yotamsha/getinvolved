@@ -6,11 +6,14 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var FacebookStrategy = require('passport-facebook').Strategy;
+var config = require("./config");
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var login = require('./routes/login');
 var authed = require('./routes/authed');
+var facebook = require('./routes/facebook')
 
 var app = express();
 
@@ -25,15 +28,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(passport.initialize());
+app.use(passport.initialize()); // Important!
 
 app.use('/', routes);
 app.use('/users', users);
 app.use('/login', login);
 app.use('/authed', authed);
+app.use('/facebook', facebook);
 
 passport.use(new LocalStrategy(
     function(username, password, done) {
+        // Should authenticate against users in database
+        // SELECT * FROM Users WHERE username = username AND password = password;
         if (username === 'bazza' && password === 'wazza') {
             return done(null, {
                 name: 'Bar Wachtel'
@@ -41,6 +47,24 @@ passport.use(new LocalStrategy(
         } else {
             return done(null, false, { message: "Wrong username or password"});
         }
+    }
+));
+
+passport.use(new FacebookStrategy(
+    {
+        clientID: config.facebook.appId,
+        clientSecret: config.facebook.appSecret,
+        callbackURL: config.facebook.callbackUrl
+    },
+    function(token, refreshToken, profile, done) {
+        // Should authenticate user against db
+        if (profile) {
+            done(null, {
+                name: "Jim James"
+            })
+        }
+
+        // Else clause - create user and login
     }
 ));
 
