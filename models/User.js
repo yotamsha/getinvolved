@@ -11,16 +11,18 @@ var userSchema = mongoose.Schema({
 
 userSchema.methods.findByName = function(username, cb) {
     userSchema.find({username: username}, cb);
-}
+};
 
 userSchema.methods.find = function(query, cb) {
-    User.findOne(query, function(err, user) {
-        if (err) {
+    // returns cb(err, user)
+    User.findOne(query, cb);
+};
 
-        }
-    })
-}
+var User = null;
 
-var User = mongoose.model('User', userSchema);
-
-module.export = User;
+module.export = function(dbConnection) {
+    if (!User) {
+        User = dbConnection.model('User', userSchema);
+    }
+    return User;
+};

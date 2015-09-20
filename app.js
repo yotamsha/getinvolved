@@ -4,6 +4,10 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+var config = require('./config');
+var mongoDBConnection = mongoose.createConnection(config.mongodb.host, config.mongodb.dbName);
+
 
 var passport = require('passport');
 var passportLogin = require('./modules/passport-login');
