@@ -2,10 +2,17 @@
  * Created by Bar Wachtel on 20/09/2015.
  */
 var mongoose = require("mongoose");
+var dbConnection = require("../modules/db-connection");
 
 var userSchema = mongoose.Schema({
-    username: String,
-    password: String,
+    username: {
+        type: String,
+        required: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
     accessToken: String
 });
 
@@ -18,11 +25,19 @@ userSchema.methods.find = function(query, cb) {
     User.findOne(query, cb);
 };
 
-var User = null;
+userSchema.methods.create = function(user, cb) {
+    var newUser = new User(user);
+    newUser.save(cb);
 
-module.export = function(dbConnection) {
-    if (!User) {
-        User = dbConnection.model('User', userSchema);
-    }
-    return User;
+    // Or...
+    // User.create({data..}, function (err, user) {
+    // });
 };
+
+userSchema.methods.passwordMatches = function(password) {
+    return this.password === password;
+}
+
+var User = dbConnection.model('User', userSchema);
+
+module.exports = User;

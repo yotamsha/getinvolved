@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var passport = require('passport');
+var passport = require('../modules/passport-login');
 var jwt = require('jsonwebtoken');
 var config = require('../config.js');
 
