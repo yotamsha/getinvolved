@@ -8,7 +8,8 @@ router.get('/', passport.authenticate('facebook', { session: false, scope: 'emai
 // User should be returned a jsonwebtoken
 router.get('/callback', passport.authenticate('facebook', {
     successRedirect: '/authed',
-    failureRedirect: '/login'
+    failureRedirect: '/login',
+    session: false
 }));
 
 module.exports = router;
