@@ -16,20 +16,29 @@ router.post('/',
     function (req, res, next) {
         var token = getToken(req.user);
 
-        res.json({
-            success: true,
-            token: token
+        req.user.update({
+            accessToken: token
+        }, function (err) {
+            if (err) {
+                // Mish mash of error handling - whats the preferred method of doing this?
+                next(err);
+            } else {
+                res.json({
+                    success: true,
+                    token: token
+                });
+            }
         });
     });
 
-router.post('/createUser', function(req, res, next) {
+router.post('/createUser', function (req, res, next) {
     // Validate user info
     var newUser = {
         username: req.body.username,
         password: req.body.password
     };
 
-    User.create(newUser, function(err, user) {
+    User.create(newUser, function (err, user) {
         if (err) {
             res.json({
                 success: false,
@@ -39,9 +48,18 @@ router.post('/createUser', function(req, res, next) {
             if (user) {
                 var token = getToken(user);
 
-                res.json({
-                    success: true,
-                    token: token
+                user.update({
+                    accessToken: token
+                }, function (err) {
+                    if (err) {
+                        // Mish mash of error handling - whats the preferred method of doing this?
+                        next(err);
+                    } else {
+                        res.json({
+                            success: true,
+                            token: token
+                        });
+                    }
                 });
             }
         }
