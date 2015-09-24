@@ -10,7 +10,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var login = require('./routes/login');
 var authed = require('./routes/authed');
-var facebook = require('./routes/facebook')
+var facebook = require('./routes/facebook');
 
 var app = express();
 

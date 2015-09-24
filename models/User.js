@@ -7,7 +7,8 @@ var dbConnection = require("../modules/db-connection");
 var userSchema = mongoose.Schema({
     username: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     password: {
         type: String,
@@ -16,27 +17,24 @@ var userSchema = mongoose.Schema({
     accessToken: String
 });
 
-userSchema.methods.findByName = function(username, cb) {
-    userSchema.find({username: username}, cb);
-};
-
-userSchema.methods.find = function(query, cb) {
-    // returns cb(err, user)
-    User.findOne(query, cb);
-};
-
-userSchema.methods.create = function(user, cb) {
+// Schema.methods = document methods (available on Objects)
+userSchema.methods.create = function (user, cb) {
     var newUser = new User(user);
     newUser.save(cb);
-
-    // Or...
-    // User.create({data..}, function (err, user) {
-    // });
 };
 
-userSchema.methods.passwordMatches = function(password) {
+userSchema.methods.passwordMatches = function (password) {
     return this.password === password;
-}
+};
+
+// Schema.statics = static methods (available on Model)
+userSchema.statics.findByName = function (username, cb) {
+    User.findOne({username: username}, cb);
+};
+
+userSchema.statics.get = function (query, cb) {
+    User.findOne(query, cb);
+};
 
 var User = dbConnection.model('User', userSchema);
 
