@@ -4,24 +4,27 @@
 extends layout
 
 block content
-    h1= title
-    form(name="login_details", action='/login', method="post")
-        div.input
-            span.label username
-            input(type="text", name="username")
-        div.input
-            span.label password
-            input(type="password", name="password")
-        div.actions
-            input(type="submit", value="Login")
+    div.login
+        div.page-header
+            h1= title
+        form.form-inline(name="login_details", action='/login', method="post")
+            div.input.form-group
+                //label.sr-only(for='usernameText') Username
+                input.form-control(type="text", name="username", id='usernameText', placeholder='Username')
+            div.input.form-group
+                //label.sr-only(for='passwordText') Password
+                input.form-control(type="password", name="password", id='passwordText', placeholder='Password')
+            div.input.actions
+                input.btn.btn-default(type="submit", value="Login")
 
-    form(name="signup_details", action='/login/createUser', method="post")
-        div.input
-            span.label username
-            input(type="text", name="username")
-        div.input
-            span.label password
-            input(type="password", name="password")
-        div.actions
-            input(type="submit", value="Sign Up")
-    a(href="/facebook") Facebook
+        form.form-inline(name="signup_details", action='/login/createUser', method="post")
+            div.input.form-group
+                //span.label Choose username
+                input.form-control(type="text", name="username", placeholder='Choose username')
+            div.input.form-group
+                //span.label Set passsword
+                input.form-control(type="password", name="password", placeholder='Set password')
+            div.input.actions
+                input.btn.btn-default(type="submit", value="Sign Up")
+        a.facebook_link(href="/facebook")
+            img(src="images/fb_connnect.jpg")

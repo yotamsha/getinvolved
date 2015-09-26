@@ -6,7 +6,7 @@ var loginController = require('../controllers/loginController');
 
 /* Post login info . */
 router.get('/', function (req, res, next) {
-    res.render('login', {title: 'getInvolved - login'});
+    res.render('login', {title: 'getInvolved'});
 });
 
 router.post('/',

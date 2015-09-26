@@ -18,11 +18,13 @@ passport.use(new LocalStrategy(
         User.get({username: username}, function(err, user) {
             if (err) {
                 logger.error(err);
+                done(err);
             } else {
                 if (user && user.passwordMatches(password)) {
                     return done(null, user);
                 } else {
                     logger.log("No user named " + username);
+                    done(null, false, { message: "No user " + username + " exists"});
                 }
             }
         });

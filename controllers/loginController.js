@@ -59,7 +59,11 @@ exports.createUser = function (req, res, next) {
 };
 
 function getToken(details) {
-    return jwt.sign(details, config.secret, {
+    //Encode mongo user id
+    return jwt.sign({
+        userId: details._id,
+        timestamp: new Date().getMilliseconds()
+    }, config.secret, {
         expiresInMinutes: 600
     })
 }
