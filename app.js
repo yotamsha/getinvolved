@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var passport = require('./modules/passport-login');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
+var user = require('./routes/user');
 var login = require('./routes/login');
 var facebook = require('./routes/facebook');
 
@@ -26,7 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize()); // Important!
 
 app.use('/', routes);
-app.use('/users', users);
+app.use('/users', user);
 app.use('/login', login);
 app.use('/facebook', facebook);
 

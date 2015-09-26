@@ -38,21 +38,8 @@ exports.createUser = function (req, res, next) {
             });
         } else {
             if (user) {
-                var token = getToken(user);
-
-                user.update({
-                    accessToken: token
-                }, function (err) {
-                    if (err) {
-                        // Mish mash of error handling - whats the preferred method of doing this?
-                        next(err);
-                    } else {
-                        res.json({
-                            success: true,
-                            token: token
-                        });
-                    }
-                });
+                req.user = user;
+                next();
             }
         }
     });
@@ -61,9 +48,10 @@ exports.createUser = function (req, res, next) {
 function getToken(details) {
     //Encode mongo user id
     return jwt.sign({
-        userId: details._id,
-        timestamp: new Date().getMilliseconds()
-    }, config.secret, {
-        expiresInMinutes: 600
-    })
+            userId: details._id,
+            timestamp: new Date().getMilliseconds()
+        }, config.secret,
+        {
+            //options
+        })
 }

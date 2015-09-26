@@ -8,5 +8,6 @@ module.exports = {
     ok: 200,
     badRequest: 400,
     unauthorized: 401,
-    internalError: 500
+    internalError: 500,
+    serviceUnavailable: 503
 }

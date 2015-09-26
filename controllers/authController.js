@@ -10,7 +10,7 @@ exports.auth = function (req, res, next) {
     if (token) {
         jwt.verify(token, config.secret, function (err, decoded) {
             if (err) {
-                return res.status(httpStatusCodes.badRequest).json({
+                return res.status(httpStatusCodes.unauthorized).json({
                     success: false,
                     message: 'Failed to authenticate token'
                 });
@@ -21,7 +21,7 @@ exports.auth = function (req, res, next) {
             }
         })
     } else {
-        return res.status(httpStatusCodes.badRequest).send({
+        return res.status(httpStatusCodes.unauthorized).send({
             success: false,
             message: 'No token provided.'
         });
@@ -29,7 +29,7 @@ exports.auth = function (req, res, next) {
 };
 
 exports.addUserToReq = function (req, res, next) {
-    User.get({_id: req.userId}, function (err, user) {
+    User.get({_id: req.userId }, function (err, user) {
         if (err) {
             logger.error(err);
             return res.status(httpStatusCodes.internalError).json({
