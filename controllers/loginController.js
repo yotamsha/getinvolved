@@ -5,8 +5,8 @@ var config = require('../config.js');
 var jwt = require('jsonwebtoken');
 var User = require('../models/User');
 
-exports.userLogin = function (req, res, next) {
-    var token = getToken(req.user);
+exports.returnAccessToken = function (req, res, next) {
+    var token = generateToken(req.user);
 
     req.user.update({
         accessToken: token
@@ -23,29 +23,7 @@ exports.userLogin = function (req, res, next) {
     })
 };
 
-exports.createUser = function (req, res, next) {
-    // Validate user info
-    var newUser = {
-        username: req.body.username,
-        password: req.body.password
-    };
-
-    User.create(newUser, function (err, user) {
-        if (err) {
-            res.json({
-                success: false,
-                error: err
-            });
-        } else {
-            if (user) {
-                req.user = user;
-                next();
-            }
-        }
-    });
-};
-
-function getToken(details) {
+function generateToken(details) {
     //Encode mongo user id
     return jwt.sign({
             userId: details._id,

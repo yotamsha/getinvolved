@@ -4,7 +4,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-var passport = require('./modules/passport-login');
+var passport = require('./modules/passport-strategies');
 
 var routes = require('./routes/index');
 var user = require('./routes/user');
@@ -26,7 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize()); // Important!
 
 app.use('/', routes);
-app.use('/users', user);
+app.use('/user', user);
 app.use('/login', login);
 app.use('/facebook', facebook);
 

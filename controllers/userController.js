@@ -6,7 +6,7 @@ var authController = require('../controllers/authController');
  */
 exports.getUser = function (req, res, next) {
     if (!req.user && req.userId) {
-        authController.addUserToReq(req, res, function () {
+        authController.attachUserToRequest(req, res, function () {
             res.json({
                 success: true,
                 user: req.user
@@ -20,14 +20,14 @@ exports.getUser = function (req, res, next) {
     }
 };
 
-exports.update = function (req, res, next) {
+exports.updateUser = function (req, res, next) {
     // Better to get the user object, validate updates and save to database ;]
     console.log(req.body);
     console.log(req.params);
     console.log(req.query);
 
     if (req.user) {
-        req.user.update(JSON.parse(req.query.user), function(err) {
+        req.user.updateUser(JSON.parse(req.query.user), function(err) {
             if (err) {
                 res.json({
                    success: false
@@ -51,4 +51,26 @@ exports.update = function (req, res, next) {
             }
         });
     }
+};
+
+exports.createUser = function (req, res, next) {
+    // Validate user info
+    var newUser = {
+        username: req.body.username,
+        password: req.body.password
+    };
+
+    User.create(newUser, function (err, user) {
+        if (err) {
+            res.json({
+                success: false,
+                error: err
+            });
+        } else {
+            if (user) {
+                req.user = user;
+                next();
+            }
+        }
+    });
 };

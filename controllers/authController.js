@@ -4,7 +4,7 @@ var httpStatusCodes = require('../httpStatusCodes');
 var User = require('../models/User');
 var logger = require('../modules/logger');
 
-exports.auth = function (req, res, next) {
+exports.authToken = function (req, res, next) {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
 
     if (token) {
@@ -28,7 +28,7 @@ exports.auth = function (req, res, next) {
     }
 };
 
-exports.addUserToReq = function (req, res, next) {
+exports.attachUserToRequest = function (req, res, next) {
     User.get({_id: req.userId }, function (err, user) {
         if (err) {
             logger.error(err);
