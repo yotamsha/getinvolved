@@ -8,8 +8,6 @@ var passport = require('./modules/passport-strategies');
 
 var routes = require('./routes/index');
 var user = require('./routes/user');
-var login = require('./routes/login');
-var facebook = require('./routes/facebook');
 
 var app = express();
 
@@ -27,8 +25,6 @@ app.use(passport.initialize()); // Important!
 
 app.use('/', routes);
 app.use('/user', user);
-app.use('/login', login);
-app.use('/facebook', facebook);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

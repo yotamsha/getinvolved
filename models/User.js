@@ -3,7 +3,9 @@
  */
 var mongoose = require("mongoose");
 var dbConnection = require("../modules/db-connection");
+var findOrCreate = require('mongoose-findorcreate');
 
+// TODO: Add socialAccessToken to entity schema
 var userSchema = mongoose.Schema({
     username: {
         type: String,
@@ -14,13 +16,17 @@ var userSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    email: String,
     accessToken: String,
     firstName: String,
     lastName: String,
     socialNetworkId: Number,
     socialId: Number,
-    email: String
+    socialAccessToken: String
 });
+
+// User.findOrCreate(query, extra_data, callback(err, user, created){...});
+userSchema.plugin(findOrCreate);
 
 // Schema.methods = document methods (available on Objects)
 userSchema.methods.passwordMatches = function (password) {
@@ -49,6 +55,16 @@ userSchema.statics.create = function (user, cb) {
 
 userSchema.statics.findByName = function (username, cb) {
     User.findOne({username: username}, cb);
+};
+
+/**
+ * find one user by social id
+ *
+ * @param id
+ * @param cb
+ */
+userSchema.statics.findBySocialId = function (id, cb) {
+    User.findOne({socialId: id}, cb);
 };
 
 userSchema.statics.getAndUpdate = function(query, info, cb) {

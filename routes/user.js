@@ -30,15 +30,21 @@ router.post('/',
     loginController.returnAccessToken
 );
 
-// facebook login
-router.get('/facebook',
-    passport.authenticate('facebook', {session: false, scope: 'email'})
-);
-
-// facebook callback endpoint
-router.get('/facebookcallback',
-    passport.authenticate('facebook', {session: false}),
+// login using facebook access token
+router.post('/facebook',
+    passport.authenticate('facebook-token'),
     loginController.returnAccessToken
 );
+
+//// facebook login
+//router.get('/facebook',
+//    passport.authenticate('facebook', {session: false, scope: 'email'})
+//);
+//
+//// facebook callback endpoint
+//router.get('/facebookcallback',
+//    passport.authenticate('facebook', {session: false}),
+//    loginController.returnAccessToken
+//);
 
 module.exports = router;
