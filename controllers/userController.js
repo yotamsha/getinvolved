@@ -23,34 +23,19 @@ exports.getUser = function (req, res, next) {
 
 exports.updateUser = function (req, res, next) {
     // Better to get the user object, validate updates and save to database ;]
-    console.log(req.body);
-    console.log(req.params);
-    console.log(req.query);
-
     if (req.user) {
-        req.user.updateUser(JSON.parse(req.query.user), function (err) {
+        req.user.update(JSON.parse(req.query.update), function (err) {
             if (err) {
-                res.json({
-                    success: false
-                });
+                next(err);
             } else {
                 res.json({
-                    success: true
+                    success: true,
+                    message: "User update succeeded"
                 });
             }
         })
     } else {
-        User.getAndUpdate({_id: req.userId}, JSON.parse(req.query.user), function (err) {
-            if (err) {
-                res.json({
-                    success: false
-                });
-            } else {
-                res.json({
-                    success: true
-                });
-            }
-        });
+        next(new Error('Expected user attached to request'));
     }
 };
 
@@ -63,6 +48,21 @@ exports.createAndLogin = function (req, res, next) {
         next(new Error("Not enough parameters supplied"));
     }
 
+};
+
+exports.deleteUser = function (req, res, next) {
+    if (req.query.userId) {
+        User.removeById(req.query.userId, function (err) {
+            if (err) {
+                next(err);
+            } else {
+                res.json({
+                    success: true,
+                    message: "Removed user"
+                });
+            }
+        });
+    }
 };
 
 function _localCreateAndLogin(req, res, next) {
@@ -88,27 +88,3 @@ function _localCreateAndLogin(req, res, next) {
 function _facebookCreateAndLogin(req, res, next) {
     passport.authenticate('facebook-token', {session: false})(req, res, next);
 }
-
-//function _createUser(req, res, next) {
-//    // Validate user info
-//    var newUser = {
-//        username: req.body.username,
-//        password: req.body.password
-//    };
-//
-//    User.create(newUser, function (err, user) {
-//        if (err) {
-//            res.json({
-//                success: false,
-//                error: err
-//            });
-//        } else {
-//            if (user) {
-//                req.user = user;
-//                next();
-//            }
-//        }
-//    });
-//};
-
-//exports.createUser = _createUser;

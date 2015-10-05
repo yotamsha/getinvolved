@@ -22,7 +22,8 @@ var userSchema = mongoose.Schema({
     lastName: String,
     socialNetworkId: Number,
     socialId: String,
-    socialAccessToken: String
+    socialAccessToken: String,
+    isAdmin: Boolean
 });
 
 // User.findOrCreate(query, extra_data, callback(err, user, created){...});
@@ -33,7 +34,7 @@ userSchema.methods.passwordMatches = function (password) {
     return this.password === password;
 };
 
-userSchema.methods.update = function(info, cb) {
+userSchema.methods.update = function (info, cb) {
     var keys = Object.keys(info);
 
     for (var i = 0; i < keys.length; i++) {
@@ -53,6 +54,10 @@ userSchema.statics.create = function (user, cb) {
     newUser.save(cb);
 };
 
+userSchema.statics.removeById = function (userId, cb) {
+    User.findOneAndRemove({_id: userId}, cb);
+};
+
 userSchema.statics.findByName = function (username, cb) {
     User.findOne({username: username}, cb);
 };
@@ -67,8 +72,8 @@ userSchema.statics.findBySocialId = function (id, cb) {
     User.findOne({socialId: id}, cb);
 };
 
-userSchema.statics.getAndUpdate = function(query, info, cb) {
-    User.get(query, function(err, user) {
+userSchema.statics.getAndUpdate = function (query, info, cb) {
+    User.get(query, function (err, user) {
         if (err) {
             cb(err);
         } else {

@@ -20,7 +20,15 @@ router.get('/',
 // update user
 router.post('/',
     authController.authToken,
+    authController.attachUserToRequest,
     userController.updateUser
+);
+
+router.delete('/',
+    authController.authToken,
+    authController.attachUserToRequest,
+    authController.userIsAdmin,
+    userController.deleteUser
 );
 
 // create user

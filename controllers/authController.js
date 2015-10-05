@@ -44,3 +44,11 @@ exports.attachUserToRequest = function (req, res, next) {
         }
     })
 };
+
+exports.userIsAdmin = function(req, res, next) {
+    if (req.user.isAdmin) {
+        next();
+    } else {
+        next(new Error("User is not admin!"));
+    }
+}
