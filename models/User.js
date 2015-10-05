@@ -21,7 +21,7 @@ var userSchema = mongoose.Schema({
     firstName: String,
     lastName: String,
     socialNetworkId: Number,
-    socialId: Number,
+    socialId: String,
     socialAccessToken: String
 });
 

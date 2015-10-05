@@ -6,21 +6,25 @@ var jwt = require('jsonwebtoken');
 var User = require('../models/User');
 
 exports.returnAccessToken = function (req, res, next) {
-    var token = generateToken(req.user);
+    if (req.user) {
+        var token = generateToken(req.user);
 
-    req.user.update({
-        accessToken: token
-    }, function (err) {
-        if (err) {
-            // Mish mash of error handling - whats the preferred method of doing this?
-            next(err);
-        } else {
-            res.json({
-                success: true,
-                token: token
-            });
-        }
-    })
+        req.user.update({
+            accessToken: token
+        }, function (err) {
+            if (err) {
+                next(err);
+            } else {
+                res.json({
+                    success: true,
+                    token: token
+                });
+            }
+        })
+    } else {
+        logger.error('No user attached to request');
+        next(new Error("Internal error"));
+    }
 };
 
 function generateToken(details) {

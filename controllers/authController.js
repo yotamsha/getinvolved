@@ -10,10 +10,8 @@ exports.authToken = function (req, res, next) {
     if (token) {
         jwt.verify(token, config.secret, function (err, decoded) {
             if (err) {
-                return res.status(httpStatusCodes.unauthorized).json({
-                    success: false,
-                    message: 'Failed to authenticate token'
-                });
+                err.status = httpStatusCodes.unauthorized;
+                next(err);
             } else {
                 // Token contains user db object id (not all routes require getting user from db)
                 req.userId = decoded.userId;
@@ -21,10 +19,9 @@ exports.authToken = function (req, res, next) {
             }
         })
     } else {
-        return res.status(httpStatusCodes.unauthorized).send({
-            success: false,
-            message: 'No token provided.'
-        });
+        var err = new Error('No token provided.');
+        err.status = httpStatusCodes.unauthorized;
+        next(err);
     }
 };
 
@@ -32,20 +29,17 @@ exports.attachUserToRequest = function (req, res, next) {
     User.get({_id: req.userId }, function (err, user) {
         if (err) {
             logger.error(err);
-            return res.status(httpStatusCodes.internalError).json({
-                success: false,
-                message: 'Error in database'
-            });
+            err.status = httpStatusCodes.internalError;
+            next(err);
         } else {
             if (user) {
                 req.user = user;
                 next();
             } else {
                 logger.error("No user found!");
-                return res.status(httpStatusCodes.internalError).json({
-                    success: false,
-                    message: 'No user found!'
-                });
+                var err = new Error('No user found!');
+                err.status = httpStatusCodes.internalError;
+                next(err);
             }
         }
     })

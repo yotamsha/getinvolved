@@ -3,7 +3,12 @@ var router = express.Router();
 var authController = require('../controllers/authController');
 var userController = require('../controllers/userController');
 var loginController = require('../controllers/loginController');
-var passport = require('passport');
+//var passport = require('passport');
+
+// create & login user
+router.put('/',
+    userController.createAndLogin,
+    loginController.returnAccessToken)
 
 // get user
 router.get('/',
@@ -19,22 +24,22 @@ router.post('/',
 );
 
 // create user
-router.post('/create',
-    userController.createUser,
-    loginController.returnAccessToken
-);
+//router.post('/create',
+//    userController.createUser,
+//    loginController.returnAccessToken
+//);
 
 // login using local strategy
-router.post('/',
-    passport.authenticate('local', {session: false}),
-    loginController.returnAccessToken
-);
+//router.post('/',
+//    passport.authenticate('local', {session: false}),
+//    loginController.returnAccessToken
+//);
 
 // login using facebook access token
-router.post('/facebook',
-    passport.authenticate('facebook-token'),
-    loginController.returnAccessToken
-);
+//router.post('/facebook',
+//    passport.authenticate('facebook-token', { session: false }),
+//    loginController.returnAccessToken
+//);
 
 //// facebook login
 //router.get('/facebook',
