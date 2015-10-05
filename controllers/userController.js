@@ -65,6 +65,18 @@ exports.deleteUser = function (req, res, next) {
     }
 };
 
+exports.getUserTasks = function (req, res, next) {
+    if (req.user) {
+        req.user.getTasks(req.user._id, function (err, _tasks) {
+            console.log(_tasks);
+            res.json({
+                success: true,
+                tasks: _tasks
+            })
+        });
+    }
+};
+
 function _localCreateAndLogin(req, res, next) {
     User.findOrCreate(
         {username: req.body.username},

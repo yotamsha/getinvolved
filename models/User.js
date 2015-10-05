@@ -4,6 +4,7 @@
 var mongoose = require("mongoose");
 var dbConnection = require("../modules/db-connection");
 var findOrCreate = require('mongoose-findorcreate');
+var Task = require("./Task");
 
 // TODO: Add socialAccessToken to entity schema
 var userSchema = mongoose.Schema({
@@ -23,13 +24,24 @@ var userSchema = mongoose.Schema({
     socialNetworkId: Number,
     socialId: String,
     socialAccessToken: String,
-    isAdmin: Boolean
+    isAdmin: Boolean,
+    volunteerTasks: [{type: mongoose.Schema.Types.ObjectId, ref: 'Task'}]
 });
 
-// User.findOrCreate(query, extra_data, callback(err, user, created){...});
+// Usage: User.findOrCreate(query, extra_data, callback(err, user, created){...});
 userSchema.plugin(findOrCreate);
 
 // Schema.methods = document methods (available on Objects)
+userSchema.methods.getTasks = function (userId ,cb) {
+    User.findOne({_id: userId}).populate('volunteerTasks').exec(function(err, user) {
+        if (err) {
+            cb(err);
+        } else {
+            cb(null, user.volunteerTasks);
+        }
+    });
+};
+
 userSchema.methods.passwordMatches = function (password) {
     return this.password === password;
 };
@@ -62,12 +74,6 @@ userSchema.statics.findByName = function (username, cb) {
     User.findOne({username: username}, cb);
 };
 
-/**
- * find one user by social id
- *
- * @param id
- * @param cb
- */
 userSchema.statics.findBySocialId = function (id, cb) {
     User.findOne({socialId: id}, cb);
 };

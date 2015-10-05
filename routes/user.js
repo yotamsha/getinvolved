@@ -31,6 +31,12 @@ router.delete('/',
     userController.deleteUser
 );
 
+router.get('/task',
+    authController.authToken,
+    authController.attachUserToRequest,
+    userController.getUserTasks
+);
+
 // create user
 //router.post('/create',
 //    userController.createUser,
