@@ -47,6 +47,7 @@ userSchema.methods.passwordMatches = function (password) {
 };
 
 userSchema.methods.update = function (info, cb) {
+    //TODO: Validate keys exits in schema & changing legal keys (isAdmin etc.)
     var keys = Object.keys(info);
 
     for (var i = 0; i < keys.length; i++) {
