@@ -4,7 +4,7 @@
 var Task = require('../models/Task');
 
 exports.getTasks = function (req, res, next) {
-    var taskDictionary = JSON.parse(req.query.taskDictionary) || {};
+    var taskDictionary = req.query.taskDictionary ? JSON.parse(req.query.taskDictionary) : {};
     Task.get(taskDictionary, function (err, tasks) {
         if (err) {
             next(err);
