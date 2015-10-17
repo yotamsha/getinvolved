@@ -6,9 +6,13 @@ var config = {
         callbackUrl: "user/facebookcallback",
         nada: 'nada'
     },
+    //mongodb: {
+    //    host: 'localhost',
+    //    dbName: 'getInvolved'
+    //}
     mongodb: {
-        host: 'localhost',
-        dbName: 'getInvolved'
+        host: "baz:baz@ds041164.mongolab.com:41164/heroku_c71zd0vr",
+        dbName: "getInvolved"
     }
 };
 
