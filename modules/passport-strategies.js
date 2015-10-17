@@ -3,7 +3,7 @@
  */
 var passport = require('passport');
 //var LocalStrategy = require('passport-local').Strategy;
-//var FacebookStrategy = require('passport-facebook').Strategy;
+var FacebookStrategy = require('passport-facebook').Strategy;
 var FacebookTokenStrategy = require('passport-facebook-token');
 var config = require('../config');
 var User = require('../models/User');
@@ -64,49 +64,49 @@ passport.use(new FacebookTokenStrategy(
     }
 ));
 
-//passport.use(new FacebookStrategy(
-//    {
-//        clientID: config.facebook.appId,
-//        clientSecret: config.facebook.appSecret,
-//        callbackURL: config.facebook.callbackUrl
-//    },
-//    function (token, refreshToken, profile, done) {
-//        User.findBySocialId(profile.id, function (err, user) {
-//            // if there is an error, stop everything and return that
-//            // ie an error connecting to the database
-//            if (err)
-//                return done(err);
-//
-//            // if the user is found, then log them in
-//            if (user) {
-//                return done(null, user); // user found, return that user
-//            } else {
-//                // if there is no user found with that facebook id, create them
-//                var newUser = {};
-//
-//                // set all of the facebook information in our user model
-//                newUser.username = generateFacebookUsername(profile);
-//                newUser.password = generateRandomString();
-//
-//                newUser.firstName = getFirstName(profile.displayName);
-//                newUser.lastName = getLastName(profile.displayName);
-//                newUser.socialNetworkId = socialNetworkIds.facebook;
-//                newUser.socialId = profile.id;
-//                newUser.socialAccessToken = token;
-//                //newUser.email = profile.emails[0].value;
-//
-//                User.create(newUser, function (err, user) {
-//                    if (err) {
-//                        throw err;
-//                    } else {
-//                        // if successful, return the new user
-//                        return done(null, user);
-//                    }
-//                });
-//            }
-//        });
-//    }
-//));
+passport.use(new FacebookStrategy(
+    {
+        clientID: config.facebook.appId,
+        clientSecret: config.facebook.appSecret,
+        callbackURL: config.facebook.callbackUrl
+    },
+    function (token, refreshToken, profile, done) {
+        User.findBySocialId(profile.id, function (err, user) {
+            // if there is an error, stop everything and return that
+            // ie an error connecting to the database
+            if (err)
+                return done(err);
+
+            // if the user is found, then log them in
+            if (user) {
+                return done(null, user); // user found, return that user
+            } else {
+                // if there is no user found with that facebook id, create them
+                var newUser = {};
+
+                // set all of the facebook information in our user model
+                newUser.username = generateFacebookUsername(profile);
+                newUser.password = generateRandomString();
+
+                newUser.firstName = getFirstName(profile.displayName);
+                newUser.lastName = getLastName(profile.displayName);
+                newUser.socialNetworkId = socialNetworkIds.facebook;
+                newUser.socialId = profile.id;
+                newUser.socialAccessToken = token;
+                //newUser.email = profile.emails[0].value;
+
+                User.create(newUser, function (err, user) {
+                    if (err) {
+                        throw err;
+                    } else {
+                        // if successful, return the new user
+                        return done(null, user);
+                    }
+                });
+            }
+        });
+    }
+));
 
 function generateFacebookUsername(profile) {
     return getFirstName(profile) + profile.id;

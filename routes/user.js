@@ -8,7 +8,8 @@ var loginController = require('../controllers/loginController');
 // create & login user
 router.put('/',
     userController.createAndLogin,
-    loginController.returnAccessToken)
+    loginController.returnAccessToken
+);
 
 // get user
 router.get('/',
