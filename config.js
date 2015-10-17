@@ -11,7 +11,7 @@ var config = {
     //    dbName: 'getInvolved'
     //}
     mongodb: {
-        host: "baz:baz@ds041164.mongolab.com:41164/heroku_c71zd0vr",
+        host: "mongodb://baz:baz@ds041164.mongolab.com:41164/heroku_c71zd0vr",
         dbName: "getInvolved"
     }
 };
