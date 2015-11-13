@@ -33,5 +33,10 @@
     "url": "git://github.com/anonymous node/sails user/sails-example.git"
   },
   "author": "anonymous node/sails user",
-  "license": ""
+  "license": "",
+  "devDependencies": {
+    "bcrypt": "^0.8.5",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0"
+  }
 }
