@@ -66,15 +66,15 @@ module.exports.blueprints = {
   // Expose a route for every method,
   // e.g.
   // `/auth/foo` => `foo: function (req, res) {}`
-  actions: true,
+  actions: false,
 
   // Expose a RESTful API, e.g.
   // `post /auth` => `create: function (req, res) {}`
-  rest: true,
+  rest: false,
 
   // Expose simple CRUD shortcuts, e.g.
   // `/auth/create` => `create: function (req, res) {}`
   // (useful for prototyping)
-  shortcuts: true
+  shortcuts: false
 
 };
