@@ -1,9 +1,13 @@
+/*
+
+*/
 /**
  * SwaggerController
  *
  * @description :: Server-side logic for managing swaggers
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
- */
+ *//*
+
 
 
 var _ = require('lodash');
@@ -15,6 +19,7 @@ _.merge(exports, {
   // Extend with custom logic here by adding additional fields, methods, etc.
 
 });
+*/
 /*
 module.exports = {
   _config: {
@@ -23,7 +28,8 @@ module.exports = {
       rest: false
   },
 }
-*/
+*//*
+
 
 module.exports.blueprints = {
 
@@ -42,3 +48,4 @@ module.exports.blueprints = {
   shortcuts: false
 
 };
+*/
