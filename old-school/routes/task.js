@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 //var authController = require('../controllers/authController');
-var taskController = require('../controllers/taskController');
+var taskController = require('./taskController');
 
 router.get('/', taskController.getTasks);
 

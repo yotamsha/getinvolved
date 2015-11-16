@@ -5,8 +5,8 @@ var passport = require('passport');
 //var LocalStrategy = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
 var FacebookTokenStrategy = require('passport-facebook-token');
-var config = require('../config');
-var User = require('../models/User');
+var config = require('../old-school/config');
+var User = require('./User');
 //var logger = require('./logger');
 
 var socialNetworkIds = {

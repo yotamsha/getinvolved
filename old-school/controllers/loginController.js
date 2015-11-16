@@ -1,7 +1,7 @@
 /**
  * Created by Bar Wachtel on 25/09/2015.
  */
-var config = require('../config.js');
+var config = require('../old-school/config.js');
 var jwt = require('jsonwebtoken');
 var User = require('../models/User');
 

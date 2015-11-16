@@ -1,5 +1,5 @@
 var User = require('../models/User');
-var authController = require('../controllers/authController');
+var authController = require('authController');
 var passport = require('passport');
 
 /**

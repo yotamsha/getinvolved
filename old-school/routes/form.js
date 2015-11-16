@@ -3,7 +3,7 @@
  */
 var express = require('express');
 var router = express.Router();
-var formController = require('../controllers/formController.js');
+var formController = require('./formController.js');
 
 router.post('/', formController.createUserForm);
 router.get('/', formController.getAllForms);

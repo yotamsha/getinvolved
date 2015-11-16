@@ -1,6 +1,6 @@
 var jwt = require('jsonwebtoken');
-var config = require('../config');
-var httpStatusCodes = require('../httpStatusCodes');
+var config = require('../old-school/config');
+var httpStatusCodes = require('../old-school/httpStatusCodes');
 var User = require('../models/User');
 var logger = require('../modules/logger');
 
