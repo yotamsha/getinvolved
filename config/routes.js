@@ -61,6 +61,8 @@ module.exports.routes = {
   'post /login': 'AuthController.login',
 
   '/logout': 'AuthController.logout',
+  'get /test': 'UserController.test',
+  'post /user': ['UserController.createAndLogin','AuthController.returnAccessToken'],
 
   /***************************************************************************
    * TASKS ROUTES

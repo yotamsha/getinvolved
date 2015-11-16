@@ -34,6 +34,18 @@ module.exports.policies = {
   * and its actions                                                          *
   *                                                                          *
   ***************************************************************************/
+
+  /**
+   * Default Actions:
+   * find
+   * findOne
+   * create
+   * update
+   * destroy
+   * populate
+   * add
+   * remove
+   */
 	// RabbitController: {
 
 		// Apply the `false` policy as the default for all of RabbitController's actions

@@ -6,7 +6,7 @@ var passport = require('passport');
 var FacebookStrategy = require('passport-facebook').Strategy;
 var FacebookTokenStrategy = require('passport-facebook-token');
 //var config = require('../old-school/config');
-var User = require('./User');
+//var User = require('./User');
 //var logger = require('./logger');
 
 var socialNetworkIds = {
@@ -35,7 +35,9 @@ var socialNetworkIds = {
 passport.use(new FacebookTokenStrategy(
     {
         clientID: sails.config.facebook.appId,
-        clientSecret: sails.config.facebook.appSecret
+        clientSecret: sails.config.facebook.appSecret,
+        enableProof: false
+
     },
     function (accessToken, refreshToken, profile, done) {
         User.findBySocialId(profile.id, function (err, user) {

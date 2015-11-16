@@ -6,7 +6,7 @@
  */
 
 var passport = require('passport');
-
+var jwt = require('jsonwebtoken');
 module.exports = {
 
   _config: {
@@ -15,9 +15,9 @@ module.exports = {
     rest: false
   },
 
-  login: function(req, res) {
+  login: function (req, res) {
 
-    passport.authenticate('local', function(err, user, info) {
+    passport.authenticate('local', function (err, user, info) {
       sails.log.info("trying to login..");
       if ((err) || (!user)) {
         sails.log.error("login failed..", err, user);
@@ -27,7 +27,7 @@ module.exports = {
           user: user
         });
       }
-      req.logIn(user, function(err) {
+      req.logIn(user, function (err) {
         if (err) res.send(err);
         return res.send({
           message: info.message,
@@ -38,9 +38,34 @@ module.exports = {
     })(req, res);
   },
 
-  logout: function(req, res) {
+  logout: function (req, res) {
     req.logout();
     res.redirect('/');
+  },
+
+  returnAccessToken: function (req, res, next) {
+    if (req.user) {
+      var token = generateToken(req.user);
+
+      req.user.update({
+        accessToken: token
+      }, function (err) {
+        if (err) {
+          next(err);
+        } else {
+          res.json({
+            success: true,
+            token: token
+          });
+        }
+      })
+    } else {
+      logger.error('No user attached to request');
+      next(new Error("Internal error"));
+    }
+
+    console.log(" in returnAccessToken");
+    res.send(200)
   }
 };
 
@@ -78,3 +103,14 @@ module.exports.blueprints = {
   shortcuts: false
 
 };
+
+function generateToken(details) {
+  //Encode mongo user id
+  return jwt.sign({
+      userId: details._id,
+      timestamp: new Date().getMilliseconds()
+    }, 'secret',
+    {
+      //options
+    })
+}
