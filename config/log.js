@@ -37,7 +37,7 @@ module.exports.log = {
   *                                                                          *
   ***************************************************************************/
 
-  level: 'silly',
+  level: 'info',
   colors: false,  // To get clean logs without prefixes or color codings
   //custom: customLogger
 };
