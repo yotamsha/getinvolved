@@ -6,7 +6,7 @@
  */
 
 var bcrypt = require('bcrypt');
-var passport= require('passport');
+var passport = require('passport');
 
 module.exports = {
   attributes: {
@@ -65,22 +65,27 @@ module.exports = {
 
 function _localCreateAndLogin(req, res, next) {
   User.findOrCreate(
-    {username: req.body.username},
-    {password: req.body.password},
-    function (err, user, created) {
+    {
+      // Query
+      username: req.body.username
+    },
+    {
+      // To create
+      username: req.body.username,
+      password: req.body.password,
+      email: req.body.email
+    },
+    function (err, user) {
       if (err) {
         next(err);
-      } else if (!created) {
-        if (user.passwordMatches(req.body.password)) {
-          req.user = user;
-        } else {
-          next(new Error('Password doesn\'t match'));
-        }
-      } else {
+      }
+      if (user.passwordMatches(req.body.password)) {
         req.user = user;
+      } else {
+        next(new Error('Password doesn\'t match'));
       }
       next();
-    })
+    });
 }
 
 function _facebookCreateAndLogin(req, res, next) {
