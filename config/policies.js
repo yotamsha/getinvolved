@@ -65,8 +65,8 @@ module.exports.policies = {
     'find': 'isAuthenticated',
     'findOne': 'isAuthenticated'
   },
-  'TaskController': {
+/*  'TaskController': {
     '*': 'isAuthenticated'
-  }
+  }*/
 
 };

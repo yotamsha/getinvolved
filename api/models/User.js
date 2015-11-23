@@ -46,6 +46,10 @@ module.exports = {
       minLength: 6,
       required: true
     },
+    tasks : {
+      collection : 'task',
+      via : 'participants'
+    },
     //TODO socialNetworkId + socialId should be unique-couple.
 
     toJSON: function () {

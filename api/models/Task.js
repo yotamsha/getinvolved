@@ -20,7 +20,12 @@ module.exports = {
     },
     immediate: {
       type : 'boolean'
+    },
+    participants : {
+      collection : 'user',
+      via : 'tasks'
     }
+
   }
 };
 
