@@ -32,7 +32,7 @@ module.exports.routes = {
    *                                                                          *
    ***************************************************************************/
 
-  '/': {
+  'get /': {
     view: 'homepage'
   },
 
@@ -50,6 +50,7 @@ module.exports.routes = {
    * PUBLIC ROUTES
    ***************************************************************************/
 
+  // ------- VIEWS ----- //
   'get /login': {
     view: 'login'
   },
@@ -58,11 +59,15 @@ module.exports.routes = {
     view: 'signup'
   },
 
+  'get /swagger/doc': ['SwaggerController.doc'],
+
+  // ------- PUBLIC ACTIONS ----- //
+
   'post /login': ['AuthController.login', 'AuthController.returnAccessToken'],
 
-  '/logout': 'AuthController.logout',
-  'get /test': 'UserController.test',
-  'post /user': ['UserController.createAndLogin','AuthController.returnAccessToken'],
+  //'post /user': ['UserController.createAndLogin','AuthController.returnAccessToken'],
+
+  'post /logout': 'AuthController.logout',
 
   /***************************************************************************
    * TASKS ROUTES

@@ -9,6 +9,11 @@ var bcrypt = require('bcrypt');
 var passport = require('passport');
 
 module.exports = {
+  _config: {
+    actions: false,
+    shortcuts: false,
+    rest: true
+  },
   attributes: {
     email: {
       type: 'email',
@@ -20,6 +25,7 @@ module.exports = {
       minLength: 6,
       required: true
     },
+
     toJSON: function () {
       var obj = this.toObject();
       delete obj.password;
