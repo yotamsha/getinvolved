@@ -15,28 +15,36 @@ module.exports = {
     rest: false
   },
 
-  login: function (req, res) {
-
-    passport.authenticate('local', function (err, user, info) {
-      sails.log.info("trying to login..");
-      if ((err) || (!user)) {
-        sails.log.error("login failed..", err, user);
-
-        return res.send({
-          message: info.message,
-          user: user
-        });
+  login: function (req, res, next) {
+      console.log(" in createAndLogin");
+      if (req.body.email) {
+        passport.authenticate('local', {session: false})(req, res, next);
+      } else if (req.query.access_token) {
+        passport.authenticate('facebook-token', {session: false})(req, res, next);
+      } else {
+        next(new Error("Not enough parameters supplied"));
       }
-      req.logIn(user, function (err) {
-        if (err) res.send(err);
-        return res.send({
-          message: info.message,
-          user: user
-        });
-      });
+    },
 
-    })(req, res);
-  },
+    //passport.authenticate('local', function (err, user, info) {
+    //  sails.log.info("trying to login..");
+    //  if ((err) || (!user)) {
+    //    sails.log.error("login failed..", err, user);
+    //
+    //    return res.send({
+    //      message: info.message,
+    //      user: user
+    //    });
+    //  }
+    //  req.logIn(user, function (err) {
+    //    if (err) res.send(err);
+    //    return res.send({
+    //      message: info.message,
+    //      user: user
+    //    });
+    //  });
+    //
+    //})(req, res);
 
   logout: function (req, res) {
     req.logout();
@@ -47,25 +55,25 @@ module.exports = {
     if (req.user) {
       var token = generateToken(req.user);
 
-      req.user.update({
+      req.user.updateMe({
         accessToken: token
-      }, function (err) {
+      }, function (err, user) {
         if (err) {
           next(err);
         } else {
-          res.json({
+          res.json(
+            {
             success: true,
             token: token
           });
         }
       })
     } else {
-      logger.error('No user attached to request');
+      sails.log.error('No user attached to request');
       next(new Error("Internal error"));
     }
-
-    console.log(" in returnAccessToken");
-    res.send(200)
+    //sails.log.info(" in returnAccessToken - returning 200 ok");
+    //res.send(200)
   }
 };
 

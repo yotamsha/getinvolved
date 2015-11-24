@@ -2,9 +2,11 @@
  * Created by Bar Wachtel on 21/09/2015.
  */
 var passport = require('passport');
-//var LocalStrategy = require('passport-local').Strategy;
+var LocalStrategy = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
 var FacebookTokenStrategy = require('passport-facebook-token');
+
+var bcrypt = require('bcrypt');
 //var config = require('../old-school/config');
 //var User = require('./User');
 //var logger = require('./logger');
@@ -31,6 +33,34 @@ var socialNetworkIds = {
 //        });
 //    }
 //));
+passport.use(new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password'
+  },
+  function(email, password, done) {
+    User.findOne({ email: email }, function (err, user) {
+      if (err) { return done(err); }
+      if (!user) {
+        return done(null, false, { message: 'Incorrect email.' });
+      }
+
+      bcrypt.compare(password, user.password, function (err, res) {
+        if (!res)
+          return done(null, false, {
+            message: 'Invalid Password'
+          });
+        //var returnUser = {
+        //  email: user.email,
+        //  createdAt: user.createdAt,
+        //  id: user.id
+        //};
+        return done(null, user, {
+          message: 'Logged In Successfully'
+        });
+      });
+    });
+  }
+));
 
 passport.use(new FacebookTokenStrategy(
     {
@@ -40,9 +70,10 @@ passport.use(new FacebookTokenStrategy(
 
     },
     function (accessToken, refreshToken, profile, done) {
+      //TODO: Email is required field, need to make sure its returned in facebook profile
         User.findBySocialId(profile.id, function (err, user) {
-            if (err || user) {
-                return done(err, user); // either will do
+            if (err || user[0]) {
+                return done(err, user[0]); // either will do
             } else {
                 // if there is no user found with that facebook id, create them
                 var newUser = {};
@@ -60,6 +91,7 @@ passport.use(new FacebookTokenStrategy(
                     newUser.email = profile.emails[0].value;
                 }
 
+                console.log("Users email " + newUser.email);
                 User.create(newUser, done);
             }
         });

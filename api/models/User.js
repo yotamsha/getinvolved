@@ -52,12 +52,27 @@ module.exports = {
     },
     //TODO socialNetworkId + socialId should be unique-couple.
 
+    // Object (instance) methods go here
     toJSON: function () {
       var obj = this.toObject();
       delete obj.password;
       return obj;
+    },
+    passwordMatches: function(_password) {
+      return this.password === _password;
+    },
+    updateMe: function(opts, cb) {
+      var updateKeys = Object.keys(opts);
+      updateKeys.forEach(function(key) {
+        console.log("updating " + key + " to value " + opts[key]);
+        if (attributeCanBeUpdatedByUser(key)) {
+          this[key] = opts[key];
+        }
+      });
+      this.save(cb);
     }
   },
+  // Static model functions (begin with capital letter)
   beforeCreate: function (user, cb) {
     bcrypt.genSalt(10, function (err, salt) {
       bcrypt.hash(user.password, salt, function (err, hash) {
@@ -75,3 +90,8 @@ module.exports = {
     User.findOne({id: 1}).exec(cb);
   }
 };
+
+function attributeCanBeUpdatedByUser(key) {
+  // Some values should not be updateable!
+  return true;
+}

@@ -58,7 +58,7 @@ module.exports.routes = {
     view: 'signup'
   },
 
-  'post /login': 'AuthController.login',
+  'post /login': ['AuthController.login', 'AuthController.returnAccessToken'],
 
   '/logout': 'AuthController.logout',
   'get /test': 'UserController.test',
