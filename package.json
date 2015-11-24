@@ -30,7 +30,7 @@
     "passport-facebook-token": "^3.0.5",
     "passport-local": "^1.0.0",
     "rc": "~0.5.0",
-    "sails": "~0.11.2",
+    "sails": "~0.12.0-rc3",
     "sails-disk": "~0.10.0",
     "sails-mongo": "^0.11.4",
     "sails-swagger": "^0.5.1",
