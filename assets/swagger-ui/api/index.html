@@ -33,7 +33,7 @@
       if (url && url.length > 1) {
         url = decodeURIComponent(url[1]);
       } else {
-        url = "http://localhost:1337/swagger/doc";
+        url = location.protocol + "//" + location.hostname + (location.port && ":" + location.port) + "/swagger/doc";
       }
 
       // Pre load translate...
