@@ -20,31 +20,11 @@ module.exports = {
       if (req.body.email) {
         passport.authenticate('local', {session: false})(req, res, next);
       } else if (req.query.access_token) {
-        passport.authenticate('facebook-token', {session: false})(req, res, next);
+        passport.authenticate('facebook-token', {scope: FacebookService.profileFields, session: false})(req, res, next);
       } else {
         next(new Error("Not enough parameters supplied"));
       }
     },
-
-    //passport.authenticate('local', function (err, user, info) {
-    //  sails.log.info("trying to login..");
-    //  if ((err) || (!user)) {
-    //    sails.log.error("login failed..", err, user);
-    //
-    //    return res.send({
-    //      message: info.message,
-    //      user: user
-    //    });
-    //  }
-    //  req.logIn(user, function (err) {
-    //    if (err) res.send(err);
-    //    return res.send({
-    //      message: info.message,
-    //      user: user
-    //    });
-    //  });
-    //
-    //})(req, res);
 
   logout: function (req, res) {
     req.logout();
@@ -53,7 +33,7 @@ module.exports = {
 
   returnAccessToken: function (req, res, next) {
     if (req.user) {
-      var token = generateToken(req.user);
+      var token = CipherService.createToken(req.user);
 
       req.user.updateMe({
         accessToken: token
@@ -112,13 +92,3 @@ module.exports.blueprints = {
 
 };
 
-function generateToken(details) {
-  //Encode mongo user id
-  return jwt.sign({
-      userId: details._id,
-      timestamp: new Date().getMilliseconds()
-    }, 'secret',
-    {
-      //options
-    })
-}

@@ -17,8 +17,13 @@ module.exports = {
     },
     username: {
       type: 'string',
-      //required: true,
+      required: true,
       unique: true
+    },
+    password: {
+      type: 'string',
+      minLength: 6
+      //required: true -- user joining from facebook never needs to provide a password!
     },
     accessToken: {
       type: 'string'
@@ -40,11 +45,6 @@ module.exports = {
     },
     isAdmin: {
       type: 'boolean'
-    },
-    password: {
-      type: 'string',
-      minLength: 6,
-      required: true
     },
     tasks : {
       collection : 'task',
@@ -72,7 +72,6 @@ module.exports = {
       this.save(cb);
     }
   },
-  // Static model functions (begin with capital letter)
   beforeCreate: function (user, cb) {
     bcrypt.genSalt(10, function (err, salt) {
       bcrypt.hash(user.password, salt, function (err, hash) {

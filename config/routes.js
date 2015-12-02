@@ -64,8 +64,8 @@ module.exports.routes = {
   // ------- PUBLIC ACTIONS ----- //
 
   'post /login': ['AuthController.login', 'AuthController.returnAccessToken'],
-
-  //'post /user': ['UserController.createAndLogin','AuthController.returnAccessToken'],
+  'post /user/': ['AuthController.login', 'AuthController.returnAccessToken'],
+  'post /user/login': ['AuthController.login', 'AuthController.returnAccessToken'],
 
   'post /logout': 'AuthController.logout',
 
