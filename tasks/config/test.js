@@ -18,6 +18,6 @@ module.exports = function(grunt) {
       src: ['test/unit/**/*.test.js']
     }
 	});
-
 	grunt.loadNpmTasks('grunt-mocha-test');
+
 };

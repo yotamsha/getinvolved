@@ -38,8 +38,7 @@
   },
   "scripts": {
     "debug": "node debug app.js",
-    "start": "sails lift",
-    "test": "mocha test/bootstrap.test.js test/unit/**/*.test.js"
+    "start": "sails lift"
   },
   "main": "app.js",
   "repository": {

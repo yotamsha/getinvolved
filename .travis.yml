@@ -3,7 +3,9 @@
  - 0.10
  before_install:
  - npm install -g dredd
-script: ./dredd
+script:
+- mocha test/bootstrap.test.js test/unit/**/*.test.js
+-./dredd
   services:
   - mongodb
   before_script:
