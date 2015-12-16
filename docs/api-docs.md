@@ -164,22 +164,7 @@ a Sails application
 + Response 500
 
 
-### User [POST]
 
-+ Request
-
-        {
-            "email" : "tom@gmail.com",
-            "password" : "123456"
-        }
-
-+ Response 201 (application/json; charset=utf-8)
-    + Attributes (user)
-
-+ Response 404
-
-
-+ Response 500
 
 
 
