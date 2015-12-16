@@ -55,13 +55,13 @@ a Sails application
 ## Task By Id [/task/{id}]
 
 + Parameters
-+ id (string, required)
+    + id (string, required)
 
 
 ### TaskById [GET]
 
 + Response 200 (application/json)
-+ Attributes (task)
+    + Attributes (task)
 
 + Response 404
 
@@ -72,7 +72,7 @@ a Sails application
 ### TaskById [PUT]
 
 + Response 200 (application/json)
-+ Attributes (task)
+    + Attributes (task)
 
 + Response 404
 
@@ -83,7 +83,7 @@ a Sails application
 ### TaskById [POST]
 
 + Response 200 (application/json)
-+ Attributes (task)
+    + Attributes (task)
 
 + Response 404
 
@@ -95,15 +95,15 @@ a Sails application
 ## User Tasks By Parentid And Id [/user/{parentid}/tasks/{id}]
 
 + Parameters
-+ parentid (string, required)
+    + parentid (string, required)
 
-+ id (string, required)
+    + id (string, required)
 
 
 ### UserTasksByParentidAndId [GET]
 
 + Response 200 (application/json)
-+ Attributes (task)
+    + Attributes (task)
 
 + Response 404
 
@@ -114,7 +114,7 @@ a Sails application
 ### UserTasksByParentidAndId [POST]
 
 + Response 200 (application/json)
-+ Attributes (task)
+    + Attributes (task)
 
 + Response 404
 
@@ -125,7 +125,7 @@ a Sails application
 ### UserTasksByParentidAndId [DELETE]
 
 + Response 200 (application/json)
-+ Attributes (task)
+    + Attributes (task)
 
 + Response 404
 
@@ -139,7 +139,7 @@ a Sails application
 ### Task [GET]
 
 + Response 200 (application/json)
-+ Attributes (task)
+    + Attributes (task)
 
 + Response 404
 
@@ -150,7 +150,7 @@ a Sails application
 ### Task [POST]
 
 + Response 200 (application/json)
-+ Attributes (task)
+    + Attributes (task)
 
 + Response 404
 
@@ -165,15 +165,15 @@ a Sails application
 ## Task Participants By Parentid And Id [/task/{parentid}/participants/{id}]
 
 + Parameters
-+ parentid (string, required)
+    + parentid (string, required)
 
-+ id (string, required)
+    + id (string, required)
 
 
 ### TaskParticipantsByParentidAndId [GET]
 
 + Response 200 (application/json)
-+ Attributes (user)
+    + Attributes (user)
 
 + Response 404
 
@@ -184,7 +184,7 @@ a Sails application
 ### TaskParticipantsByParentidAndId [POST]
 
 + Response 200 (application/json)
-+ Attributes (user)
+    + Attributes (user)
 
 + Response 404
 
@@ -195,7 +195,7 @@ a Sails application
 ### TaskParticipantsByParentidAndId [DELETE]
 
 + Response 200 (application/json)
-+ Attributes (user)
+    + Attributes (user)
 
 + Response 404
 
@@ -207,13 +207,13 @@ a Sails application
 ## User By Id [/user/{id}]
 
 + Parameters
-+ id (string, required)
+    + id (string, required)
 
 
 ### UserById [GET]
 
 + Response 200 (application/json)
-+ Attributes (user)
+    + Attributes (user)
 
 + Response 404
 
@@ -224,7 +224,7 @@ a Sails application
 ### UserById [PUT]
 
 + Response 200 (application/json)
-+ Attributes (user)
+    + Attributes (user)
 
 + Response 404
 
@@ -235,7 +235,7 @@ a Sails application
 ### UserById [POST]
 
 + Response 200 (application/json)
-+ Attributes (user)
+    + Attributes (user)
 
 + Response 404
 
@@ -249,7 +249,7 @@ a Sails application
 ### User [GET]
 
 + Response 200 (application/json)
-+ Attributes (user)
+    + Attributes (user)
 
 + Response 404
 
@@ -260,7 +260,7 @@ a Sails application
 ### User [POST]
 
 + Response 200 (application/json)
-+ Attributes (user)
+    + Attributes (user)
 
 + Response 404
 
@@ -274,7 +274,7 @@ a Sails application
 ### User [POST]
 
 + Response 200 (application/json)
-+ Attributes (user)
+    + Attributes (user)
 
 + Response 404
 
@@ -288,7 +288,7 @@ a Sails application
 ### UserLogin [POST]
 
 + Response 200 (application/json)
-+ Attributes (user)
+    + Attributes (user)
 
 + Response 404
 
