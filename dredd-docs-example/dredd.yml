@@ -1,5 +1,5 @@
 dry-run: null
-hookfiles: null
+hookfiles: "./dreddhooks.js"
 language: nodejs
 sandbox: false
 server: node app

@@ -32,7 +32,11 @@ module.exports.connections = {
     adapter: 'sails-disk'
   },
 
-  'production': {
+  unitTests: {
+    adapter: 'sails-memory'
+  },
+
+  production: {
     adapter: 'sails-mongo',
     url: process.env.MONGOLAB_URI
   },
