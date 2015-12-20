@@ -7,6 +7,7 @@
 
 var bcrypt = require('bcrypt');
 var passport = require('passport');
+// var User = require('../models/User'); -- Can add this for clarity, although its not required
 
 module.exports = {
   _config: {

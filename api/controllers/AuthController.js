@@ -17,9 +17,12 @@ module.exports = {
 
   login: function (req, res, next) {
       console.log(" in createAndLogin");
-      if (req.body.email) {
+      if (req.param("email") && req.param("password")) {
+        req.body.email = req.param("email");
+        req.body.password = req.param("password");
         passport.authenticate('local', {session: false})(req, res, next);
-      } else if (req.query.access_token) {
+      } else if (req.param("access_token")) {
+        req.query.access_token = req.param("access_token");
         passport.authenticate('facebook-token', {scope: FacebookService.profileFields, session: false})(req, res, next);
       } else {
         next(new Error("Not enough parameters supplied"));

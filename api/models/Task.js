@@ -12,7 +12,7 @@ module.exports = {
       type: 'string'
     },
     createdAt: {
-      type: 'date',
+      type: 'number',
       defaultsTo: Date.now
     },
     city: {
