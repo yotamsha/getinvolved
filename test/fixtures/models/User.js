@@ -10,8 +10,13 @@ module.exports = {
     },
     username: {
       type: 'string',
-      //required: true,
+      required: true,
       unique: true
+    },
+    password: {
+      type: 'string',
+      minLength: 6
+      //required: true -- user joining from facebook never needs to provide a password!
     },
     accessToken: {
       type: 'string'
@@ -34,15 +39,9 @@ module.exports = {
     isAdmin: {
       type: 'boolean'
     },
-    password: {
-      type: 'string',
-      minLength: 6,
-      required: true
-    },
     tasks : {
       collection : 'task',
       via : 'participants'
-    },
-
-  }
+    }
+  },
 };
