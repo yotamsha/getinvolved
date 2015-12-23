@@ -1,0 +1,14 @@
+[
+  {
+    "id" :1,
+    "username": "Walter White",
+    "email": "walter@heisenberg.com",
+    "password": "123456"
+  },
+  {
+    "id" : 2,
+    "username": "John Appleseed",
+    "email": "appleseed@me.com",
+    "password" : "123456"
+  }
+]
