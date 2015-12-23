@@ -62,9 +62,10 @@ module.exports.routes = {
   'get /swagger/doc': ['SwaggerController.doc'],
 
   // ------- PUBLIC ACTIONS ----- //
+  'put /task/:id': 'TaskController.update',
 
   'post /login': ['AuthController.login', 'AuthController.returnAccessToken'],
-  'post /user/': ['AuthController.login', 'AuthController.returnAccessToken'],
+  //'post /user': ['AuthController.login', 'AuthController.returnAccessToken'],
   'post /user/login': ['AuthController.login', 'AuthController.returnAccessToken'],
 
   'post /logout': 'AuthController.logout',

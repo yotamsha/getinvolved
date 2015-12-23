@@ -8,6 +8,8 @@
 var bcrypt = require('bcrypt');
 
 module.exports = {
+  autoCreatedAt: false,
+  autoUpdatedAt: false,
 
   attributes: {
     email: {
@@ -46,11 +48,28 @@ module.exports = {
     isAdmin: {
       type: 'boolean'
     },
-    tasks : {
-      collection : 'task',
-      via : 'participants'
+    volunteerTasks: {
+      collection : 'Task',
+      via : 'volunteers'
     },
-    //TODO socialNetworkId + socialId should be unique-couple.
+    petitionerCases: {
+      collection: 'Case',
+      via: 'petitioner'
+    },
+    creationDate: {
+      columnName: 'creationDate',
+      type: 'integer',
+      defaultsTo: function () {
+        return new Date().getTime();
+      }
+    },
+    updateDate: {
+      columnName: 'updateDate',
+      type: 'integer',
+      defaultsTo: function () {
+        return new Date().getTime();
+      }
+    },
 
     // Object (instance) methods go here
     toJSON: function () {
@@ -71,6 +90,10 @@ module.exports = {
       });
       this.save(cb);
     }
+  },
+  beforeUpdate: function (values, next) {
+    values.updateDate = new Date().getTime();
+    next();
   },
   beforeCreate: function (user, cb) {
     bcrypt.genSalt(10, function (err, salt) {

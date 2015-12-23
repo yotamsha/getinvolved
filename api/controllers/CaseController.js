@@ -1,15 +1,15 @@
 /**
  * TaskController
  *
- * @description :: Server-side logic for managing Tasks
+ * @description :: Server-side logic for managing tasks
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
 module.exports = {
   _config: {
     actions: false,
-    rest: false,
-    shortcuts: false
+    shortcuts: false,
+    rest: true
   }
 };
 

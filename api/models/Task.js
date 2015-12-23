@@ -6,26 +6,35 @@
 */
 
 module.exports = {
-
+  autoCreatedAt: false,
+  autoUpdatedAt: false,
   attributes: {
-    name: {
-      type: 'string'
+    name: 'string',
+    relatedToCase: {
+      model: 'Case'
     },
-    createdAt: {
-      type: 'number',
-      defaultsTo: Date.now
+    volunteers: {
+      collection: 'User',
+      via: 'volunteerTasks'
     },
-    city: {
-      type: 'string'
+    creationDate: {
+      columnName: 'creationDate',
+      type: 'integer',
+      defaultsTo: function () {
+        return new Date().getTime();
+      }
     },
-    immediate: {
-      type : 'boolean'
-    },
-    participants : {
-      collection : 'user',
-      via : 'tasks'
+    updateDate: {
+      columnName: 'updateDate',
+      type: 'integer',
+      defaultsTo: function () {
+        return new Date().getTime();
+      }
     }
-
+  },
+  beforeUpdate: function (values, next) {
+    values.updateDate = new Date().getTime();
+    next();
   }
 };
 

@@ -40,8 +40,13 @@ module.exports.policies = {
     'findOne': 'isAuthenticated'
   },
 
-  'TaskController': {
+  'CaseController': {
     '*': 'isAuthenticated'
+  },
+
+  'TaskController': {
+    '*': false,
+    'update': true
   }
 
   /***************************************************************************
