@@ -106,6 +106,11 @@ e2e-tests/            --> end-to-end tests
   scenarios.js          --> end-to-end scenarios to be run by Protractor
 ```
 
+## Translations
+
+New texts are added under client/resources/locale-he_HE.json (currently only Hebrew..). 
+In order to access a key in the json use the relevant key :   {{"views.home.title" | translate}}
+
 ## Testing
 
 There are two kinds of tests in the angular-seed application: Unit tests and End to End tests.
