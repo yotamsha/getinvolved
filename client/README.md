@@ -108,8 +108,13 @@ e2e-tests/            --> end-to-end tests
 
 ## Translations
 
-New texts are added under client/resources/locale-he_HE.json (currently only Hebrew..). 
-In order to access a key in the json use the relevant key :   {{"views.home.title" | translate}}
+* Translations setup is based on this guide:
+ [Angular-i18n Tutorial](https://scotch.io/tutorials/internationalization-of-angularjs-applications). 
+* I use angular-translate library - 
+ [angular-translate-docs](https://angular-translate.github.io/docs/#/api/pascalprecht.translate.filter:translate).
+* New texts are added under `client/resources/locale-he_HE.json` (currently only Hebrew..). 
+* Static translation in html files :   `{{"views.home.title" | translate}}`
+* Dynamic translation in js files (inject $filter service) :   `$filter('translate')('dynamic.text')`
 
 ## Testing
 
