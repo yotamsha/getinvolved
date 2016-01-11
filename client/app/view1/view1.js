@@ -9,16 +9,17 @@ angular.module('myApp.view1', ['ngRoute'])
         });
     }])
 
-    .controller('View1Ctrl', ['$scope', '$http', '$timeout', 'appData', '$q',
-        function ($scope, $http, $timeout, appData, $q) {
+    .controller('View1Ctrl', ['$scope', '$http', '$timeout', 'appData', '$q','$filter',
+        function ($scope, $http, $timeout, appData, $q, $filter) {
 
             // --- INNER FUNCTIONS --- //
 
             function _init() {
                 $scope.vm = {
                     viewData : [1,2,3],
-                    tasks : []
-                };
+                    dynamicallyTranslatedText : $filter('translate')('dynamic.text')
+
+            };
             }
 
             // --- SCOPE FUNCTIONS --- //

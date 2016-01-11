@@ -1,6 +1,9 @@
 <div class="view1" ng-cloak>
-מסך 1
+    {{"views.home.title" | translate}}
     <ul>
         <li ng-repeat="value in vm.viewData">{{value}}</li>
     </ul>
+    <div>
+        {{vm.dynamicallyTranslatedText}}
+    </div>
 </div>
