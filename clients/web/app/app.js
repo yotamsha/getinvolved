@@ -7,6 +7,7 @@ angular.module('myApp', [
         'ngMaterial',
         'ngCookies',
         'pascalprecht.translate',// angular-translate
+        'restangular',
 
         // App views
         'myApp.view1',

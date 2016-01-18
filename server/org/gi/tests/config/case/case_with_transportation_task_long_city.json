@@ -1,0 +1,28 @@
+{
+  "state": "__undefined__",
+  "tasks": [
+    {
+      "address": {
+        "street_name": "Balfur",
+        "city": "loooooooooooooooooooooooooooooooooooooooooooooooooooong",
+        "street_number": "23",
+        "country": "IL"
+      },
+      "destination_address": {
+        "street_name": "Dizingof",
+        "city": "Tel Aviv",
+        "street_number": "32",
+        "country": "IL"
+      },
+      "state": "__undefined__",
+      "type": "TRANSPORTATION",
+      "title": "t11",
+      "volunteer_id": "__REPLACE__",
+      "due_date": "__REPLACE__",
+      "description": "d11"
+    }
+  ],
+  "petitioner_id": "__REPLACE__",
+  "description": "desc goes here",
+  "title": "title goes here"
+}

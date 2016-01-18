@@ -1,0 +1,11 @@
+{
+    "first_name": "Dan",
+    "last_name": "Been",
+    "user_name": "dan",
+    "password": "12qwer56",
+    "email": "dan__gi.net",
+    "phone_number": {
+      "number": "0544567123",
+      "country_code": "IL"
+    }
+  }

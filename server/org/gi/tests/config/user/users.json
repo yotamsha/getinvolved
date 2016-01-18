@@ -1,0 +1,35 @@
+[
+  {
+    "first_name": "Jack",
+    "last_name": "Back",
+    "user_name": "jack",
+    "password": "qwerty",
+    "email": "jack@gi.net",
+    "phone_number": {
+      "number": "036497317",
+      "country_code": "IL"
+    }
+  },
+  {
+    "first_name": "Dan",
+    "last_name": "Been",
+    "user_name": "dan",
+    "password": "12qwer56",
+    "email": "dan@gi.net",
+    "phone_number": {
+      "number": "0544567123",
+      "country_code": "IL"
+    }
+  },
+  {
+    "first_name": "Nisim",
+    "last_name": "Naser",
+    "user_name": "nissim",
+    "password": "zxcvbnm",
+    "email": "nisimk@gi.net",
+    "phone_number": {
+      "number": "036497612",
+      "country_code": "IL"
+    }
+  }
+]

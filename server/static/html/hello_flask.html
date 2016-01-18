@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <script>
+            function ping_server() {
+              document.getElementById("server_response").innerHTML = '';
+              var xhr = new XMLHttpRequest();
+              xhr.onreadystatechange = function() {
+              if (xhr.readyState == 4 && xhr.status == 200) {
+                document.getElementById("server_response").innerHTML = 'Server response: <b>' + xhr.responseText + ' </b>( ' + new Date().toUTCString() + ' )';
+              }
+              if (xhr.readyState == 4 && xhr.status != 200) {
+                document.getElementById("server_response").innerHTML = 'We have a problem... ' + xhr.responseText;
+              }
+            };
+             xhr.open("GET", "/api/ping", true);
+             xhr.send();
+            }
+        </script>
+    </head>
+    <body>
+        <h1>Welcome to Flask based GI server</h1>
+        <button onclick="ping_server()">Ping GI Server</button>
+        </br>
+        </br>
+        <div id="server_response"/>
+    </body>
+</html>
