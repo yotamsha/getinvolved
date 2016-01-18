@@ -9,8 +9,10 @@ angular.module('myApp.view1', ['ngRoute'])
         });
     }])
 
-    .controller('View1Ctrl', ['$scope', '$http', '$timeout', 'appData', '$q','$filter',
-        function ($scope, $http, $timeout, appData, $q, $filter) {
+    .controller('View1Ctrl', ['$scope', '$http', '$timeout', 'appData', '$q','$filter','Restangular',
+        function ($scope, $http, $timeout, appData, $q, $filter, Restangular) {
+
+            var tasksDao = Restangular.all('tasks');
 
             // --- INNER FUNCTIONS --- //
 
@@ -24,18 +26,20 @@ angular.module('myApp.view1', ['ngRoute'])
 
             // --- SCOPE FUNCTIONS --- //
 
-            $scope.getModels = function () {
+            $scope.getTasks = function () {
 
-                appData.getAll("tasks")
-                    .success(function(data){
+                tasksDao.getList()
+                    .then(function(data){
                     $scope.vm.dbData = data;
-                })
+                });
             };
-            $scope.saveOrUpdateModel = function () {
-
-                appData.saveOrUpdate("dataModel")
-                    .success(function (result) {
-
+            $scope.createTask = function () {
+                var task = {
+                    name : "newTask",
+                    description : "bla bla.."
+                };
+                tasksDao.post(task)
+                    .then(function (result) {
                 });
             };
 

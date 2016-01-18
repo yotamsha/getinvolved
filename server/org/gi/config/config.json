@@ -1,5 +1,5 @@
 {
-    "_db_uri" :"mongodb://localhost:27017/getinvolved",
-    "db_uri" : "mongodb://gi:gi@ds037415.mongolab.com:37415/getinvolved"
+    "db_uri" :"mongodb://localhost:27017/getinvolved",
+    "_db_uri" : "mongodb://gi:gi@ds037415.mongolab.com:37415/getinvolved"
 }
 
