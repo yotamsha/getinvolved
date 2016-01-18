@@ -8,6 +8,7 @@ angular.module('myApp', [
         'ngCookies',
         'pascalprecht.translate',// angular-translate
         'restangular',
+        'ui.router',
 
         // App views
         'myApp.view1',
@@ -27,7 +28,7 @@ angular.module('myApp', [
         },
         'preferredLocale': 'he_HE'
     })
-    .config(['$routeProvider', '$translateProvider', function ($routeProvider, $translateProvider) {
+    .config(['$urlRouterProvider', '$translateProvider', function ($urlRouterProvider, $translateProvider) {
         // i18n setup based on: https://scotch.io/tutorials/internationalization-of-angularjs-applications
         $translateProvider.useStaticFilesLoader({
             prefix: 'resources/locale-',// path to translations files
@@ -35,6 +36,7 @@ angular.module('myApp', [
         });
         $translateProvider.preferredLanguage('he_HE');// is applied on first load
         $translateProvider.useLocalStorage();// saves selected language to localStorage
+        // App routing is using ui-router module - https://github.com/angular-ui/ui-router
+        $urlRouterProvider.otherwise("/view1");
 
-        $routeProvider.otherwise({redirectTo: '/view1'});
     }]);
