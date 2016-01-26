@@ -1,25 +1,51 @@
 /* app css stylesheet */
-.menu {
-  list-style: none;
-  border-bottom: 0.1em solid black;
-  margin-bottom: 2em;
-  padding: 0 0 0.5em; }
+body {
+  min-width: 300px; }
 
-.menu:before {
-  content: "["; }
+h1, h2 {
+  margin: 0px; }
 
-.menu:after {
-  content: "]"; }
+.view-container {
+  min-height: 500px;
+  min-height: 500px; }
 
-.menu > li {
-  display: inline; }
+.main-panel {
+  background-color: #E6E6E6;
+  margin-top: 13px;
+  margin-bottom: 13px;
+  margin-left: 10px;
+  margin-right: 10px; }
 
-.menu > li:before {
-  content: "|";
-  padding-right: 0.3em; }
+.content-box-img {
+  height: 350px; }
+  .content-box-img img {
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    background-position: center center; }
 
-.menu > li:nth-child(1):before {
-  content: "";
-  padding: 0; }
+.content-box-text {
+  border: 2px solid #ffffff;
+  height: 350px; }
+
+.header {
+  background-image: url("../img/header-bg-wide.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 270px;
+  width: 100%; }
+  .header .logo {
+    background-image: url("../img/logo.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 20px;
+    left: 30px;
+    height: 100px;
+    width: 270px; }
+
+footer {
+  background-color: #565656;
+  height: 250px; }
 
 /*# sourceMappingURL=app.css.map */

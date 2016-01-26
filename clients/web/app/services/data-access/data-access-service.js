@@ -3,7 +3,7 @@
  */
 'use strict';
 
-angular.module('myApp.services.data-access.data-access-service', [])
+angular.module('app.services.data-access.data-access-service', [])
 
     .service('appData', ['$http', function ($http) {
         var isDebug = true;

@@ -1,28 +1,32 @@
-.menu {
-  list-style: none;
-  border-bottom: 0.1em solid black;
-  margin-bottom: 2em;
-  padding: 0 0 0.5em;
+body {
+  min-width: 300px;
+}
+h1 , h2{
+  margin: 0px;
 }
 
-.menu:before {
-  content: "[";
+.view-container {
+  min-height: 500px;
+  min-height: 500px;
 }
-
-.menu:after {
-  content: "]";
+.main-panel {
+  background-color: #E6E6E6;
+  margin-top: 13px;
+  margin-bottom: 13px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
+.content-box-img {
+  height: 350px;
+  img {
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    background-position: center center;
+  }
 
-.menu > li {
-  display: inline;
 }
-
-.menu > li:before {
-  content: "|";
-  padding-right: 0.3em;
-}
-
-.menu > li:nth-child(1):before {
-  content: "";
-  padding: 0;
+.content-box-text {
+  border: 2px solid #ffffff;
+  height: 350px;
 }

@@ -3,7 +3,7 @@
  */
 'use strict';
 
-angular.module('myApp.services.language-service', [])
+angular.module('app.services.language-service', [])
     .service('LocaleService', function ($translate, LOCALES, $rootScope, tmhDynamicLocale) {
         // i18n setup based on: https://scotch.io/tutorials/internationalization-of-angularjs-applications
         // angular-traslate doc : https://angular-translate.github.io/docs/#/api/pascalprecht.translate.filter:translate

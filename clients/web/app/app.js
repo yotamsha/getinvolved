@@ -1,7 +1,7 @@
 'use strict';
 
 // Declare app level module which depends on views, and components
-angular.module('myApp', [
+angular.module('app', [
         // External modules
         'ngRoute',
         'ngMaterial',
@@ -11,15 +11,16 @@ angular.module('myApp', [
         'ui.router',
 
         // App views
-        'myApp.view1',
-        'myApp.view2',
+        'app.view1',
+        'app.view2',
+        'app.caseDetail',
 
         // Components
-        'myApp.version',
+        'app.version',
 
         // Services
-        'myApp.services.data-access',
-        'myApp.services.language-service'
+        'app.services.data-access',
+        'app.services.language-service'
     ])
     .constant('LOCALES', {
         'locales': {

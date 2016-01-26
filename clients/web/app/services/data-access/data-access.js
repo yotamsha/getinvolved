@@ -3,6 +3,6 @@
  */
 'use strict';
 
-angular.module('myApp.services.data-access', [
-        'myApp.services.data-access.data-access-service',
+angular.module('app.services.data-access', [
+        'app.services.data-access.data-access-service',
     ]);

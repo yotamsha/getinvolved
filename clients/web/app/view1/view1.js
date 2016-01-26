@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp.view1', [])
+angular.module('app.view1', [])
 
     .config(['$stateProvider', function ($stateProvider) {
         $stateProvider.state('view1', {
