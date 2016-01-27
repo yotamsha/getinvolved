@@ -23,8 +23,8 @@ angular.module('app.caseDetail', [])
             function _init() {
                 $scope.vm = {
                     case: {
-                        title: "case title!",
-                        description: "case description..",
+                        title: "כותרת של המקרה..",
+                        description: "טקסט מגניב בעברית שמתאר משהו",
                         imgUrl : "assets/img/face1.jpg"
                     }
 

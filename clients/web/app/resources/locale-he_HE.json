@@ -1,4 +1,6 @@
 {
   "views.home.title": "עמוד הבית",
+  "views.caseDetail.description" : "מה וזה",
+  "views.caseDetail.tasks_list_title" : "מה צריך",
   "dynamic.text" : "טקסט דינמי"
 }

@@ -1,32 +1,79 @@
+font-face {
+
+}
+@font-face {
+  font-family: 'Yed';
+  src: url('../fonts/Yed SemiComebackReg.otf'); /* IE9 Compat Modes */
+  src: url('../fonts/Yed SemiComebackReg.otf?#iefix') format('truetype'), /* IE6-IE8 */
+  url('../fonts/Yed SemiComebackReg.ttf')  format('truetype'), /* Safari, Android, iOS */
+}
 body {
   min-width: 300px;
+  font-family: 'Yed', 'arial';
+  font-weight: normal;
+  color : #666666;
+  font-size: 12px;
 }
-h1 , h2{
+h1 , h2, h3, h4, h5, h6 {
   margin: 0px;
+  -webkit-margin-before: 0px;
+  -webkit-margin-after: 0px;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+  font-weight: normal;
+}
+h1 {
+  font-size: 30px;
+}
+h2 {
+  font-size: 26px;
+}
+h3 {
+  font-size: 22px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 14px;
 }
 
 .view-container {
   min-height: 500px;
   min-height: 500px;
+  max-width: 1000px;
+  margin: auto;
 }
 .main-panel {
   background-color: #E6E6E6;
   margin-top: 13px;
-  margin-bottom: 13px;
+  margin-bottom: 30px;
   margin-left: 10px;
   margin-right: 10px;
+  padding: 10px;
+}
+.panel-section {
+  border-top: 2px solid white;
+  min-height: 70px;
+}
+.panel-section-inner {
+  padding : 8px;
 }
 .content-box-img {
   height: 350px;
+  margin: 3px;
   img {
     height: 100%;
     width: 100%;
     background-size: cover;
-    background-position: center center;
   }
 
 }
 .content-box-text {
+  margin: 3px;
   border: 2px solid #ffffff;
   height: 350px;
 }
