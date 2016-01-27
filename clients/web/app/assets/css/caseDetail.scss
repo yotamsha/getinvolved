@@ -1,5 +1,37 @@
 .case-detail-view {
   .case-header-panel {
-    padding-bottom: 30px;
+    margin-bottom: 30px;
+    position: relative;
+  }
+  .centered-bubble {
+    /* PLEASE NOTE - container must be position:relative */
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 50px;
+    width: 50px;
+    opacity: 0.8;
+  }
+  .tasks-list-title {
+    margin-bottom: 15px;
+  }
+  .task-item {
+    font-size: 14px;
+    margin-bottom: 30px;
+    h5 {
+      font-size: 17px;
+    }
+    .task-title-row {
+      margin-bottom: 7px;
+    }
+    .task-title {
+      padding-left: 60px;
+    }
+    .text-emphasized {
+      color: #F58220;
+    }
   }
 }

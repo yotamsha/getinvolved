@@ -1,6 +1,10 @@
 {
   "views.home.title": "עמוד הבית",
   "views.caseDetail.description" : "מה וזה",
-  "views.caseDetail.tasks_list_title" : "מה צריך",
+  "views.caseDetail.tasks_list_title" : "מה צריך?",
+  "views.caseDetail.tasks_list_item.when" : "מתי?",
+  "views.caseDetail.tasks_list_item.where" : "איפה?",
+  "views.caseDetail.tasks_list_item.apply" : "אני בפנים",
+
   "dynamic.text" : "טקסט דינמי"
 }

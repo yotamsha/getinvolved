@@ -10,6 +10,8 @@
                     {{vm.case.title}}
                 </h4>
             </div>
+            <img class="centered-bubble" src="assets/img/orange-bubble.png">
+
         </div>
         <!-- /// DESCRIPTION ROW //// -->
         <div layout="row" class="panel-section" layout-align="start center">
@@ -25,9 +27,22 @@
         <!-- /// TASKS LIST //// -->
         <div layout="row" class="panel-section" layout-align="start center">
             <div layout="column" class="panel-section-inner">
-                <h2>
+                <h2 class="tasks-list-title">
                     {{"views.caseDetail.tasks_list_title" | translate}}
                 </h2>
+                <div class="task-item" ng-repeat="task in vm.case.tasks">
+                    <div layout="row" class="task-title-row">
+                        <h5 class="task-title">{{task.title}}</h5>
+                        <button class="btn-primary">{{"views.caseDetail.tasks_list_item.apply" | translate}} </button>
+                    </div>
+                    <div class="task-detail">
+                       <span class="text-emphasized">{{"views.caseDetail.tasks_list_item.when" | translate}}</span>  {{task.date}}
+                    </div>
+                    <div class="task-detail">
+                        <span class="text-emphasized"> {{"views.caseDetail.tasks_list_item.where" | translate}} </span>
+                         {{task.location}}
+                    </div>
+                </div>
 
             </div>
         </div>

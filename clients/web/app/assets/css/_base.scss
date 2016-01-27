@@ -40,7 +40,18 @@ h5 {
 h6 {
   font-size: 14px;
 }
-
+button.btn-primary {
+  background-color: #22A5B9;
+  min-width: 130px;
+  color: #ffffff;
+  font-family: "Yed";
+  font-size: 16px;
+  font-weight: lighter;
+  height: 22px;
+  padding: 0px 0px;
+  border: 0px;
+  border-radius: 2px;
+}
 .view-container {
   min-height: 500px;
   min-height: 500px;
@@ -54,6 +65,10 @@ h6 {
   margin-left: 10px;
   margin-right: 10px;
   padding: 10px;
+  .panel-section:last-child {
+    border-bottom: 2px solid white;
+
+  }
 }
 .panel-section {
   border-top: 2px solid white;

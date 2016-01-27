@@ -37,6 +37,18 @@ h5 {
 h6 {
   font-size: 14px; }
 
+button.btn-primary {
+  background-color: #22A5B9;
+  min-width: 130px;
+  color: #ffffff;
+  font-family: "Yed";
+  font-size: 16px;
+  font-weight: lighter;
+  height: 22px;
+  padding: 0px 0px;
+  border: 0px;
+  border-radius: 2px; }
+
 .view-container {
   min-height: 500px;
   min-height: 500px;
@@ -50,6 +62,8 @@ h6 {
   margin-left: 10px;
   margin-right: 10px;
   padding: 10px; }
+  .main-panel .panel-section:last-child {
+    border-bottom: 2px solid white; }
 
 .panel-section {
   border-top: 2px solid white;
@@ -92,6 +106,31 @@ footer {
   height: 250px; }
 
 .case-detail-view .case-header-panel {
-  padding-bottom: 30px; }
+  margin-bottom: 30px;
+  position: relative; }
+.case-detail-view .centered-bubble {
+  /* PLEASE NOTE - container must be position:relative */
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 50px;
+  width: 50px;
+  opacity: 0.8; }
+.case-detail-view .tasks-list-title {
+  margin-bottom: 15px; }
+.case-detail-view .task-item {
+  font-size: 14px;
+  margin-bottom: 30px; }
+  .case-detail-view .task-item h5 {
+    font-size: 17px; }
+  .case-detail-view .task-item .task-title-row {
+    margin-bottom: 7px; }
+  .case-detail-view .task-item .task-title {
+    padding-left: 60px; }
+  .case-detail-view .task-item .text-emphasized {
+    color: #F58220; }
 
 /*# sourceMappingURL=app.css.map */

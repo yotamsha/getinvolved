@@ -25,7 +25,24 @@ angular.module('app.caseDetail', [])
                     case: {
                         title: "כותרת של המקרה..",
                         description: "טקסט מגניב בעברית שמתאר משהו",
-                        imgUrl : "assets/img/face1.jpg"
+                        imgUrl : "assets/img/face1.jpg",
+                        tasks : [
+                            {
+                                title : "הסעה לבת ים",
+                                date : new Date(),
+                                location : "תל אביב"
+                            },
+                            {
+                                title : "עזרה בקניות",
+                                date : new Date(),
+                                location : "תל אביב"
+                            },
+                            {
+                                title : "ניקיון דירה",
+                                date : new Date(),
+                                location : "תל אביב"
+                            }
+                        ]
                     }
 
                 };
