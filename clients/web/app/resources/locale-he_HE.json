@@ -5,6 +5,8 @@
   "views.caseDetail.tasks_list_item.when" : "מתי?",
   "views.caseDetail.tasks_list_item.where" : "איפה?",
   "views.caseDetail.tasks_list_item.apply" : "אני בפנים",
-
+"views.login.title" : "הרשמה",
+"views.login.signup" : "הירשם",
+"views.login.already_signed" : "כבר נרשמת?",
   "dynamic.text" : "טקסט דינמי"
 }

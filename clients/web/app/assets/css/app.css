@@ -42,9 +42,9 @@ button.btn-primary {
   min-width: 130px;
   color: #ffffff;
   font-family: "Yed";
-  font-size: 16px;
+  font-size: 17px;
   font-weight: lighter;
-  height: 22px;
+  height: 30px;
   padding: 0px 0px;
   border: 0px;
   border-radius: 2px; }
@@ -132,5 +132,13 @@ footer {
     padding-left: 60px; }
   .case-detail-view .task-item .text-emphasized {
     color: #F58220; }
+  .case-detail-view .task-item .task-detail:last-of-type {
+    margin-bottom: 15px; }
+
+.login-dialog {
+  width: 320px;
+  height: 400px; }
+  .login-dialog .dialog-header {
+    color: #ffffff; }
 
 /*# sourceMappingURL=app.css.map */

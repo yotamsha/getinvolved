@@ -14,13 +14,15 @@ angular.module('app', [
         'app.view1',
         'app.view2',
         'app.caseDetail',
+        'app.login',
 
         // Components
         'app.version',
 
         // Services
         'app.services.data-access',
-        'app.services.language-service'
+        'app.services.language-service',
+        'app.services.dialogs-service'
     ])
     .constant('LOCALES', {
         'locales': {
@@ -29,15 +31,21 @@ angular.module('app', [
         },
         'preferredLocale': 'he_HE'
     })
-    .config(['$urlRouterProvider', '$translateProvider', function ($urlRouterProvider, $translateProvider) {
-        // i18n setup based on: https://scotch.io/tutorials/internationalization-of-angularjs-applications
-        $translateProvider.useStaticFilesLoader({
-            prefix: 'resources/locale-',// path to translations files
-            suffix: '.json'// suffix, currently- extension of the translations
-        });
-        $translateProvider.preferredLanguage('he_HE');// is applied on first load
-        $translateProvider.useLocalStorage();// saves selected language to localStorage
-        // App routing is using ui-router module - https://github.com/angular-ui/ui-router
-        $urlRouterProvider.otherwise("/view1");
+    .config(['$urlRouterProvider', '$translateProvider', '$mdThemingProvider',
+        function ($urlRouterProvider, $translateProvider, $mdThemingProvider) {
 
-    }]);
+            $mdThemingProvider.theme('default')
+                .primaryPalette('cyan')
+                .accentPalette('orange');
+
+            // i18n setup based on: https://scotch.io/tutorials/internationalization-of-angularjs-applications
+            $translateProvider.useStaticFilesLoader({
+                prefix: 'resources/locale-',// path to translations files
+                suffix: '.json'// suffix, currently- extension of the translations
+            });
+            $translateProvider.preferredLanguage('he_HE');// is applied on first load
+            $translateProvider.useLocalStorage();// saves selected language to localStorage
+            // App routing is using ui-router module - https://github.com/angular-ui/ui-router
+            $urlRouterProvider.otherwise("/view1");
+
+        }]);

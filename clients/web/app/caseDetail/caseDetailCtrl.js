@@ -13,10 +13,10 @@ angular.module('app.caseDetail', [])
         });
     }])
 
-    .controller('caseDetailCtrl', ['$scope', 'Restangular', '$stateParams',
-        function ($scope, Restangular, $stateParams) {
+    .controller('caseDetailCtrl', ['$scope', 'Restangular', '$stateParams','DialogsService',
+        function ($scope, Restangular, $stateParams, DialogsService) {
 
-            var caseDao = Restangular.all('cases');
+            //var caseDao = Restangular.all('cases');
 
             // --- INNER FUNCTIONS --- //
 
@@ -49,7 +49,9 @@ angular.module('app.caseDetail', [])
             }
 
             // --- SCOPE FUNCTIONS --- //
-
+            $scope.openLoginDialog = function(ev) {
+                DialogsService.openDialog({dialog : 'login'});
+            };
             // --- INIT --- //
 
             _init();
