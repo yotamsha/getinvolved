@@ -15,5 +15,36 @@
     height: 100px;
     width: 270px;
   }
+  .nav-bar {
+    /*
+    margin-top: 45px;
+    */
+    margin-right: 40px;
+    min-width: 600px;
+    color: #ffffff;
+    font-size: 13px;
+
+    .route-link {
+      padding-top: 45px;
+      padding-bottom: 10px;
+      min-width: 60px;
+      padding-left: 5px;
+      padding-right: 5px;
+      text-align: center;
+      &.active {
+        background-color: rgba(88, 145, 161, 0.71);
+      }
+    }
+    a {
+      color: #ffffff;
+      text-decoration: none;
+    }
+    a:visited {
+      color: #ffffff;
+    }
+    a:hover {
+      color: #F4EEEE;
+    }
+  }
 }
 

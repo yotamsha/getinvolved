@@ -100,6 +100,30 @@ button.btn-primary {
     left: 30px;
     height: 100px;
     width: 270px; }
+  .header .nav-bar {
+    /*
+    margin-top: 45px;
+    */
+    margin-right: 40px;
+    min-width: 600px;
+    color: #ffffff;
+    font-size: 13px; }
+    .header .nav-bar .route-link {
+      padding-top: 45px;
+      padding-bottom: 10px;
+      min-width: 60px;
+      padding-left: 5px;
+      padding-right: 5px;
+      text-align: center; }
+      .header .nav-bar .route-link.active {
+        background-color: rgba(88, 145, 161, 0.71); }
+    .header .nav-bar a {
+      color: #ffffff;
+      text-decoration: none; }
+    .header .nav-bar a:visited {
+      color: #ffffff; }
+    .header .nav-bar a:hover {
+      color: #F4EEEE; }
 
 footer {
   background-color: #565656;
