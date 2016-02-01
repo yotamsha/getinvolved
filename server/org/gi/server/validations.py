@@ -5,6 +5,8 @@ import re
 import phonenumbers
 import pycountry
 import time
+import org.gi.server.authorization as auth
+
 
 WSP = r'[\s]'  # see 2.2.2. Structured Header Field Bodies
 CRLF = r'(?:\r\n)'  # see 2.2.3. Long Header Fields
@@ -220,8 +222,8 @@ def validate_transportation_task(task, faults):
     validate_address(task['address'], faults)
 
 
-def validate_tasks(tasks, faults):
-    def _validate_task(task, faults):
+def validate_tasks(tasks, faults, current_tasks=None):
+    def _validate_task(task, faults, current_task=None):
         if not task:
             faults.append("A task can not be null")
             return
@@ -231,10 +233,15 @@ def validate_tasks(tasks, faults):
         if not task.get('type'):
             faults.append('A task must contain the property \'type\'. Valid type values are %s' % str(TASK_TYPES))
             return
-        if task['type'] == 'TRANSPORTATION':
+        if task['type'] == TASK_TYPE_PRODUCT_TRANSPORTATION:
             validate_transportation_task(task, faults)
         else:
-            post_validate(task, TASK_META, faults, mandatory=True)
+            if not current_task:
+                post_validate(task, TASK_META, faults, mandatory=True)
+            else:
+                _validate_status_transition(current_task['state'], task['state'], VALID_TASK_STATES, TASK_TRANSITIONS,
+                                            faults)
+                put_validate(task, TASK_META, faults, mandatory=False)
 
     if not tasks:
         faults.append('A Case must have at least one task')
@@ -243,7 +250,14 @@ def validate_tasks(tasks, faults):
         faults.append("tasks must be a list")
         return
     for task in tasks:
-        _validate_task(task, faults)
+        if task.get('id'):  # is it a new task or an updated one?
+            if current_tasks:
+                for cur_task in current_tasks:
+                    if cur_task['id'] == task['id']:
+                        _validate_task(task, faults, cur_task)
+                        break
+        else:
+            _validate_task(task, faults)
 
 
 def validate_case_state(state, faults):
@@ -322,15 +336,23 @@ def _validate_status_transition(current_state, new_state, valid_states, valid_tr
         return
 
     if new_state not in valid_states:
-        faults.append('%s in invalid state. Valid states are %s' % (new_state, str(valid_states)))
+        faults.append('%s is invalid state. Valid states are %s' % (new_state, str(valid_states)))
         return
 
     if current_state not in valid_states:
-        faults.append('%s in invalid state. Valid states are %s' % (current_state, str(valid_states)))
+        faults.append('%s is invalid state. Valid states are %s' % (current_state, str(valid_states)))
         return
     if new_state not in valid_transitions[current_state]:
         faults.append('The transition from state %s to state %s in invalid. Possible values for new state are %s' % (
             current_state, new_state, str(valid_transitions[current_state])))
+
+def validate_user_role(role,faults):
+    if not role or not isinstance(role,(str,unicode)):
+        faults.append('User role must be non empty string')
+        return
+    if role not in auth.ROLES.keys():
+        faults.append("Invalid role %s. Valid roles are %s" % (role, str(auth.ROLES.keys())))
+
 
 
 def validate_address(address, faults):
@@ -341,7 +363,8 @@ def validate_address(address, faults):
         return
     for key in address.keys():
         if key not in ADDRESS_META.keys():
-            faults.append('The field \'%s\' is invalid address field. Valid address fields are %s' % (key, str(ADDRESS_META.keys())))
+            faults.append('The field \'%s\' is invalid address field. Valid address fields are %s' % (
+                key, str(ADDRESS_META.keys())))
     for field_name, validation_info in ADDRESS_META.iteritems():
         if field_name not in address and validation_info[MANDATORY]:
             faults.append('The field %s is a mandatory field.' % field_name)
@@ -453,7 +476,8 @@ USER_META = {
     'user_name': validate_user_name,
     'password': validate_password,
     'email': validate_email,
-    'phone_number': validate_phone_number
+    'phone_number': validate_phone_number,
+    'role' : validate_user_role
 }
 
 CASE_META = {
@@ -490,7 +514,13 @@ ADDRESS_META = {
 
 }
 
-TASK_TYPES = ['GENERAL', 'PRODUCT_REQUEST', 'DONATION', 'TRANSPORTATION']
+TASK_TYPE_GENERAL = 'GENERAL'
+TASK_TYPE_PRODUCT_REQUEST = 'PRODUCT_REQUEST'
+TASK_TYPE_PRODUCT_DONATION = 'DONATION'
+TASK_TYPE_PRODUCT_TRANSPORTATION = 'TRANSPORTATION'
+
+TASK_TYPES = [TASK_TYPE_GENERAL, TASK_TYPE_PRODUCT_REQUEST, TASK_TYPE_PRODUCT_DONATION,
+              TASK_TYPE_PRODUCT_TRANSPORTATION]
 
 
 def entity_exists(db, collection_name, entity_id):
@@ -499,6 +529,13 @@ def entity_exists(db, collection_name, entity_id):
         return entity is not None
     except Exception:
         return False
+
+
+def case_put_validate(current_case, updated_case, faults):
+    _validate_status_transition(current_case['state'], updated_case['state'], VALID_CASE_STATES, CASE_TRANSITIONS,
+                                faults)
+    if faults:
+        return
 
 
 def case_post_validate(payload, db, faults):

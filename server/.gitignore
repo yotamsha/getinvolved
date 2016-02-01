@@ -1,0 +1,6 @@
+*.pyc
+.idea/
+GI_SERVER.egg-info/
+build/
+dist/
+

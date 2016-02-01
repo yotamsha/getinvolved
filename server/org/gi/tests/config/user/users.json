@@ -2,7 +2,7 @@
   {
     "first_name": "Jack",
     "last_name": "Back",
-    "user_name": "jack",
+    "user_name": "Ajack",
     "password": "qwerty",
     "email": "jack@gi.net",
     "phone_number": {
@@ -13,7 +13,7 @@
   {
     "first_name": "Dan",
     "last_name": "Been",
-    "user_name": "dan",
+    "user_name": "Bdan",
     "password": "12qwer56",
     "email": "dan@gi.net",
     "phone_number": {
@@ -22,13 +22,57 @@
     }
   },
   {
+    "first_name": "Gan",
+    "last_name": "Been",
+    "user_name": "CGan",
+    "password": "12qwer56",
+    "email": "gan@gi.net",
+    "phone_number": {
+      "number": "0544567423",
+      "country_code": "IL"
+    }
+  },
+  {
+    "first_name": "Zorb",
+    "last_name": "TheBeen",
+    "user_name": "Dzorb",
+    "password": "12qdfdfr56",
+    "email": "zorb@gi.net",
+    "phone_number": {
+      "number": "0544517423",
+      "country_code": "IL"
+    }
+  },
+   {
+    "first_name": "Zack",
+    "last_name": "TheZack",
+    "user_name": "Ezack",
+    "password": "12qwdfr56",
+    "email": "zack@gi.net",
+    "phone_number": {
+      "number": "0544537423",
+      "country_code": "IL"
+    }
+  },
+  {
     "first_name": "Nisim",
     "last_name": "Naser",
-    "user_name": "nissim",
+    "user_name": "Fnissim",
     "password": "zxcvbnm",
     "email": "nisimk@gi.net",
     "phone_number": {
       "number": "036497612",
+      "country_code": "IL"
+    }
+  },
+  {
+    "first_name": "boon",
+    "last_name": "toon",
+    "user_name": "Gboon",
+    "password": "zxcvbdfnm",
+    "email": "boon@gi.net",
+    "phone_number": {
+      "number": "036498612",
       "country_code": "IL"
     }
   }

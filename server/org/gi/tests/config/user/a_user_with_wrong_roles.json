@@ -1,0 +1,12 @@
+{
+  "first_name": "One",
+  "last_name": "User",
+  "user_name": "one_user",
+  "password": "qwerty123",
+  "email": "one_user@gi.net",
+  "phone_number": {
+    "number": "036497317",
+    "country_code": "IL"
+  },
+  "role" : "wrong_user"
+}
