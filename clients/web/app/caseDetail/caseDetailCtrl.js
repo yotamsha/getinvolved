@@ -13,8 +13,8 @@ angular.module('app.caseDetail', [])
         });
     }])
 
-    .controller('caseDetailCtrl', ['$scope', 'Restangular', '$stateParams','DialogsService',
-        function ($scope, Restangular, $stateParams, DialogsService) {
+    .controller('caseDetailCtrl', ['$scope', 'Restangular', '$stateParams','DialogsService','moment',
+        function ($scope, Restangular, $stateParams, DialogsService, moment) {
 
             //var caseDao = Restangular.all('cases');
 
@@ -29,17 +29,17 @@ angular.module('app.caseDetail', [])
                         tasks : [
                             {
                                 title : "הסעה לבת ים",
-                                date : new Date(),
+                                date : moment().format('LLLL'),
                                 location : "תל אביב"
                             },
                             {
                                 title : "עזרה בקניות",
-                                date : new Date(),
+                                date : moment().format('LLLL'),
                                 location : "תל אביב"
                             },
                             {
                                 title : "ניקיון דירה",
-                                date : new Date(),
+                                date : moment().format('LLLL'),
                                 location : "תל אביב"
                             }
                         ]

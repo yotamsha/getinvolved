@@ -18,11 +18,18 @@ angular.module('app', [
 
         // Components
         'app.version',
+        'app.header',
 
         // Services
         'app.services.data-access',
         'app.services.language-service',
-        'app.services.dialogs-service'
+        'app.services.dialogs-service',
+
+        // 3rd-Party Wrappers - We wrap 3rd party libraries that aren't angular modules in order
+        // to keep the global window clean. Only these libraries are accessible through a single variable: window._thirdParty
+        // more on the method: http://jameshill.io/articles/angular-third-party-injection-pattern/
+        'app.vendors.momentjs'
+
     ])
     .constant('LOCALES', {
         'locales': {
@@ -33,7 +40,6 @@ angular.module('app', [
     })
     .config(['$urlRouterProvider', '$translateProvider', '$mdThemingProvider',
         function ($urlRouterProvider, $translateProvider, $mdThemingProvider) {
-
             $mdThemingProvider.theme('default')
                 .primaryPalette('cyan')
                 .accentPalette('orange');
@@ -48,4 +54,7 @@ angular.module('app', [
             // App routing is using ui-router module - https://github.com/angular-ui/ui-router
             $urlRouterProvider.otherwise("/view1");
 
-        }]);
+        }])
+    .run(['moment',function(moment){
+        moment.locale('he');
+    }])
