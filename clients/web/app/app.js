@@ -14,6 +14,7 @@ angular.module('app', [
         'app.view1',
         'app.view2',
         'app.caseDetail',
+        'app.casesSearch',
         'app.login',
 
         // Components
