@@ -24,7 +24,11 @@ angular.module('app.casesSearch', [])
                 $scope.vm = {
                   cases : [
                     {
-                      title: 'אהלן אחי',
+                      title: 'עזרה בהסעה',
+                      imgSrc: 'assets/img/face1.jpg'
+                    },
+                    {
+                      title: 'עזרה בהסעה',
                       imgSrc: 'assets/img/face1.jpg'
                     }
                   ]

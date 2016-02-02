@@ -1,9 +1,9 @@
 <div class="cases-search-view">
   <div class="case" ng-repeat="case in vm.cases">
       <div>
-        <img src="{{ case.imgSrc }}" style="width: 100px; height: 100px" />
+        <img class="case-img" src="{{ case.imgSrc }}" />
       </div>
-      <div>
+      <div class="case-details">
         <div>{{ case.title }}</div>
         <button class="btn-primary">אני בפנים </button>
       </div>
