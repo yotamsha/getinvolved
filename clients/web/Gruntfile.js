@@ -1,15 +1,22 @@
 module.exports = function(grunt) {
+  require('load-grunt-tasks')(grunt);
 
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    
+    sass: {
+        options: {
+            sourceMap: true
+        },
+         dist: {
+           files: [
+              {src: 'app/assets/css/app.scss', dest: 'app/assets/css/app.css'},
+            ],
+         }
+    }
   });
 
-  // Load the plugin that provides the "uglify" task.
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-
   // Default task(s).
-  grunt.registerTask('default', ['uglify']);
+  grunt.registerTask('default', ['sass']);
 
 };
