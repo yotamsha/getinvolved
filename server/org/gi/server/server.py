@@ -1,8 +1,14 @@
 import os
+import json
 from sys import platform as _platform
 
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, make_response, request, jsonify
 from flask_restful import Api
+from authomatic.adapters import WerkzeugAdapter as adapter
+from authomatic import Authomatic
+from org.gi.server.auth.config import config as auth_config
+
+authomatic = Authomatic(auth_config, "THE MOSTESTSECRETSTRINGY", report_errors=True)
 
 from org.gi.server import utils as u
 
@@ -13,6 +19,16 @@ from org.gi.server.model.userlist import UserList
 
 app = Flask(__name__, static_url_path='')
 api = Api(app)
+
+
+@app.route('/login/<provider_name>', methods=['GET', 'POST'])
+def login(provider_name):
+    response = make_response()
+    result = authomatic.login(adapter(request, response), provider_name)
+    if result and result.user:
+        result.user.update()
+        return jsonify(json.loads(result.user.content))
+    return response
 
 
 def _get_static_folder(_type):

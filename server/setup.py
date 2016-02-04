@@ -11,5 +11,7 @@ setup(
                       'flask_restful',
                       'pymongo',
                       'phonenumbers',
-                      'pycountry']
+                      'pycountry',
+                      'authomatic'
+                      ]
 )

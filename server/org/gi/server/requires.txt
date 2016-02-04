@@ -1,0 +1,11 @@
+# -----------------------------------------
+# Install via 'pip install -r requires.txt'
+# -----------------------------------------
+flask
+flask_restful
+pymongo
+phonenumbers
+pycountry
+authomatic
+# for unit tests
+requests
