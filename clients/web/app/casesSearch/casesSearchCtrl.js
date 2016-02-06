@@ -16,29 +16,31 @@ angular.module('app.casesSearch', [])
     .controller('casesSearchCtrl', ['$scope', 'Restangular', '$stateParams','DialogsService','moment',
         function ($scope, Restangular, $stateParams, DialogsService, moment) {
 
-            //var caseDao = Restangular.all('cases');
-
             // --- INNER FUNCTIONS --- //
+            function createCasesArr(){
+              var arr = [];
+              for (var i = 1; i < 24; i++) {
+                  arr.push({
+                    title: ' עזרה בהסעה ' + i,
+                    imgSrc: 'assets/img/face1.jpg',
+                    order: i,
+                  });
+              }
+
+              return arr;
+            }
 
             function _init() {
                 $scope.vm = {
-                  cases : [
-                    {
-                      title: 'עזרה בהסעה',
-                      imgSrc: 'assets/img/face1.jpg'
-                    },
-                    {
-                      title: 'עזרה בהסעה',
-                      imgSrc: 'assets/img/face1.jpg'
-                    }
-                  ]
+                  cases : createCasesArr(),
+                  reverse: false
                 };
+
+                $scope.vm.changeSort = function(isReversed){
+                    $scope.vm.reverse = isReversed;
+                }
             }
 
-            // --- SCOPE FUNCTIONS --- //
-            // $scope.openLoginDialog = function(ev) {
-            //     DialogsService.openDialog({dialog : 'login'});
-            // };
             // --- INIT --- //
 
             _init();

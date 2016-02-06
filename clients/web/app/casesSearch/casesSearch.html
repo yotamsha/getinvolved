@@ -1,13 +1,20 @@
 <div class="cases-search-view">
-  <div class="case" ng-repeat="case in vm.cases">
-      <div>
-        <img class="case-img" src="{{ case.imgSrc }}" />
-      </div>
-      <div class="case-details">
-        <div>{{ case.title }}</div>
-        <button class="btn-primary">אני בפנים </button>
-      </div>
-
-
+  <div class="top-strip">
+    <span> מיין לפי: </span>
+    <span ng-click=vm.changeSort(false)> חדש ביותר </span>
+    |
+    <span ng-click=vm.changeSort(true)> ישן ביותר </span>
+  </div>
+  <div class="cases-container clearfix">
+    <div class="case float-right" ng-repeat="case in vm.cases  | orderBy: 'order' : vm.reverse">
+        <div>
+          <img class="case-img" src="{{ case.imgSrc }}" />
+        </div>
+        <div class="case-details">
+          <div class="case-title">{{ case.title }}</div>
+          <button class="btn-secondary case-register-btn float">אני בפנים </button>
+          <span class="share-icon float-right"></span>
+        </div>
+    </div>
   </div>
 </div>
