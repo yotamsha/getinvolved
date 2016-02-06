@@ -40,18 +40,36 @@ h5 {
 h6 {
   font-size: 14px;
 }
-button.btn-primary {
+
+.float {
+  float: left;
+}
+
+.float-right {
+  float: right;
+}
+
+button {
   background-color: #22A5B9;
-  min-width: 130px;
   color: #ffffff;
   font-family: "Yed";
-  font-size: 17px;
   font-weight: lighter;
-  height: 30px;
-  padding: 0px 0px;
-  border: 0px;
   border-radius: 2px;
+  border: 0px;
+
+  &.btn-primary{
+    height: 30px;
+    font-size: 17px;
+    min-width: 130px;
+  }
+
+  &.btn-secondary{
+    height: 24px;
+    font-size: 14px;
+    min-width: 130px;
+  }
 }
+
 
 .view-container {
   min-height: 500px;
