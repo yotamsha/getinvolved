@@ -33,7 +33,7 @@ class User(Resource):
 
     def _pad_with_roles(self, payload):
         if payload and isinstance(payload, dict) and not payload.get('role'):
-            payload['role'] = auth.USER
+            payload['role'] = auth.NONE
 
     @requires_auth
     def get(self, user_id):
@@ -59,13 +59,14 @@ class User(Resource):
         faults = []
         payload = request.json
         self._pad_with_roles(payload)
-        v.post_validate(payload, v.USER_META, faults)
+        v.user_post_validate(payload, faults)
         if faults:
             log.debug("Failed to create a user. Faults: %s", str(faults))
             return {'errors': faults}, u.HTTP_BAD_INPUT
         try:
             user = request.json
-            user['password'] = auth.hash_password(user['password'])
+            if 'password' in user:
+                user['password'] = auth.hash_password(user['password'])
             id = db.users.insert(user)
         except Exception as e:
             abort(u.HTTP_BAD_INPUT, str(e))
@@ -82,7 +83,7 @@ class User(Resource):
             faults = []
             payload = request.json
             self._pad_with_roles(payload)
-            v.put_validate(payload, v.USER_META, faults)
+            v.user_put_validate(payload, faults)
             if faults:
                 return {'errors': faults}, u.HTTP_BAD_INPUT
             try:

@@ -1,4 +1,7 @@
+import json
+
 from org.gi.server import utils as u
+from org.gi.server import db
 
 __author__ = 'avishayb'
 import re
@@ -7,6 +10,7 @@ import pycountry
 import time
 import org.gi.server.authorization as auth
 
+MANDATORY = True
 
 WSP = r'[\s]'  # see 2.2.2. Structured Header Field Bodies
 CRLF = r'(?:\r\n)'  # see 2.2.3. Long Header Fields
@@ -355,6 +359,27 @@ def validate_user_role(role, faults):
         faults.append("Invalid role %s. Valid roles are %s" % (role, str(auth.ROLES.keys())))
 
 
+def validate_mandatory_and_present_fields(payload, meta, faults):
+    FUNC = 0
+    MANDATORY = 1
+    if not payload or not isinstance(payload, dict):
+        faults.append('payload must be none empty dict')
+        return
+    for key in payload.keys():
+        if key not in meta.keys():
+            faults.append('The field \'%s\' is invalid. Valid fields are %s' % (
+                key, str(meta.keys())))
+    for field_name, validation_info in meta.iteritems():
+        if field_name not in payload and (isinstance(validation_info, tuple) and validation_info[MANDATORY]):
+            faults.append('The field %s is a mandatory field.' % field_name)
+            continue
+        if field_name in payload:
+            if isinstance(validation_info, tuple):
+                validation_info[FUNC](payload[field_name], faults)
+            else:
+                validation_info(payload[field_name], faults)
+
+
 def validate_address(address, faults):
     FUNC = 0
     MANDATORY = 1
@@ -470,14 +495,34 @@ def validate_task_title(task_title, faults):
     pass
 
 
+def validate_facebook_id(facebook_id, faults):
+    if not facebook_id or not (isinstance(facebook_id, str) or isinstance(facebook_id, basestring)):
+        faults.append('facebook_id must be a none empty string')
+        return
+    if len(facebook_id) <= 8 or len(facebook_id) > 30:
+        faults.append('facebook_id must be between 0-30 characters')
+    if not facebook_id.isdigit():
+        faults.append('facebook_id must be all digits')
+
+
+def validate_facebook_access_token(fb_access_token, faults):
+    if not fb_access_token or not (isinstance(fb_access_token, str) or isinstance(fb_access_token, basestring)):
+        faults.append('fb_access_token must be a none empty string')
+        return
+    if len(fb_access_token) < 10:
+        faults.append('fb_access_token must be atleast 10 characters')
+
+
 USER_META = {
-    'first_name': validate_first_name,
-    'last_name': validate_last_name,
+    'first_name': (validate_first_name, MANDATORY),
+    'last_name': (validate_last_name, MANDATORY),
     'user_name': validate_user_name,
     'password': validate_password,
-    'email': validate_email,
+    'email': (validate_email, MANDATORY),
     'phone_number': validate_phone_number,
-    'role': validate_user_role
+    'role': (validate_user_role, MANDATORY),
+    'facebook_id': validate_facebook_id,
+    'facebook_access_token': validate_facebook_access_token
 }
 
 CASE_META = {
@@ -531,6 +576,46 @@ def entity_exists(db, collection_name, entity_id):
         return False
 
 
+def user_put_validate(user_updates, faults):
+    if isinstance(user_updates, unicode):
+        try:
+            user_updates = json.loads(user_updates)
+        except:
+            faults.append('Bad entity body: {}'.format(user_updates))
+            return
+    if not user_updates or len(user_updates) <= 0:
+        faults.append('No update fields supplied')
+        return
+    validate_fields(user_updates.keys(), user_updates, USER_META, faults)
+
+
+def user_post_validate(user, faults):
+    local = ['user_name', 'password', 'phone_number']
+    fb = ['facebook_id', 'facebook_access_token']
+    if not validate_fields(local, user, USER_META) and not validate_fields(fb, user, USER_META):
+        faults.append('User must have atleast one of the following field groups. fb:{} local:{}'.format(fb, local))
+        return
+    validate_mandatory_and_present_fields(user, USER_META, faults)
+    if faults:
+        return
+
+
+def validate_fields(fields, payload, meta, dummy_faults=None):
+    if not dummy_faults:
+        dummy_faults = []
+    for field in fields:
+        if field in payload and field in meta:
+            if isinstance(meta[field], tuple):
+                meta[field][0](payload[field], dummy_faults)
+            else:
+                meta[field](payload[field], dummy_faults)
+            if dummy_faults:
+                return False
+        else:
+            return False
+    return True
+
+
 def case_put_validate(current_case, updated_case, faults):
     _validate_status_transition(current_case['state'], updated_case['state'], VALID_CASE_STATES, CASE_TRANSITIONS,
                                 faults)
@@ -570,15 +655,15 @@ def post_validate(payload, meta, faults, mandatory=True):
     if not isinstance(faults, list):
         faults.append("faults must be a list")
         return
-    for key in meta.keys():
-        if key not in payload.keys() and mandatory and meta[key]:
-            faults.append('The field \'%s\' can not be found in incoming payload' % key)
-    for key in payload.keys():
-        if key not in meta.keys():
-            faults.append('The field \'%s\' in invalid field. Valid field names are: %s' % (key, str(meta.keys())))
+    for field_name in meta.keys():
+        if field_name not in payload.keys() and mandatory and meta[field_name]:
+            faults.append('The field \'%s\' can not be found in incoming payload' % field_name)
+    for field_name in payload.keys():
+        if field_name not in meta.keys():
+            faults.append('The field \'%s\' in invalid field. Valid field names are: %s' % (field_name, str(meta.keys())))
     if faults:
         return
-    for key, func in meta.iteritems():
-        if key in payload and func:
-            func(payload[key], faults)
+    for field_name, field_validator in meta.iteritems():
+        if field_name in payload and field_validator:
+            field_validator(payload[field_name], faults)
 
