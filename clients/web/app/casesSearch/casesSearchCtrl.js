@@ -12,12 +12,6 @@ angular.module('app.casesSearch', [])
             controller: 'casesSearchCtrl'
         });
     }])
-    .config(function(RestangularProvider) {
-        RestangularProvider.setBaseUrl('http://localhost:5000/api');
-        RestangularProvider.setDefaultHeaders({
-           "Authorization": "Basic YWRtaW46YWRtaW4="
-         });
-    })
     .controller('casesSearchCtrl', ['$scope', 'Restangular', '$stateParams','DialogsService','moment',
         function ($scope, Restangular, $stateParams, DialogsService, moment) {
 

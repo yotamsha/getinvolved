@@ -20,23 +20,6 @@ angular.module('app.login', [])
 
             // --- SCOPE FUNCTIONS --- //
 
-            // reset login status
-            AuthService.clearCredentials();
-
-            $scope.login = function () {
-
-                $scope.dataLoading = true;
-                AuthService.login($scope.username, $scope.password, function(response) {
-                    console.log("login response: " ,response);
-                    if(response.success) {
-                        AuthService.setCredentials($scope.username, $scope.password);
-                        //$location.path('/');
-                    } else {
-                        $scope.error = response.message;
-                        $scope.dataLoading = false;
-                    }
-                });
-            };
             $scope.hide = function() {
                 $mdDialog.hide();
             };

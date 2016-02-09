@@ -42,13 +42,11 @@ angular.module('app', [
     })
     .config(['$urlRouterProvider', '$translateProvider', '$mdThemingProvider', 'RestangularProvider','$httpProvider',
         function ($urlRouterProvider, $translateProvider, $mdThemingProvider, RestangularProvider, $httpProvider) {
-            RestangularProvider.setBaseUrl('http://127.0.0.1:5000/api');
 
-/*            $httpProvider.defaults.useXDomain = true;
-            $httpProvider.defaults.withCredentials = true;
-            delete $httpProvider.defaults.headers.common["X-Requested-With"];
-            $httpProvider.defaults.headers.common["Accept"] = "application/json";
-            $httpProvider.defaults.headers.common["Content-Type"] = "application/json";*/
+            RestangularProvider.setBaseUrl('http://localhost:5000/api');
+            RestangularProvider.setDefaultHeaders({
+                "Authorization": "Basic YWRtaW46YWRtaW4="
+            });
 
             $mdThemingProvider.theme('default')
                 .primaryPalette('cyan')
@@ -66,11 +64,7 @@ angular.module('app', [
 
         }])
     .run(['moment', '$http', '$rootScope', 'AuthService','$window', function (moment, $http, $rootScope, AuthService, $window) {
-        // keep user logged in after page refresh
-/*        $rootScope.globals = $cookieStore.get('globals') || {};
-        if ($rootScope.globals.currentUser) {
-            $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata; // jshint ignore:line
-        }*/
+
         function facebookInit(){
             $rootScope.user = {};
 
