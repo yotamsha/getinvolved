@@ -11,10 +11,8 @@ angular.module('app.services.dialogs-service', [])
                 controller : 'loginCtrl',
                 templateUrl : 'authentication/login.html',
                 actionCb : function(answer){
-                    console.log("in actionCb: "+answer);
                 },
                 cancelCb : function(){
-                    console.log("in cancelCb: ");
                 }
             }
         }

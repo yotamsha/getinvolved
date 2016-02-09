@@ -8,8 +8,11 @@
 
   .case {
     border: 1px solid #D9D9D9;
-    width: 21%;
+    min-width: 225px;
+    max-width: 230px;
+    /*
     margin-left: 30px;
+    */
     margin-bottom: 50px;
     padding-bottom: 10px;
   }

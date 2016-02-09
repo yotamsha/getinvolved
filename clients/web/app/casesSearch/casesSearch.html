@@ -5,16 +5,19 @@
     |
     <span ng-click=vm.changeSort(true)> ישן ביותר </span>
   </div>
-  <div class="cases-container clearfix">
-    <div class="case float-right" ng-repeat="case in vm.cases  | orderBy: 'order' : vm.reverse">
-        <div>
-          <img class="case-img" src="{{ case.imgSrc }}" />
-        </div>
-        <div class="case-details">
-          <div class="case-title">{{ case.title }}</div>
-          <button class="btn-secondary case-register-btn float">אני בפנים </button>
-          <span class="share-icon float-right"></span>
+    <div layout="row" layout-wrap layout-align-xs="center center">
+        <div  class="cases-container">
+            <div flex="25" flex-xs="50" layout-margin="10"  class="case" ng-repeat="case in vm.cases  | orderBy: 'order' : vm.reverse">
+                <div>
+                    <img class="case-img" src="{{ case.imgSrc }}" />
+                </div>
+                <div class="case-details">
+                    <div class="case-title">{{ case.title }}</div>
+                    <button class="btn-secondary case-register-btn float">אני בפנים </button>
+                    <span class="share-icon float-right"></span>
+                </div>
+            </div>
         </div>
     </div>
-  </div>
+
 </div>

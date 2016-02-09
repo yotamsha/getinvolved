@@ -5,26 +5,42 @@
 
 angular.module('app.login', [])
 
-    .controller('loginCtrl', ['$scope', '$mdDialog',
-        function ($scope, $mdDialog) {
+    .controller('loginCtrl', ['$scope', '$mdDialog','AuthService',
+        function ($scope, $mdDialog, AuthService) {
 
             // --- INNER FUNCTIONS --- //
 
             function _init() {
-
+                $scope.username = "admin";
+                $scope.password = "admin";
             }
 
             // --- SCOPE FUNCTIONS --- //
+
+            // reset login status
+            AuthService.clearCredentials();
+
+            $scope.login = function () {
+
+                $scope.dataLoading = true;
+                AuthService.login($scope.username, $scope.password, function(response) {
+                    console.log("login response: " ,response);
+                    if(response.success) {
+                        AuthService.setCredentials($scope.username, $scope.password);
+                        //$location.path('/');
+                    } else {
+                        $scope.error = response.message;
+                        $scope.dataLoading = false;
+                    }
+                });
+            };
             $scope.hide = function() {
-                console.log("Hiding Dialog");
                 $mdDialog.hide();
             };
             $scope.cancel = function() {
-                console.log("Dialog cancelled ");
                 $mdDialog.cancel();
             };
             $scope.answer = function(answer) {
-                console.log("Dialog answer: " +answer);
                 $mdDialog.hide(answer);
             };
             // --- INIT --- //

@@ -25,6 +25,7 @@ angular.module('app', [
         'app.services.data-access',
         'app.services.language-service',
         'app.services.dialogs-service',
+        'app.services.authentication.auth-service',
 
         // 3rd-Party Wrappers - We wrap 3rd party libraries that aren't angular modules in order
         // to keep the global window clean. Only these libraries are accessible through a single variable: window._thirdParty
@@ -39,8 +40,16 @@ angular.module('app', [
         },
         'preferredLocale': 'he_HE'
     })
-    .config(['$urlRouterProvider', '$translateProvider', '$mdThemingProvider',
-        function ($urlRouterProvider, $translateProvider, $mdThemingProvider) {
+    .config(['$urlRouterProvider', '$translateProvider', '$mdThemingProvider', 'RestangularProvider','$httpProvider',
+        function ($urlRouterProvider, $translateProvider, $mdThemingProvider, RestangularProvider, $httpProvider) {
+            RestangularProvider.setBaseUrl('http://127.0.0.1:5000/api');
+
+/*            $httpProvider.defaults.useXDomain = true;
+            $httpProvider.defaults.withCredentials = true;
+            delete $httpProvider.defaults.headers.common["X-Requested-With"];
+            $httpProvider.defaults.headers.common["Accept"] = "application/json";
+            $httpProvider.defaults.headers.common["Content-Type"] = "application/json";*/
+
             $mdThemingProvider.theme('default')
                 .primaryPalette('cyan')
                 .accentPalette('orange');
@@ -56,6 +65,12 @@ angular.module('app', [
             $urlRouterProvider.otherwise("/view1");
 
         }])
-    .run(['moment',function(moment){
+    .run(['moment', '$http', '$rootScope', '$cookieStore', function (moment, $http, $rootScope, $cookieStore) {
+        // keep user logged in after page refresh
+        $rootScope.globals = $cookieStore.get('globals') || {};
+        if ($rootScope.globals.currentUser) {
+            $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata; // jshint ignore:line
+        }
+
         moment.locale('he');
     }])
