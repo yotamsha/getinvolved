@@ -10,8 +10,8 @@ from org.gi.server.static import static_bp
 from org.gi.server.facebook import facebook_bp
 from org.gi.server.local_login import local_login_bp
 
-from org.gi.server.model.case import Case, CaseList
-from org.gi.server.model.user import User, UserList
+from org.gi.server.api.case import Case, CaseList
+from org.gi.server.api.user import User, UserList
 
 
 __author__ = 'avishayb'
