@@ -17,7 +17,7 @@ angular.module('app.header.header-ctrl', [])
 
             {
                 textKey : "views.main.header.about_us",
-                link : "/about",
+                link : "/cases",
             },
             {
                 textKey : "views.main.header.donors",
