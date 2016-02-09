@@ -51,8 +51,8 @@ angular.module('app.services.authentication.auth-service', [])
                     FB.api('/me', function(res) {
 
                         $rootScope.$apply(function() {
-                            alert("fb logged in",res);
-
+                            //alert("fb logged in");
+                            console.log("facebook login completed: " +res);
                             $rootScope.user = _self.user = res;
 
                         });
