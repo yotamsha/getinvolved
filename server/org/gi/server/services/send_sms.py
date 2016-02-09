@@ -29,11 +29,3 @@ def send_sms(to, sender, message):
                       auth=HTTPBasicAuth(PLIVO_AUTH_ID, PLIVO_AUTH_TOKEN))
     return r.status_code == 202, r.json()
 
-# ---- code below should be moved to UT -------
-SRC = '+972545420450'
-DST0 = '+972544280116'
-DST1 = '+972527588594'
-send_sms(SRC, DST1, 'A msg from GI server')
-lst = [DST0, DST1]
-send_sms(SRC, lst, 'A msg from GI server')
-

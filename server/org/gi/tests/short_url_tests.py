@@ -8,7 +8,6 @@ class GIShortURLTestCase(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(GIShortURLTestCase, self).__init__(*args, **kwargs)
 
-
     def test_get_short_url(self):
         status, short_url = shortener.get_short_url('http://www.shvoong.co.il')
         self.assertTrue(status)
