@@ -1,6 +1,3 @@
 *.pyc
 .idea/
-GI_SERVER.egg-info/
-build/
-dist/
-
+org/gi/config/local_config.json

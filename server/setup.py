@@ -9,9 +9,10 @@ setup(
     zip_safe=False,
     install_requires=['flask',
                       'flask_restful',
+                      'flask_oauth',
+                      'PyJWT',
                       'pymongo',
                       'phonenumbers',
-                      'pycountry',
-                      'authomatic'
-                      ]
+                      'requests',
+                      'pycountry']
 )
