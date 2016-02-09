@@ -1,22 +1,22 @@
 import os
 
 from flask import Flask
+from flask_cors import CORS
 from flask_restful import Api
 
 from org.gi.config import config
 from org.gi.server import utils as u
-
-from org.gi.server.static import static_bp
-from org.gi.server.facebook import facebook_bp
-from org.gi.server.local_login import local_login_bp
-
 from org.gi.server.api.case import Case, CaseList
 from org.gi.server.api.user import User, UserList
+from org.gi.server.facebook import facebook_bp
+from org.gi.server.local_login import local_login_bp
+from org.gi.server.static import static_bp
 
 
 __author__ = 'avishayb'
 
 app = Flask(__name__, static_url_path='')
+CORS(app)
 app.register_blueprint(static_bp)
 app.register_blueprint(facebook_bp)
 app.register_blueprint(local_login_bp)

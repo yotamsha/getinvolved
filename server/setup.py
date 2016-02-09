@@ -14,5 +14,6 @@ setup(
                       'pymongo',
                       'phonenumbers',
                       'requests',
-                      'pycountry']
+                      'pycountry',
+                      'flask-cors']
 )

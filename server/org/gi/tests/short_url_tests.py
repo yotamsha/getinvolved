@@ -1,6 +1,7 @@
 __author__ = 'avishayb'
 import unittest
-from org.gi.server import url_shortener as shortener
+
+from org.gi.server.services import url_shortener as shortener
 
 
 class GIShortURLTestCase(unittest.TestCase):

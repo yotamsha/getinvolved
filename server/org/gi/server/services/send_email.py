@@ -9,6 +9,7 @@ API_KEY = 'key-dbff3e0ffe49286ed318266c3233b07a'
 DOMAIN = 'sandbox678d079fe13a4b8db1a9f3a6d3a797fb.mailgun.org'
 URL_TEMPLATE = 'https://api.mailgun.net/v3/%s/messages'
 
+
 def send_email(to, subject, message, sender, test_mode=False, cc=None, bcc=None):
     url = URL_TEMPLATE % DOMAIN
     data = {
