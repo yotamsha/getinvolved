@@ -9,11 +9,12 @@ from org.gi.server.web_token import get_user_from_access_token
 
 __author__ = 'avishayb'
 
+NONE = 'ROLE_NONE'
 USER = 'ROLE_USER'
 POWER_USER = 'ROLE_POWER_USER'
 ADMIN = 'ROLE_ADMIN'
 
-ROLES = {USER: 0, POWER_USER: 1, ADMIN: 3}
+ROLES = {NONE: 0, USER: 1, POWER_USER: 2, ADMIN: 5}
 
 
 def requires_roles(*roles):

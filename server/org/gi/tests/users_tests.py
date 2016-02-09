@@ -7,6 +7,7 @@ from misc import _remove_from_db, _load, _push_to_db, MONGO, SERVER_URL, AUTH
 import org.gi.server.authorization as auth
 import json
 
+
 class GIServerUsersTestCase(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(GIServerUsersTestCase, self).__init__(*args, **kwargs)
@@ -24,7 +25,6 @@ class GIServerUsersTestCase(unittest.TestCase):
 
     def tearDown(self):
         _remove_from_db(MONGO, 'users')
-
 
     def test_has_users_db(self):
         try:
@@ -76,7 +76,6 @@ class GIServerUsersTestCase(unittest.TestCase):
                          'Expecting to return %d users from server. Only %d users were returned.' % (
                              len(self.users), usr_counter))
 
-
     def test_paging(self):
         PAGE_SIZE = 2
         counter = 0
@@ -96,7 +95,6 @@ class GIServerUsersTestCase(unittest.TestCase):
         self.assertEqual(usr_counter, len(self.users),
                          'Expecting to return %d users from server. Only %d users were returned.' % (
                              len(self.users), usr_counter))
-
 
     def test_filter_or(self):
         emails = ['dan@gi.net', 'jack@gi.net']
@@ -120,36 +118,29 @@ class GIServerUsersTestCase(unittest.TestCase):
         self.assertTrue(r.status_code, 200)
         self.assertEqual(len(r.json()), len(self.users) - 1)
 
-
     def test_empty_payload(self):
         r = requests.post('%s/users' % SERVER_URL, auth=AUTH, json=json.dumps({}))
         self.assertEqual(r.status_code, 400)
-
 
     def test_wrong_email(self):
         r = requests.post('%s/users' % SERVER_URL, auth=AUTH, json=_load('wrong_email.json', self.config_folder))
         self.assertEqual(r.status_code, 400)
 
-
     def test_wrong_phone_number(self):
         r = requests.post('%s/users' % SERVER_URL, auth=AUTH, json=_load('wrong_phone_number.json', self.config_folder))
         self.assertEqual(r.status_code, 400)
-
 
     def test_short_password(self):
         r = requests.post('%s/users' % SERVER_URL, auth=AUTH, json=_load('short_password.json', self.config_folder))
         self.assertEqual(r.status_code, 400)
 
-
     def test_long_password(self):
         r = requests.post('%s/users' % SERVER_URL, auth=AUTH, json=_load('long_password.json', self.config_folder))
         self.assertEqual(r.status_code, 400)
 
-
     def test_no_first_name(self):
         r = requests.post('%s/users' % SERVER_URL, auth=AUTH, json=_load('no_first_name.json', self.config_folder))
         self.assertEqual(r.status_code, 400)
-
 
     def test_delete_one(self):
         try:
@@ -167,6 +158,11 @@ class GIServerUsersTestCase(unittest.TestCase):
         self.assertEqual(r.status_code, 400)
         _remove_from_db(MONGO, 'users')
 
+    def test_no_payload_put(self):
+        r = requests.put('%s/users/%s' % (SERVER_URL, self.ids[0]), auth=AUTH)
+        self.assertEqual(r.status_code, 400)
+        _remove_from_db(MONGO, 'users')
+
     def test_wrong_email_put(self):
         r = requests.put('%s/users/%s' % (SERVER_URL, self.ids[0]),
                          auth=AUTH, json=_load('wrong_email.json', self.config_folder))
@@ -179,20 +175,17 @@ class GIServerUsersTestCase(unittest.TestCase):
         self.assertEqual(r.status_code, 400)
         _remove_from_db(MONGO, 'users')
 
-
     def test_short_password_put(self):
         r = requests.put('%s/users/%s' % (SERVER_URL, self.ids[0]),
                          auth=AUTH, json=_load('short_password.json', self.config_folder))
         self.assertEqual(r.status_code, 400)
         _remove_from_db(MONGO, 'users')
 
-
     def test_long_password_put(self):
         r = requests.put('%s/users/%s' % (SERVER_URL, self.ids[0]),
                          auth=AUTH, json=_load('long_password.json', self.config_folder))
         self.assertEqual(r.status_code, 400)
         _remove_from_db(MONGO, 'users')
-
 
     def test_no_first_name_put(self):
         r = requests.put('%s/users/%s' % (SERVER_URL, self.ids[0]),
@@ -203,16 +196,35 @@ class GIServerUsersTestCase(unittest.TestCase):
         r = requests.post('%s/users' % SERVER_URL, auth=AUTH, json=_load('a_user.json', self.config_folder))
         self.assertEqual(r.status_code, 201)
         pushed_to_api = _load('a_user.json', self.config_folder)
-        created = r.json();
+        created = r.json()
         for k, v in pushed_to_api.iteritems():
             if k != 'password':
                 self.assertEqual(v, created[k])
+
+    def test_create_a_fb_user(self):
+        r = requests.post('%s/users' % SERVER_URL, auth=AUTH, json=_load('a_fb_user.json', self.config_folder))
+        self.assertEqual(r.status_code, 201)
+        pushed_to_api = _load('a_fb_user.json', self.config_folder)
+        created = r.json()
+        for k, v in pushed_to_api.iteritems():
+            if k != 'password':
+                self.assertEqual(v, created[k])
+
+    def test_bad_fb_users(self):
+        bad_fb_users = _load('bad_fb_users.json', self.config_folder)
+        for bad_fb_user in bad_fb_users:
+            r = requests.post('%s/users' % SERVER_URL, auth=AUTH, json=bad_fb_user)
+            if r.status_code == 201:
+                print(bad_fb_user)
+            self.assertEqual(r.status_code, 400)
+            self.assertTrue(len(r._content) > 0)
+            self.assertTrue('errors' in r._content)
 
     def test_create_a_user_with_roles(self):
         r = requests.post('%s/users' % SERVER_URL, auth=AUTH, json=_load('a_user_with_roles.json', self.config_folder))
         self.assertEqual(r.status_code, 201)
         pushed_to_api = _load('a_user_with_roles.json', self.config_folder)
-        created = r.json();
+        created = r.json()
         for k, v in pushed_to_api.iteritems():
             if k != 'password':
                 self.assertEqual(v, created[k])
@@ -221,7 +233,6 @@ class GIServerUsersTestCase(unittest.TestCase):
         r = requests.post('%s/users' % SERVER_URL, auth=AUTH,
                           json=_load('a_user_with_wrong_roles.json', self.config_folder))
         self.assertEqual(r.status_code, 400)
-
 
     def test_create_a_user_with_int_pwd(self):
         r = requests.post('%s/users' % SERVER_URL, auth=AUTH,
