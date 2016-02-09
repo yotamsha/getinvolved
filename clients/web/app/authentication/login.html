@@ -1,28 +1,34 @@
-<md-dialog class="login-dialog" aria-label="{{"views.login.title" | translate}}"  ng-cloak>
-    <form>
-        <md-toolbar>
-            <div class="md-toolbar-tools dialog-header">
-                <h2>{{"views.login.title" | translate}}</h2>
-                <span flex></span>
-                <md-button class="md-icon-button" ng-click="cancel()">
-                    <md-icon md-svg-src="assets/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
-                </md-button>
-            </div>
-        </md-toolbar>
-        <md-dialog-content>
-            <div class="md-dialog-content">
-<button ng-click="login()">Login</button>
-            </div>
-        </md-dialog-content>
-        <md-dialog-actions layout="row">
-
+<md-dialog class="login-dialog" aria-label="{{" views.login.title" | translate}}"  ng-cloak>
+<form>
+    <md-toolbar>
+        <div class="md-toolbar-tools dialog-header">
+            <h2>{{"views.login.title" | translate}}</h2>
             <span flex></span>
-            <md-button ng-click="answer('not useful')">
-                Not Useful
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="assets/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
             </md-button>
-            <md-button ng-click="answer('useful')" style="margin-right:20px;">
-                Useful
-            </md-button>
-        </md-dialog-actions>
-    </form>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="md-dialog-content" style="overflow: hidden">
+            <fb:login-button scope="public_profile,email" >
+            </fb:login-button>
+<!--            <div class="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="false" data-auto-logout-link="false"></div>
+
+&lt;!&ndash;
+            <fb:login-button show-faces="true" max-rows="1" size="large">Login</fb:login-button>
+&ndash;&gt;-->
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+
+        <span flex></span>
+        <md-button ng-click="answer('not useful')">
+            Not Useful
+        </md-button>
+        <md-button ng-click="answer('useful')" style="margin-right:20px;">
+            Useful
+        </md-button>
+    </md-dialog-actions>
+</form>
 </md-dialog>

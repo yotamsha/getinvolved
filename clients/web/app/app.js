@@ -65,12 +65,35 @@ angular.module('app', [
             $urlRouterProvider.otherwise("/view1");
 
         }])
-    .run(['moment', '$http', '$rootScope', '$cookieStore', function (moment, $http, $rootScope, $cookieStore) {
+    .run(['moment', '$http', '$rootScope', 'AuthService','$window', function (moment, $http, $rootScope, AuthService, $window) {
         // keep user logged in after page refresh
-        $rootScope.globals = $cookieStore.get('globals') || {};
+/*        $rootScope.globals = $cookieStore.get('globals') || {};
         if ($rootScope.globals.currentUser) {
             $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata; // jshint ignore:line
-        }
+        }*/
+        function facebookInit(){
+            $rootScope.user = {};
 
+            $window.fbAsyncInit = function() {
+                // Executed when the SDK is loaded
+                FB.init({
+                    appId      : '836437249818535',
+                    cookie     : true,  // enable cookies to allow the server to access
+                                        // the session
+                    xfbml      : true,  // parse social plugins on this page
+                    version    : 'v2.2' // use version 2.2
+                });
+                AuthService.facebookAuthenticator.watchAuthenticationStatusChange();
+
+            };
+            (function(d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s); js.id = id;
+                js.src = "//connect.facebook.net/en_US/sdk.js";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+        }
+        facebookInit();
         moment.locale('he');
-    }])
+    }]);

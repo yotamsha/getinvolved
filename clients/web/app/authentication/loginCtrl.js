@@ -5,14 +5,17 @@
 
 angular.module('app.login', [])
 
-    .controller('loginCtrl', ['$scope', '$mdDialog','AuthService',
-        function ($scope, $mdDialog, AuthService) {
+    .controller('loginCtrl', ['$scope', '$mdDialog','AuthService','$timeout',
+        function ($scope, $mdDialog, AuthService, $timeout) {
 
             // --- INNER FUNCTIONS --- //
 
             function _init() {
                 $scope.username = "admin";
                 $scope.password = "admin";
+                $timeout(function(){
+                    FB.XFBML.parse();
+                },0);
             }
 
             // --- SCOPE FUNCTIONS --- //
@@ -48,4 +51,15 @@ angular.module('app.login', [])
             _init();
         }
 
-    ]);
+    ])
+/*    .directive('btFbParse', function () {
+        return {
+            restrict:'A',
+            link:function (scope, element, attrs) {
+                console.log(scope.shareurl);//it works
+                if(scope.facebookIsReady){
+                    FB.XFBML.parse();
+                }
+            }
+        };
+    })*/
