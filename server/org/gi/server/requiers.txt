@@ -3,8 +3,11 @@
 # -----------------------------------------
 flask
 flask_restful
+flask_oauth
+PyJWT
 pymongo
 phonenumbers
 pycountry
-# for unit tests
-requests
+googlemaps
+requests==2.2.1
+flask-cors

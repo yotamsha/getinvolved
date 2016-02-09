@@ -346,13 +346,13 @@ def _validate_status_transition(current_state, new_state, valid_states, valid_tr
         faults.append('The transition from state %s to state %s in invalid. Possible values for new state are %s' % (
             current_state, new_state, str(valid_transitions[current_state])))
 
-def validate_user_role(role,faults):
-    if not role or not isinstance(role,(str,unicode)):
+
+def validate_user_role(role, faults):
+    if not role or not isinstance(role, (str, unicode)):
         faults.append('User role must be non empty string')
         return
     if role not in auth.ROLES.keys():
         faults.append("Invalid role %s. Valid roles are %s" % (role, str(auth.ROLES.keys())))
-
 
 
 def validate_address(address, faults):
@@ -477,7 +477,7 @@ USER_META = {
     'password': validate_password,
     'email': validate_email,
     'phone_number': validate_phone_number,
-    'role' : validate_user_role
+    'role': validate_user_role
 }
 
 CASE_META = {
@@ -536,6 +536,11 @@ def case_put_validate(current_case, updated_case, faults):
                                 faults)
     if faults:
         return
+    else:
+        if updated_case['state'] == CASE_COMPLETED and len(updated_case['tasks']) != sum(
+                1 for task in updated_case['tasks'] if task['state'] == TASK_COMPLETED):
+            faults.append(
+                'A case cant be marked as %s until all tasks are marked as %s' % (CASE_COMPLETED, TASK_COMPLETED))
 
 
 def case_post_validate(payload, db, faults):

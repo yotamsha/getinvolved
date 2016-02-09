@@ -24,10 +24,13 @@ HTTP_FORBIDDEN = 403
 HTTP_NOT_FOUND = 404
 HTTP_CONFLICT = 409
 HTTP_SERVER_ERROR = 500
+HTTP_SERVICE_UNAVAILABLE = 503
+HTTP_GATEWAY_TIMEOUT = 504
 
 
-def handle_sort_and_paging(cursor,sort,page_size_str,page_number_str):
-    if cursor and sort:
+def handle_sort_and_paging(cursor, sort, page_size_str, page_number_str):
+    if cursor:
+        sort = sort if sort else [('_id', pymongo.ASCENDING)]
         cursor = cursor.sort(sort)
         page_size = as_int(page_size_str)
         if page_size and isinstance(page_size, int) and page_size > 0:
@@ -36,6 +39,7 @@ def handle_sort_and_paging(cursor,sort,page_size_str,page_number_str):
             if page_number and isinstance(page_number, int) and page_number >= 0:
                 cursor = cursor.skip(page_number * page_size)
     return cursor
+
 
 def handle_id(record):
     if record and '_id' in record:
@@ -63,10 +67,10 @@ def diff_dict(original, modified):
                 else:
                     changes[key] = value
 
-
         return changes
     else:
         raise Exception('parameters must be a dictionary')
+
 
 def as_int(str):
     try:
@@ -74,12 +78,28 @@ def as_int(str):
     except Exception:
         return None
 
+
 def make_list(cursor):
     lst = []
     for entity in cursor:
         handle_id(entity)
         lst.append(entity)
     return lst
+
+
+def query_string_to_dict(request):
+    if not request:
+        return None
+    if not request.query_string:
+        return None
+    _args = request.query_string.split('&')
+    _result = dict()
+    if _args:
+        for arg in _args:
+            index = arg.find('=')
+            if index != -1:
+                _result[arg[:index]] = arg[index + 1:]
+    return _result
 
 
 def get_fields_projection_and_filter(request):
@@ -98,11 +118,10 @@ def get_fields_projection_and_filter(request):
             result.append((sort_item[0], SORT_ORDER[sort_item[1]]))
         return result
 
-
     if not request:
-        return None, None
-    # if not request.query_string:
-    #     return None, None
+        return None, None, None, None , None
+    if not request.query_string:
+        return None, None, None, None, None
     _args = request.query_string.split('&')
     _result = dict()
     if _args:
@@ -111,7 +130,8 @@ def get_fields_projection_and_filter(request):
             if index != -1:
                 _result[arg[:index]] = arg[index + 1:]
     _filter = eval(urllib.unquote(_result.get('filter')).decode('utf8')) if _result.get('filter') else None
-    _projection = {field_name: 1 for field_name in _result.get('projection').split(',')} if _result.get('projection') else None
+    _projection = {field_name: 1 for field_name in _result.get('projection').split(',')} if _result.get(
+        'projection') else None
     _sort = _get_sort_args()
     return _filter, _projection, _sort, _result.get("page_size"), _result.get("page_number")
 
