@@ -8,25 +8,23 @@ angular.module('app.header.header-ctrl', [])
         ctrl.headerLinks = [
             {
                 textKey : "views.main.header.ask_help",
-                link : "/case/1",
+                link : "/cases",
+                classes : "ask-help"
             },
             {
                 textKey : "views.main.header.login_or_signup",
-                link : "/login",
+                link : "/case/1",
+                classes : "login-signup"
             },
-
             {
                 textKey : "views.main.header.about_us",
-                link : "/cases",
-            },
-            {
-                textKey : "views.main.header.donors",
-                link : "/view1",
-            },
+                link : "/about_us",
+                classes : "about-us"
+            }
         ];
-        ctrl.navClass = function (page) {
+        ctrl.navClass = function (route) {
             var currentRoute = $location.path();
-            return page === currentRoute ? 'active' : '';
+            return route.link === currentRoute ? 'active ' + route.classes : '';
         };
         /*        "views.main.header.login_or_signup" : "כניסה / הרשמה",
                     "views.main.header.ask_help" : "לבקש עזרה",

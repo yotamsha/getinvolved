@@ -2,10 +2,9 @@
     <div class="logo"></div>
     <div hide-xs class="nav-bar" layout="row">
         <div  flex-offset="5" ng-repeat="route in ctrl.headerLinks" >
-            <div class="route-link" ng-class="ctrl.navClass(route.link)" >
+            <div class="route-link" ng-class="ctrl.navClass(route)" >
                 <a href="#{{route.link}}"> {{route.textKey | translate}}</a>
             </div>
         </div>
     </div>
-
 </div>

@@ -60,7 +60,7 @@ angular.module('app', [
             $translateProvider.preferredLanguage('he_HE');// is applied on first load
             $translateProvider.useLocalStorage();// saves selected language to localStorage
             // App routing is using ui-router module - https://github.com/angular-ui/ui-router
-            $urlRouterProvider.otherwise("/view1");
+            $urlRouterProvider.otherwise("/cases");
 
         }])
     .run(['moment', '$http', '$rootScope', 'AuthService','$window', function (moment, $http, $rootScope, AuthService, $window) {
