@@ -5,26 +5,28 @@
 
 angular.module('app.login', [])
 
-    .controller('loginCtrl', ['$scope', '$mdDialog',
-        function ($scope, $mdDialog) {
+    .controller('loginCtrl', ['$scope', '$mdDialog','AuthService','$timeout',
+        function ($scope, $mdDialog, AuthService, $timeout) {
 
             // --- INNER FUNCTIONS --- //
 
             function _init() {
-
+                $scope.username = "admin";
+                $scope.password = "admin";
+                $timeout(function(){
+                    FB.XFBML.parse();
+                },0);
             }
 
             // --- SCOPE FUNCTIONS --- //
+
             $scope.hide = function() {
-                console.log("Hiding Dialog");
                 $mdDialog.hide();
             };
             $scope.cancel = function() {
-                console.log("Dialog cancelled ");
                 $mdDialog.cancel();
             };
             $scope.answer = function(answer) {
-                console.log("Dialog answer: " +answer);
                 $mdDialog.hide(answer);
             };
             // --- INIT --- //
@@ -32,4 +34,15 @@ angular.module('app.login', [])
             _init();
         }
 
-    ]);
+    ])
+/*    .directive('btFbParse', function () {
+        return {
+            restrict:'A',
+            link:function (scope, element, attrs) {
+                console.log(scope.shareurl);//it works
+                if(scope.facebookIsReady){
+                    FB.XFBML.parse();
+                }
+            }
+        };
+    })*/

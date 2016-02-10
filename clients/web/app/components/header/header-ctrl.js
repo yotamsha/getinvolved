@@ -26,9 +26,6 @@ angular.module('app.header.header-ctrl', [])
         ];
         ctrl.navClass = function (page) {
             var currentRoute = $location.path();
-            console.log("page: "+page);
-            console.log("currentRoute: "+currentRoute);
-            console.log("page === currentRoute: "+(page === currentRoute));
             return page === currentRoute ? 'active' : '';
         };
         /*        "views.main.header.login_or_signup" : "כניסה / הרשמה",

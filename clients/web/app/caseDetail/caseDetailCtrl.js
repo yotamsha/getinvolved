@@ -17,7 +17,7 @@ angular.module('app.caseDetail', [])
         function ($scope, Restangular, $stateParams, DialogsService, moment) {
 
             //var caseDao = Restangular.all('cases');
-
+            //caseDao.getList();
             // --- INNER FUNCTIONS --- //
 
             function _init() {
