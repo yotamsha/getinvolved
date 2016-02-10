@@ -37,9 +37,6 @@ def get_current_user_role(user_id):
 # ------------------------------------------------------------------------------------
 
 
-# mode = None
-
-
 def hash_password(password):
     md5 = hashlib.md5()
     md5.update(password)
@@ -80,12 +77,12 @@ def authenticate():
         {'WWW-Authenticate': 'Basic realm="Login Required"'})
 
 
-def requires_auth(f):
+def requires_user_password(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         auth = request.authorization
         if not auth or not check_auth(auth.username, auth.password):
-            return authenticate()
+            return 'You need to authenticate', u.HTTP_UNAUTHORIZED
         return f(*args, **kwargs)
 
     return decorated
@@ -99,12 +96,12 @@ def check_access_token(access_token):
     return False
 
 
-def requires_access_token(f):
+def requires_auth(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         access_token = request.headers.get('Authorization')
         if not access_token or not check_access_token(access_token):
-            return authenticate()
+            return 'You need to authenticate', u.HTTP_UNAUTHORIZED
         return f(*args, **kwargs)
 
     return decorated

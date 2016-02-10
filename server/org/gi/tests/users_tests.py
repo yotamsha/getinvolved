@@ -1,3 +1,5 @@
+from org.gi.server.web_token import AccessTokenAuth
+
 __author__ = 'avishayb'
 
 import requests
@@ -244,8 +246,8 @@ class GIServerUsersTestCase(unittest.TestCase):
                           json=_load('a_user_with_str_phone_number.json', self.config_folder))
         self.assertEqual(r.status_code, 400)
 
-    def test_create_a_user_wrong_user_password(self):
-        _AUTH = HTTPBasicAuth('wrong', 'wrong')
+    def test_create_a_user_bad_access_token(self):
+        _AUTH = AccessTokenAuth('this is fake and should crashhh')
         r = requests.post('%s/users' % SERVER_URL, auth=_AUTH,
                           json=_load('a_user_with_str_phone_number.json', self.config_folder))
         self.assertEqual(r.status_code, 401)

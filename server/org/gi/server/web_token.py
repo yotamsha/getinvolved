@@ -25,8 +25,20 @@ def generate_access_token(db_user):
 
 
 def get_user_from_access_token(access_token):
-    decoded = jwt.decode(access_token, config.get('secret_key'))
-    if time.time() - decoded['timestamp'] < ACCESS_TOKEN_TTL:
-        return decoded['user']
+    try:
+        decoded = jwt.decode(access_token, config.get('secret_key'))
+        if time.time() - decoded['timestamp'] < ACCESS_TOKEN_TTL:
+            return decoded['user']
+    except:
+        return
 
+
+class AccessTokenAuth:
+    """Attaches HTTP Basic Authentication to the given Request object."""
+    def __init__(self, access_token):
+        self.access_token = access_token
+
+    def __call__(self, r):
+        r.headers['Authorization'] = self.access_token
+        return r
 

@@ -44,20 +44,23 @@ def facebook_authorized(resp):
     return facebook_token((resp['access_token'], ''))
 
 
-@facebook_bp.route('/login/fb_token/<fb_token>')
+@facebook_bp.route('/login/fb_token/<fb_token>', methods=['GET'])
 def facebook_token(fb_token):
     if not fb_token or len(fb_token) == 0:
         return 'No access token supplied', util.HTTP_BAD_INPUT
 
     session['fb_access_token'] = fb_token
-    me = facebook.get('/me?fields=id,email,first_name,last_name')
+    resp = facebook.get('/me?fields=id,email,first_name,last_name')
+    if not resp.status == util.HTTP_OK:
+        return resp.data['error']['message'], resp.status
+
     user = {
-        'user_name': me.data['email'],
-        'first_name': me.data['first_name'],
-        'last_name': me.data['last_name'],
-        'email': me.data['email'],
+        'user_name': resp.data['email'],
+        'first_name': resp.data['first_name'],
+        'last_name': resp.data['last_name'],
+        'email': resp.data['email'],
         'role': USER,
-        'facebook_id': me.data['id'],
+        'facebook_id': resp.data['id'],
         'facebook_access_token': fb_token
     }
 

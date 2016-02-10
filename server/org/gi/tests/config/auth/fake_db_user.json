@@ -1,0 +1,13 @@
+{
+  "first_name": "Bazza",
+  "last_name": "Wazza",
+  "user_name": "bazza",
+  "password": "thealmighty",
+  "email": "baz@naz.net",
+  "phone_number": {
+    "number": "036660000",
+    "country_code": "US"
+  },
+  "role": "USER",
+  "_id": "fake_mongo_obj_id"
+}

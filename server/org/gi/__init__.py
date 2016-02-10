@@ -14,10 +14,12 @@ def _validate_mode(mode):
         raise argparse.ArgumentTypeError('mode should be a value in %s', str[modes])
     return mode
 
-if 'utrunner.py' not in sys.argv[0]:
+if 'utrunner.py' not in sys.argv[0] and 'run_all.py' not in sys.argv[0]:
     parser = argparse.ArgumentParser()
     parser.add_argument('--mode', dest='mode', required=True, type=_validate_mode,
                         help='The GI server mode (prod|dev)')
     args = parser.parse_args()
     mode = args.mode
     os.environ['__MODE'] = mode
+else:
+    os.environ['__MODE'] = 'dev'
