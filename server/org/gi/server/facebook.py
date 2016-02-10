@@ -2,9 +2,11 @@ from flask import request, url_for, session, Blueprint
 from flask_oauth import OAuth
 
 from org.gi.config import config
-from org.gi.server.authorization import ROLES, USER
+from org.gi.server.authorization import USER
 from org.gi.server.db import db
 from org.gi.server.web_token import generate_access_token, get_user_from_access_token
+import org.gi.server.utils as util
+import org.gi.server.validations as valid
 
 
 __author__ = 'bazza'
@@ -39,35 +41,48 @@ def facebook_authorized(resp):
             request.args['error_description']
         )
 
-    session['fb_access_token'] = (resp['access_token'], '')
+    return facebook_token((resp['access_token'], ''))
 
+
+@facebook_bp.route('/login/fb_token/<fb_token>')
+def facebook_token(fb_token):
+    if not fb_token or len(fb_token) == 0:
+        return 'No access token supplied', util.HTTP_BAD_INPUT
+
+    session['fb_access_token'] = fb_token
     me = facebook.get('/me?fields=id,email,first_name,last_name')
     user = {
         'user_name': me.data['email'],
         'first_name': me.data['first_name'],
         'last_name': me.data['last_name'],
         'email': me.data['email'],
-        'role': ROLES[USER],
+        'role': USER,
         'facebook_id': me.data['id'],
-        'facebook_access_token': (resp['access_token'], ''),
+        'facebook_access_token': fb_token
     }
 
-    db_user = db.users.find_one({'facebook_id': user['facebook_id']})
-    if not db_user:
-        db_user = db.users.insert_one(user)
+    faults = []
+    valid.user_post_validate(user, faults)
+    if not faults:
+        db_user = db.users.find_one({'facebook_id': user['facebook_id']})
+        if not db_user:
+            db_user = db.users.insert_one(user)
 
-    access_token = generate_access_token(db_user)
-    return access_token
+        access_token = generate_access_token(db_user)
+        return access_token
+    else:
+        return 'Could retrieve all required user information from facebook', util.HTTP_BAD_INPUT
 
 
 # Internally used whenever facebook.get(..) is called
 @facebook.tokengetter
 def get_facebook_oauth_token():
+    secret = config.get('fb_app_secret')
     if 'fb_access_token' in session:
         fb_token = session['fb_access_token']
         if fb_token:
-            return fb_token
+            return fb_token, secret
     access_token = request.headers.get('Authorization')
     if access_token:
         user = get_user_from_access_token(access_token)
-        return user['facebook_access_token']
+        return user['facebook_access_token'], secret

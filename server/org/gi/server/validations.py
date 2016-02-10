@@ -499,7 +499,7 @@ FB_ID_MAX_LENGTH = 40
 
 
 def validate_facebook_id(facebook_id, faults):
-    if not facebook_id or not isinstance(facebook_id, str):
+    if not facebook_id or not (isinstance(facebook_id, str) or isinstance(facebook_id, unicode)):
         faults.append('facebook_id must be a none empty string')
         return
     if len(facebook_id) <= FB_ID_MIN_LENGTH or len(facebook_id) > FB_ID_MAX_LENGTH:
@@ -509,7 +509,7 @@ def validate_facebook_id(facebook_id, faults):
 
 
 def validate_facebook_access_token(fb_access_token, faults):
-    if not fb_access_token or not isinstance(fb_access_token, str):
+    if not fb_access_token or not (isinstance(fb_access_token, str) or isinstance(fb_access_token, unicode)):
         faults.append('fb_access_token must be a none empty string')
         return
     if len(fb_access_token) < FB_TOKEN_MIN_LENGTH:
