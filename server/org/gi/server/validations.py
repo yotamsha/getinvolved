@@ -1,7 +1,6 @@
 import json
 
 from org.gi.server import utils as u
-from org.gi.server import db
 
 __author__ = 'avishayb'
 import re
@@ -494,23 +493,26 @@ def validate_task_description(validate_task, faults):
 def validate_task_title(task_title, faults):
     pass
 
+FB_TOKEN_MIN_LENGTH = 10
+FB_ID_MIN_LENGTH = 8
+FB_ID_MAX_LENGTH = 40
 
 def validate_facebook_id(facebook_id, faults):
     if not facebook_id or not (isinstance(facebook_id, str) or isinstance(facebook_id, basestring)):
         faults.append('facebook_id must be a none empty string')
         return
-    if len(facebook_id) <= 8 or len(facebook_id) > 30:
-        faults.append('facebook_id must be between 0-30 characters')
+    if len(facebook_id) <= FB_ID_MIN_LENGTH or len(facebook_id) > FB_ID_MAX_LENGTH:
+        faults.append('facebook_id must be between {}-{} characters'.format(FB_ID_MIN_LENGTH, FB_ID_MAX_LENGTH))
     if not facebook_id.isdigit():
         faults.append('facebook_id must be all digits')
 
 
 def validate_facebook_access_token(fb_access_token, faults):
-    if not fb_access_token or not (isinstance(fb_access_token, str) or isinstance(fb_access_token, basestring)):
+    if not fb_access_token or not isinstance(fb_access_token, str):
         faults.append('fb_access_token must be a none empty string')
         return
-    if len(fb_access_token) < 10:
-        faults.append('fb_access_token must be atleast 10 characters')
+    if len(fb_access_token) < FB_TOKEN_MIN_LENGTH:
+        faults.append('fb_access_token must be atleast {} characters'.format(FB_TOKEN_MIN_LENGTH))
 
 
 USER_META = {
