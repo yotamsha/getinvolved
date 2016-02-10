@@ -26,6 +26,12 @@ def _load_config():
             with open(path) as data_file:
                 print 'Loading config {}'.format(path)
                 _config = json.load(data_file)
+            local_config = path.replace(CONFIG_FILE.format(mode), 'local_config.json')
+            if os.path.exists(local_config):
+                with open(local_config) as local_config_data:
+                    print 'Overwriting config fields with local_config'
+                    _local_config = json.load(local_config_data)
+                    _config.update(_local_config)
         except Exception as e:
             print(str(e))
 

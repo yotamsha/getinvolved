@@ -62,7 +62,7 @@ def check_auth(user_name, password):
         if not count:
             return user_name == 'admin' and password == 'admin'
         return count
-    elif mode == 'production':
+    elif mode == 'prod':
         if not db:
             raise Exception('Failed to authenticate (db is None)')
         pwd_hash = hash_password(password)
