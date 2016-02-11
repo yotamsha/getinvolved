@@ -46,7 +46,7 @@ def facebook_authorized(resp):
 
 @facebook_bp.route('/login/fb_token/<fb_token>', methods=['GET'])
 def facebook_token(fb_token):
-    if not fb_token or len(fb_token) == 0:
+    if not fb_token:
         return 'No access token supplied', util.HTTP_BAD_INPUT
 
     session['fb_access_token'] = fb_token
