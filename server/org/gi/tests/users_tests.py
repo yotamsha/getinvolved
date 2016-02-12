@@ -5,7 +5,7 @@ __author__ = 'avishayb'
 import requests
 from requests.auth import HTTPBasicAuth
 import unittest
-from misc import _remove_from_db, _load, _push_to_db, MONGO, SERVER_URL, AUTH
+from misc import _remove_from_db, _load, _push_to_db, MONGO, SERVER_URL, AUTH, validate_server_is_up
 import org.gi.server.authorization as auth
 import json
 
@@ -27,6 +27,10 @@ class GIServerUsersTestCase(unittest.TestCase):
 
     def tearDown(self):
         _remove_from_db(MONGO, 'users')
+
+    @classmethod
+    def setUpClass(cls):
+        validate_server_is_up()
 
     def test_has_users_db(self):
         try:

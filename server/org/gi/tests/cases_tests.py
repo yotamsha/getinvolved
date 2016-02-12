@@ -2,7 +2,7 @@ __author__ = 'avishayb'
 import requests
 import unittest
 import time
-from misc import _remove_from_db, _load, _push_to_db, MONGO, SERVER_URL, AUTH
+from misc import _remove_from_db, _load, _push_to_db, MONGO, SERVER_URL, AUTH, validate_server_is_up
 from org.gi.server import validations as v
 
 class TestGIServerCaseTestCase(unittest.TestCase):
@@ -17,6 +17,10 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         _remove_from_db(MONGO, 'cases')
         self.user_ids = _push_to_db(MONGO, 'users', self.users)
         self.case_ids = _push_to_db(MONGO, 'cases', self.cases)
+
+    @classmethod
+    def setUpClass(cls):
+        validate_server_is_up()
 
 
     def tearDown(self):

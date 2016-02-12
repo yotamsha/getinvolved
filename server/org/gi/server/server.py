@@ -21,6 +21,11 @@ app.register_blueprint(static_bp)
 app.register_blueprint(facebook_bp)
 app.register_blueprint(local_login_bp)
 app.secret_key = config.get('secret_key')
+
+@app.route('/api/ping')
+def ping():
+    return 'Pong', u.HTTP_OK
+
 api = Api(app)
 
 
@@ -39,6 +44,3 @@ if __name__ == '__main__':
     app.run(debug=False)
 
 
-@app.route('/api/ping')
-def ping():
-    return 'Pong', u.HTTP_OK

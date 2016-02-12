@@ -7,11 +7,23 @@ import sys
 import json
 import os
 from org.gi.server.web_token import generate_access_token, AccessTokenAuth
+from requests.exceptions import ConnectionError
 
 DB_URI = config.get_db_uri()
 SERVER_URL = 'http://localhost:5000/api'
 MONGO = pymongo.MongoClient(DB_URI)
 
+SERVER_DOWN_MSG = 'No response from GI Server (%s). Make sure its up and running.'
+SERVER_NO_PING = 'Bad response (%d) from Ping call. Try HTTP GET to %s'
+
+def validate_server_is_up():
+    try:
+        ping_url = '%s/ping' % SERVER_URL
+        r = requests.get(ping_url)
+        if r.status_code != 200:
+            raise Exception(SERVER_NO_PING % (r.status_code, ping_url))
+    except ConnectionError as ce:
+        raise Exception (SERVER_DOWN_MSG % str(ce))
 
 def _get_id(self):
     _push_to_db(MONGO, 'users', self.users)
