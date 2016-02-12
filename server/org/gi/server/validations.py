@@ -107,6 +107,13 @@ ZIP_CODE_MIN_MAX = 7
 CITY_MIN = 3
 CITY_MAX = 25
 
+FB_TOKEN_MIN_LENGTH = 10
+FB_ID_MIN_LENGTH = 8
+FB_ID_MAX_LENGTH = 40
+
+MAX_DUE_DATE_HOURS = 24
+
+
 STATES = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE',
           'FL', 'GA', 'HI', 'IA', 'ID', 'IN', 'IL', 'KS', 'KY',
           'LA', 'MA', 'MD', 'ME', 'MI', 'MN', 'MO', 'MS', 'MT',
@@ -469,12 +476,38 @@ def validate_task_type(task_type, faults):
     if task_type not in TASK_TYPES:
         faults.append('task_type type must be none empty string belongs to the set %s' % str(TASK_TYPES))
 
+def validate_sms_notification(sms_val, faults):
+    if not validate_boolean(sms_val):
+        faults.append('sms notification field must have boolean value. current value is %s' % sms_val)
+
+def validate_email_notification(email_val, faults):
+    if not validate_boolean(email_val):
+        faults.append('email notification field must have boolean value. current value is %s' % email_val)
+
+def validate_boolean(val):
+    return val is not None and isinstance(val, bool)
 
 def noop(nada, faults):
     pass
 
 
-MAX_DUE_DATE_HOURS = 24
+def validate_notifications(notification,faults):
+    if notification and not isinstance(notification, dict):
+        faults.append('notification must be a dict')
+        return
+    for key in notification.keys():
+        if key not in NOTIFICATIONS_META.keys():
+            faults.append('%s is invalid field. valid fields are %s' % (key, str(NOTIFICATIONS_META.keys())))
+    for key in NOTIFICATIONS_META.keys():
+        if key not in notification.keys():
+            faults.append('%s is missing from input.' % key)
+    for key in notification.keys():
+        if not validate_boolean(notification[key]):
+            faults.append('\'%s\' field with value \'%s\' must has a boolean value' % (key, notification[key]))
+
+
+
+
 
 
 def validate_date_in_the_future(due_date, faults):
@@ -492,11 +525,6 @@ def validate_task_description(validate_task, faults):
 
 def validate_task_title(task_title, faults):
     pass
-
-FB_TOKEN_MIN_LENGTH = 10
-FB_ID_MIN_LENGTH = 8
-FB_ID_MAX_LENGTH = 40
-
 
 def validate_facebook_id(facebook_id, faults):
     if not facebook_id or not (isinstance(facebook_id, str) or isinstance(facebook_id, unicode)):
@@ -525,7 +553,8 @@ USER_META = {
     'phone_number': validate_phone_number,
     'role': (validate_user_role, MANDATORY),
     'facebook_id': validate_facebook_id,
-    'facebook_access_token': validate_facebook_access_token
+    'facebook_access_token': validate_facebook_access_token,
+    'notifications': validate_notifications,
 }
 
 CASE_META = {
@@ -560,6 +589,11 @@ ADDRESS_META = {
     'state': (validate_state, False),
     'country': (validate_country, True)
 
+}
+
+NOTIFICATIONS_META = {
+    'sms': None,
+    'email': None
 }
 
 TASK_TYPE_GENERAL = 'GENERAL'
