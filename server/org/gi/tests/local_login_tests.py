@@ -1,10 +1,8 @@
 import unittest
-from misc import _remove_from_db, _load, _push_to_db, MONGO
+from misc import _remove_from_db, _load, _push_to_db, MONGO, SERVER_URL
 import org.gi.server.authorization as auth
 import requests
 from requests.auth import HTTPBasicAuth
-
-SERVER_URL = 'http://localhost:5000'
 
 
 class GIAccessTokenAuthentication(unittest.TestCase):
