@@ -1,5 +1,7 @@
 import json
 
+from bson import ObjectId
+
 from org.gi.server import utils as u
 
 __author__ = 'avishayb'
@@ -669,4 +671,3 @@ def post_validate(payload, meta, faults, mandatory=True):
     for field_name, field_validator in meta.iteritems():
         if field_name in payload and field_validator:
             field_validator(payload[field_name], faults)
-

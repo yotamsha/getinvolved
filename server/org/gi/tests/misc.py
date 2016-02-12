@@ -45,6 +45,8 @@ ACCESS_TOKEN_AUTH = AccessTokenAuth(generate_access_token(_load('fake_db_user.js
 
 
 def _push_to_db(mongo, collection_name, data):
+    if not isinstance(data, list):
+        data = [data]
     db = mongo.get_default_database()
     db[collection_name].insert_many(data)
     return _get_ids(mongo, collection_name)
@@ -52,7 +54,7 @@ def _push_to_db(mongo, collection_name, data):
 
 def _remove_from_db(mongo, collection_name):
     db = mongo.get_default_database()
-    db[collection_name].drop()
+    db[collection_name].delete_many({})
 
 
 def _get_ids(mongo, collection_name):
