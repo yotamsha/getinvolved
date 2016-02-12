@@ -1,7 +1,5 @@
 import json
 
-from bson import ObjectId
-
 from org.gi.server import utils as u
 
 __author__ = 'avishayb'
