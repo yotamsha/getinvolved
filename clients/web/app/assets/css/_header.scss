@@ -15,6 +15,28 @@
     height: 100px;
     width: 270px;
   }
+
+  .header-title{
+    color: #ffffff;
+    font-size: 40px;
+  }
+
+  .header-subtitle{
+    color: #ffffff;
+    font-size: 28px;
+    width: 470px;
+    text-align: center;
+  }
+
+  .header-btn {
+    margin-top: 15px;
+    padding: 3px 12px;
+    background-color: #54585B;
+    background-color: rgba(84, 88, 91, 0.6);
+    color: #B5B8BF;
+    font-size: 18px;
+  }
+
   .nav-bar {
     /*
     margin-top: 45px;

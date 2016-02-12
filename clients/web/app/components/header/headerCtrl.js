@@ -1,10 +1,29 @@
 /**
  * Created by yotam on 31/1/2016.
  */
+
 angular.module('app.header.header-ctrl', [])
 
-    .controller('headerCtrl', ['$location', function($location) {
+    .controller('headerCtrl', ['$location','$rootScope','$scope', function($location, $rootScope, $scope) {
         var ctrl = this;
+
+
+        ctrl.title = $rootScope.header.title;
+        $scope.$watch(function () { return $rootScope.header.title; }, function (newValue, oldValue) {
+          if (newValue !== oldValue)
+            ctrl.title = newValue;
+        });
+        ctrl.subTitle = $rootScope.header.subTitle;
+        $scope.$watch(function () { return $rootScope.header.subTitle; }, function (newValue, oldValue) {
+          if (newValue !== oldValue)
+            ctrl.subTitle = newValue;
+        });
+        ctrl.shouldShowButton = $rootScope.header.shouldShowButton;
+        $scope.$watch(function () { return $rootScope.header.shouldShowButton; }, function (newValue, oldValue) {
+          if (newValue !== oldValue)
+            ctrl.shouldShowButton = newValue;
+        });
+
         ctrl.headerLinks = [
             {
                 textKey : "views.main.header.ask_help",
@@ -33,5 +52,4 @@ angular.module('app.header.header-ctrl', [])
                     "views.main.header.opportunities" : "הזדמנויות",
                     "views.main.header.success_stories" : "הצלחות",
                     "views.main.header.troubleshooting" : "מסתבכים? דברו איתנו",*/
-        ctrl.someValue = 3;
     }]);

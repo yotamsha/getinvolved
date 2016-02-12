@@ -6,6 +6,7 @@ angular.module('app', [
         'ngRoute',
         'ngMaterial',
         'ngCookies',
+        'ngSanitize',
         'pascalprecht.translate',// angular-translate
         'restangular',
         'ui.router',
@@ -64,6 +65,23 @@ angular.module('app', [
 
         }])
     .run(['moment', '$http', '$rootScope', 'AuthService','$window', function (moment, $http, $rootScope, AuthService, $window) {
+        facebookInit();
+        moment.locale('he');
+        initHeaderData();
+
+        function initHeaderData(){
+          $rootScope.header = {};
+          resetHeaderData();
+          $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+            resetHeaderData();
+          });
+        }
+
+        function resetHeaderData(){
+          $rootScope.header.title='';
+          $rootScope.header.subTitle='';
+          $rootScope.header.shouldShowButton = false;
+        };
 
         function facebookInit(){
             $rootScope.user = {};
@@ -88,6 +106,4 @@ angular.module('app', [
                 fjs.parentNode.insertBefore(js, fjs);
             }(document, 'script', 'facebook-jssdk'));
         }
-        facebookInit();
-        moment.locale('he');
     }]);
