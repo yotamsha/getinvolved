@@ -1,5 +1,6 @@
 import unittest
-from misc import _remove_from_db, _load, _push_to_db, MONGO, SERVER_URL
+
+from misc import _remove_from_db, _load, _push_to_db, MONGO, SERVER_URL, validate_server_is_up
 import org.gi.server.authorization as auth
 import requests
 from requests.auth import HTTPBasicAuth
@@ -17,6 +18,10 @@ class GIAccessTokenAuthentication(unittest.TestCase):
         user = self._user.copy()
         user['password'] = auth.hash_password(user['password'])
         _push_to_db(MONGO, 'users', [user])
+
+    @classmethod
+    def setUpClass(cls):
+        validate_server_is_up()
 
     def tearDown(self):
         _remove_from_db(MONGO, 'users')

@@ -128,6 +128,26 @@ class GIServerUsersTestCase(unittest.TestCase):
         r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH, json=json.dumps({}))
         self.assertEqual(r.status_code, 400)
 
+    def test_notifications(self):
+        r = requests.post('%s/users' % SERVER_URL, auth=AUTH,
+                          json=_load('a_user_with_notifications.json', self.config_folder))
+        self.assertEqual(r.status_code, 201)
+
+    def test_notifications_wrong_key(self):
+        r = requests.post('%s/users' % SERVER_URL, auth=AUTH,
+                          json=_load('a_user_with_notifications_wrong_key.json', self.config_folder))
+        self.assertEqual(r.status_code, 400)
+
+    def test_notifications_wrong_value_not_dict(self):
+        r = requests.post('%s/users' % SERVER_URL, auth=AUTH,
+                          json=_load('a_user_with_notifications_wrong_value_not_dict.json', self.config_folder))
+        self.assertEqual(r.status_code, 400)
+
+    def test_notifications_wrong_value_not_bool(self):
+        r = requests.post('%s/users' % SERVER_URL, auth=AUTH,
+                          json=_load('a_user_with_notifications_wrong_value_not_bool.json', self.config_folder))
+        self.assertEqual(r.status_code, 400)
+
     def test_wrong_email(self):
         r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH, json=_load('wrong_email.json', self.config_folder))
         self.assertEqual(r.status_code, 400)
