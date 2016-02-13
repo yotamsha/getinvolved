@@ -1,4 +1,4 @@
-from flask import request, abort
+from flask import request, abort, session
 from flask_restful import Resource, reqparse
 
 import org.gi.server.authorization as auth
@@ -38,6 +38,8 @@ class User(Resource):
     @requires_auth
     def get(self, user_id):
         try:
+            if 'me' == user_id:
+                user_id = session['user']['_id']
             user = db.users.find_one({'_id': u.to_object_id(user_id)})
             u.handle_id(user)
         except Exception as e:
