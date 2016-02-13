@@ -1,0 +1,26 @@
+[
+  {
+    "first_name": "A",
+    "last_name": "User",
+    "email": "one_user@gi.net",
+    "id": "1234567890431"
+  },
+  {
+    "first_name": "One",
+    "last_name": "B",
+    "email": "one_user@gi.net",
+    "id": "1234567890431"
+  },
+  {
+    "first_name": "One",
+    "last_name": "User",
+    "email": "notvalid",
+    "id": "1234567890431"
+  },
+  {
+    "first_name": "One",
+    "last_name": "User",
+    "email": "one_user@gi.net",
+    "id": "12"
+  }
+]
