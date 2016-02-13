@@ -18,15 +18,18 @@ class GIServerUsersTestCase(unittest.TestCase):
         self.passwords = {}
 
     def setUp(self):
-        _remove_from_db(MONGO, 'users')
+        self.remove_users_from_db()
         for user in self.users:
             self.passwords[user['user_name']] = user['password']
             user['password'] = auth.hash_password(user['password'])
             # print(user['user_name'] + ', ' + user['password'] + ' , ' + self.passwords[user['user_name']])
         self.ids = _push_to_db(MONGO, 'users', self.users)
 
-    def tearDown(self):
+    def remove_users_from_db(self):
         _remove_from_db(MONGO, 'users')
+
+    def tearDown(self):
+        self.remove_users_from_db()
 
     @classmethod
     def setUpClass(cls):
@@ -42,7 +45,7 @@ class GIServerUsersTestCase(unittest.TestCase):
             for usr in db_users:
                 self.assertTrue(usr['user_name'] in user_names)
         except Exception:
-            _remove_from_db(MONGO, 'users')
+            self.remove_users_from_db()
 
     def test_sort_asc(self):
         r = requests.get('%s/users?sort=[(\'user_name\',\'ASCENDING\')]' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH)
@@ -129,22 +132,23 @@ class GIServerUsersTestCase(unittest.TestCase):
         self.assertEqual(r.status_code, 400)
 
     def test_notifications(self):
-        r = requests.post('%s/users' % SERVER_URL, auth=AUTH,
+        self.remove_users_from_db()
+        r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH,
                           json=_load('a_user_with_notifications.json', self.config_folder))
         self.assertEqual(r.status_code, 201)
 
     def test_notifications_wrong_key(self):
-        r = requests.post('%s/users' % SERVER_URL, auth=AUTH,
+        r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH,
                           json=_load('a_user_with_notifications_wrong_key.json', self.config_folder))
         self.assertEqual(r.status_code, 400)
 
     def test_notifications_wrong_value_not_dict(self):
-        r = requests.post('%s/users' % SERVER_URL, auth=AUTH,
+        r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH,
                           json=_load('a_user_with_notifications_wrong_value_not_dict.json', self.config_folder))
         self.assertEqual(r.status_code, 400)
 
     def test_notifications_wrong_value_not_bool(self):
-        r = requests.post('%s/users' % SERVER_URL, auth=AUTH,
+        r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH,
                           json=_load('a_user_with_notifications_wrong_value_not_bool.json', self.config_folder))
         self.assertEqual(r.status_code, 400)
 
@@ -173,7 +177,7 @@ class GIServerUsersTestCase(unittest.TestCase):
             r = requests.delete('%s/users/%s' % (SERVER_URL_API, self.ids[0]), auth=ACCESS_TOKEN_AUTH)
             self.assertEqual(r.status_code, 204)
         except Exception:
-            _remove_from_db(MONGO, 'users')
+            self.remove_users_from_db()
 
     def test_delete_wrong_user_id(self):
         r = requests.delete('%s/users/%s' % (SERVER_URL_API, 'qazxswedc'), auth=ACCESS_TOKEN_AUTH)
@@ -182,36 +186,36 @@ class GIServerUsersTestCase(unittest.TestCase):
     def test_empty_payload_put(self):
         r = requests.put('%s/users/%s' % (SERVER_URL_API, self.ids[0]), auth=ACCESS_TOKEN_AUTH, json=json.dumps({}))
         self.assertEqual(r.status_code, 400)
-        _remove_from_db(MONGO, 'users')
+        self.remove_users_from_db()
 
     def test_no_payload_put(self):
         r = requests.put('%s/users/%s' % (SERVER_URL_API, self.ids[0]), auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, 400)
-        _remove_from_db(MONGO, 'users')
+        self.remove_users_from_db()
 
     def test_wrong_email_put(self):
         r = requests.put('%s/users/%s' % (SERVER_URL_API, self.ids[0]),
                          auth=ACCESS_TOKEN_AUTH, json=_load('wrong_email.json', self.config_folder))
         self.assertEqual(r.status_code, 400)
-        _remove_from_db(MONGO, 'users')
+        self.remove_users_from_db()
 
     def test_wrong_phone_number_put(self):
         r = requests.put('%s/users/%s' % (SERVER_URL_API, self.ids[0]),
                          auth=ACCESS_TOKEN_AUTH, json=_load('wrong_phone_number.json', self.config_folder))
         self.assertEqual(r.status_code, 400)
-        _remove_from_db(MONGO, 'users')
+        self.remove_users_from_db()
 
     def test_short_password_put(self):
         r = requests.put('%s/users/%s' % (SERVER_URL_API, self.ids[0]),
                          auth=ACCESS_TOKEN_AUTH, json=_load('short_password.json', self.config_folder))
         self.assertEqual(r.status_code, 400)
-        _remove_from_db(MONGO, 'users')
+        self.remove_users_from_db()
 
     def test_long_password_put(self):
         r = requests.put('%s/users/%s' % (SERVER_URL_API, self.ids[0]),
                          auth=ACCESS_TOKEN_AUTH, json=_load('long_password.json', self.config_folder))
         self.assertEqual(r.status_code, 400)
-        _remove_from_db(MONGO, 'users')
+        self.remove_users_from_db()
 
     def test_no_first_name_put(self):
         r = requests.put('%s/users/%s' % (SERVER_URL_API, self.ids[0]),
@@ -219,6 +223,7 @@ class GIServerUsersTestCase(unittest.TestCase):
         self.assertEqual(r.status_code, 400)
 
     def test_create_a_user(self):
+        self.remove_users_from_db()
         r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH, json=_load('a_user.json', self.config_folder))
         self.assertEqual(r.status_code, 201)
         pushed_to_api = _load('a_user.json', self.config_folder)
@@ -247,6 +252,7 @@ class GIServerUsersTestCase(unittest.TestCase):
             self.assertTrue('errors' in r._content)
 
     def test_create_a_user_with_roles(self):
+        self.remove_users_from_db()
         r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH, json=_load('a_user_with_roles.json', self.config_folder))
         self.assertEqual(r.status_code, 201)
         pushed_to_api = _load('a_user_with_roles.json', self.config_folder)
