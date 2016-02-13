@@ -2,15 +2,23 @@
 
 angular.module('app.view1', [])
 
-    .config(['$stateProvider', function ($stateProvider) {
+    .config(['$stateProvider', 'USER_ROLES', function ($stateProvider, USER_ROLES) {
         $stateProvider.state('view1', {
-            url : "/view1",
+            url: "/view1",
             templateUrl: 'view1/view1.html',
-            controller: 'View1Ctrl'
+            controller: 'View1Ctrl',
+            data: {
+                authorizedRoles: [USER_ROLES.admin]
+            },
+            resolve: {
+                authorize: ['AuthService', function (AuthService) {
+                    return AuthService.isAuthorized(USER_ROLES.user);
+                }],
+            }
         });
     }])
 
-    .controller('View1Ctrl', ['$scope', '$http', '$timeout', '$q','$filter','Restangular',
+    .controller('View1Ctrl', ['$scope', '$http', '$timeout', '$q', '$filter', 'Restangular',
         function View1Ctrl($scope, $http, $timeout, $q, $filter, Restangular) {
 
             var tasksDao = Restangular.all('tasks');
@@ -19,10 +27,10 @@ angular.module('app.view1', [])
 
             function _init() {
                 $scope.vm = {
-                    viewData : [1,2,3],
-                    dynamicallyTranslatedText : $filter('translate')('dynamic.text')
+                    viewData: [1, 2, 3],
+                    dynamicallyTranslatedText: $filter('translate')('dynamic.text')
 
-            };
+                };
             }
 
             // --- SCOPE FUNCTIONS --- //
@@ -30,18 +38,18 @@ angular.module('app.view1', [])
             $scope.getTasks = function () {
 
                 tasksDao.getList()
-                    .then(function(data){
-                    $scope.vm.dbData = data;
-                });
+                    .then(function (data) {
+                        $scope.vm.dbData = data;
+                    });
             };
             $scope.createTask = function () {
                 var task = {
-                    name : "newTask",
-                    description : "bla bla.."
+                    name: "newTask",
+                    description: "bla bla.."
                 };
                 tasksDao.post(task)
                     .then(function (result) {
-                });
+                    });
             };
 
             // --- INIT --- //
