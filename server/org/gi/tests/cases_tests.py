@@ -1,9 +1,13 @@
-__author__ = 'avishayb'
 import requests
 import unittest
 import time
-from misc import _remove_from_db, _load, _push_to_db, MONGO, SERVER_URL, AUTH
+from misc import _remove_from_db, _load, _push_to_db, MONGO, SERVER_URL_API, ACCESS_TOKEN_AUTH, validate_server_is_up
 from org.gi.server import validations as v
+from org.gi.server import utils as utils
+
+
+__author__ = 'avishayb'
+
 
 class TestGIServerCaseTestCase(unittest.TestCase):
     def __init__(self, *args, **kwargs):
@@ -18,16 +22,18 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         self.user_ids = _push_to_db(MONGO, 'users', self.users)
         self.case_ids = _push_to_db(MONGO, 'cases', self.cases)
 
+    @classmethod
+    def setUpClass(cls):
+        validate_server_is_up()
 
     def tearDown(self):
         _remove_from_db(MONGO, 'users')
         _remove_from_db(MONGO, 'cases')
 
-
     def prepare_and_push_to_db(self):
         _push_to_db(MONGO, 'users', self.users)
-        r = requests.get('%s/users' % SERVER_URL, auth=AUTH)
-        self.assertEqual(r.status_code, 200)
+        r = requests.get('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_OK)
         db_users = r.json()['users']
         for case in self.cases:
             case['petitioner_id'] = db_users[0]['id']
@@ -49,104 +55,104 @@ class TestGIServerCaseTestCase(unittest.TestCase):
     def test_create_case_fake_petitioner_id(self):
         case = _load('case_fake_petitioner_id.json', self.config_folder)
         self._replace(case)
-        r = requests.post('%s/cases' % SERVER_URL, json=case, auth=AUTH)
-        self.assertEqual(r.status_code, 400)
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
 
     def test_create_case_fake_volunteer_id(self):
         case = _load('case_fake_volunteer_id.json', self.config_folder)
         self._replace(case)
-        r = requests.post('%s/cases' % SERVER_URL, json=case, auth=AUTH)
-        self.assertEqual(r.status_code, 201)
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_CREATED)
 
     def test_create_case(self):
         case = _load('case_undefined.json', self.config_folder)
         self._replace(case)
-        r = requests.post('%s/cases' % SERVER_URL, json=case, auth=AUTH)
-        self.assertEqual(r.status_code, 201)
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_CREATED)
 
     def test_create_case_short_description(self):
         case = _load('case_short_description.json', self.config_folder)
         self._replace(case)
-        r = requests.post('%s/cases' % SERVER_URL, json=case, auth=AUTH)
-        self.assertEqual(r.status_code, 400)
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
 
     def test_create_case_dummy_property(self):
         case = _load('case_dummy_property.json', self.config_folder)
         self._replace(case)
-        r = requests.post('%s/cases' % SERVER_URL, json=case, auth=AUTH)
-        self.assertEqual(r.status_code, 400)
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
 
     def test_create_transportation_case(self):
         case = _load('case_with_transportation_task.json', self.config_folder)
         self._replace(case)
-        r = requests.post('%s/cases' % SERVER_URL, json=case, auth=AUTH)
-        self.assertEqual(r.status_code, 201)
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_CREATED)
 
     def test_create_transportation_case_wrong_country_code(self):
         case = _load('case_with_transportation_task_wrong_country_code.json', self.config_folder)
         self._replace(case)
-        r = requests.post('%s/cases' % SERVER_URL, json=case, auth=AUTH)
-        self.assertEqual(r.status_code, 400)
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
 
     def test_create_transportation_case_short_city(self):
         case = _load('case_with_transportation_task_short_city.json', self.config_folder)
         self._replace(case)
-        r = requests.post('%s/cases' % SERVER_URL, json=case, auth=AUTH)
-        self.assertEqual(r.status_code, 400)
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
 
     def test_create_transportation_case_long_city(self):
         case = _load('case_with_transportation_task_long_city.json', self.config_folder)
         self._replace(case)
-        r = requests.post('%s/cases' % SERVER_URL, json=case, auth=AUTH)
-        self.assertEqual(r.status_code, 400)
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
 
     def test_create_case_wrong_task_type(self):
         case = _load('case_with_wrong_task_type.json', self.config_folder)
         self._replace(case)
-        r = requests.post('%s/cases' % SERVER_URL, json=case, auth=AUTH)
-        self.assertEqual(r.status_code, 400)
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
 
     def test_create_case_no_task_type(self):
         case = _load('case_with_no_task_type.json', self.config_folder)
         self._replace(case)
-        r = requests.post('%s/cases' % SERVER_URL, json=case, auth=AUTH)
-        self.assertEqual(r.status_code, 400)
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
 
     def test_create_case_no_tasks(self):
         case = _load('case_with_no_tasks.json', self.config_folder)
         self._replace(case)
-        r = requests.post('%s/cases' % SERVER_URL, json=case, auth=AUTH)
-        self.assertEqual(r.status_code, 400)
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
 
     def test_create_transportation_case_dummy_property(self):
         case = _load('case_with_transportation_task_dummy_property.json', self.config_folder)
         self._replace(case)
-        r = requests.post('%s/cases' % SERVER_URL, json=case, auth=AUTH)
-        self.assertEqual(r.status_code, 400)
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
 
     def test_create_general_task_with_address(self):
         case = _load('case_with_general_task_with_address.json', self.config_folder)
         self._replace(case)
-        r = requests.post('%s/cases' % SERVER_URL, json=case, auth=AUTH)
-        self.assertEqual(r.status_code, 201)
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_CREATED)
 
     def test_update_case_with_invalid_state(self):
         case = _load('case_state_transitions_1.json', self.config_folder)
         self._replace(case)
-        r = requests.put('%s/cases/%s' % (SERVER_URL, self.case_ids[0]), json=case, auth=AUTH)
-        self.assertEqual(r.status_code, 400)
+        r = requests.put('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]), json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
 
     def test_update_case_with_valid_state(self):
         case = _load('case_state_transitions_2.json', self.config_folder)
         self._replace(case)
-        r = requests.put('%s/cases/%s' % (SERVER_URL, self.case_ids[0]), json=case, auth=AUTH)
-        self.assertEqual(r.status_code, 400)
+        r = requests.put('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]), json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
 
     def test_update_case_to_completed(self):
         case = _load('case_state_transitions_3.json', self.config_folder)
         self._replace(case)
-        r = requests.put('%s/cases/%s' % (SERVER_URL, self.case_ids[0]), json=case, auth=AUTH)
-        self.assertEqual(r.status_code, 400)
+        r = requests.put('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]), json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
 
     def test_update_case_to_completed_but_tasks_are_not_completed(self):
         case = _load('case_state_transitions_5.json', self.config_folder)
@@ -155,27 +161,27 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         result = db.cases.update_one({"tasks.state": v.TASK_UNDEFINED},
                                      {'$set': {'state': v.CASE_ASSIGNED, 'tasks.$.state': v.TASK_ASSIGNED}})
         self.assertEqual(result.modified_count, 1)
-        r = requests.put('%s/cases/%s' % (SERVER_URL, self.case_ids[0]), json=case, auth=AUTH)
-        self.assertEqual(r.status_code, 400)
+        r = requests.put('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]), json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
 
     def test_update_state_transitions(self):
         case = _load('case_state_transitions_4.json', self.config_folder)
         self._replace(case)
-        r = requests.put('%s/cases/%s' % (SERVER_URL, self.case_ids[0]), json=case, auth=AUTH)
-        self.assertEqual(r.status_code, 204)
+        r = requests.put('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]), json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_NO_CONTENT)
         #
         # keep on testing the state machine
         #
         case['state'] = 'cancelled_by_admin'
-        r = requests.put('%s/cases/%s' % (SERVER_URL, self.case_ids[0]), json=case, auth=AUTH)
-        self.assertEqual(r.status_code, 204)
+        r = requests.put('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]), json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_NO_CONTENT)
 
     def test_delete_case(self):
-        r = requests.delete('%s/cases/%s' % (SERVER_URL, self.case_ids[0]), auth=AUTH)
-        self.assertEqual(r.status_code, 204)
+        r = requests.delete('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]), auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_NO_CONTENT)
 
     def test_delete_case_wrong_id(self):
         wrong_id = self.case_ids[0].replace(self.case_ids[0][0], str(int(self.case_ids[0][0]) + 1))
-        r = requests.delete('%s/cases/%s' % (SERVER_URL, wrong_id), auth=AUTH)
-        self.assertEqual(r.status_code, 404)
+        r = requests.delete('%s/cases/%s' % (SERVER_URL_API, wrong_id), auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_NOT_FOUND)
 

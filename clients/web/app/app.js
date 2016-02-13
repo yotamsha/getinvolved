@@ -6,6 +6,7 @@ angular.module('app', [
         'ngRoute',
         'ngMaterial',
         'ngCookies',
+        'ngSanitize',
         'pascalprecht.translate',// angular-translate
         'restangular',
         'ui.router',
@@ -60,14 +61,28 @@ angular.module('app', [
             $translateProvider.preferredLanguage('he_HE');// is applied on first load
             $translateProvider.useLocalStorage();// saves selected language to localStorage
             // App routing is using ui-router module - https://github.com/angular-ui/ui-router
-            $urlRouterProvider.otherwise("/view1");
+            $urlRouterProvider.otherwise("/cases");
 
         }])
     .run(['moment', '$http', '$rootScope', 'AuthService','$window', function (moment, $http, $rootScope, AuthService, $window) {
-        // TODO
-        // - Get session state, and set it to the stateManager, and to the Authorization header.
-        // - Add an event listener that validate that each route that requires authentication or authorization
-        // passes the tests.
+        facebookInit();
+        moment.locale('he');
+        initHeaderData();
+
+        function initHeaderData(){
+          $rootScope.header = {};
+          resetHeaderData();
+          $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+            resetHeaderData();
+          });
+        }
+
+        function resetHeaderData(){
+          $rootScope.header.title='';
+          $rootScope.header.subTitle='';
+          $rootScope.header.shouldShowButton = false;
+        };
+
         function facebookInit(){
             $rootScope.user = {};
 
@@ -91,6 +106,4 @@ angular.module('app', [
                 fjs.parentNode.insertBefore(js, fjs);
             }(document, 'script', 'facebook-jssdk'));
         }
-        facebookInit();
-        moment.locale('he');
     }]);

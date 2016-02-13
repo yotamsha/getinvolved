@@ -9,7 +9,7 @@ def handle_constraints():
     username_index = IndexModel('user_name', name='user_name_index', unique=True)
     phone_number_index = IndexModel(
         [("phone_number.number", pymongo.ASCENDING), ("phone_number.country_code", pymongo.ASCENDING)],
-        name='phone_number_index', unique=True)
+        name='phone_number_index', unique=True, sparse=True)
     db.users.create_indexes([email_index, phone_number_index, username_index])
 
 

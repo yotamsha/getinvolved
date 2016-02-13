@@ -20,7 +20,6 @@ class Case(Resource):
                     geo = l.get_lat_lng(address)
                     address['geo'] = geo
 
-    @requires_auth
     def get(self, case_id):
         try:
             case = db.cases.find_one({'_id': u.to_object_id(case_id)})
@@ -92,7 +91,6 @@ class CaseList(Resource):
         self.reqparse = reqparse.RequestParser()
         super(CaseList, self).__init__()
 
-    @requires_auth
     def get(self):
         try:
             _filter, projection, sort, page_size_str, page_number_str = u.get_fields_projection_and_filter(request)

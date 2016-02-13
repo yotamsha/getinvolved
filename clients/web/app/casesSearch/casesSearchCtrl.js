@@ -12,11 +12,11 @@ angular.module('app.casesSearch', [])
             controller: 'casesSearchCtrl'
         });
     }])
-    .controller('casesSearchCtrl', ['$scope', 'Restangular', '$stateParams','DialogsService','moment',
-        function ($scope, Restangular, $stateParams, DialogsService, moment) {
-
-
-
+    .controller('casesSearchCtrl', ['$scope', 'Restangular', '$stateParams','DialogsService','moment','$rootScope',
+        function ($scope, Restangular, $stateParams, DialogsService, moment, $rootScope) {
+            $rootScope.header.title = "בואו נתערב"
+            $rootScope.header.subTitle = "מגוון אפשרויות להתנדבות חד פעמית שיהפכו רגע פנוי לרגע של שינוי";
+            $rootScope.header.shouldShowButton = true;
             // --- INNER FUNCTIONS --- //
             // function createCasesArr(){
             //   var arr = [];
