@@ -3,6 +3,7 @@
 // Declare app level module which depends on views, and components
 angular.module('app', [
         // External modules
+        'angularUtils.directives.dirPagination',
         'ngRoute',
         'ngMaterial',
         'ngCookies',
