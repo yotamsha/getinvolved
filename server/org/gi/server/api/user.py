@@ -54,7 +54,6 @@ class User(Resource):
             return str(e), u.HTTP_NOT_FOUND
         return '', u.HTTP_NO_CONTENT
 
-    @requires_auth
     def post(self):
         faults = []
         payload = request.json
