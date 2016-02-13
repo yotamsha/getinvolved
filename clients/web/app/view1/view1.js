@@ -10,8 +10,8 @@ angular.module('app.view1', [])
         });
     }])
 
-    .controller('View1Ctrl', ['$scope', '$http', '$timeout', 'appData', '$q','$filter','Restangular',
-        function View1Ctrl($scope, $http, $timeout, appData, $q, $filter, Restangular) {
+    .controller('View1Ctrl', ['$scope', '$http', '$timeout', '$q','$filter','Restangular',
+        function View1Ctrl($scope, $http, $timeout, $q, $filter, Restangular) {
 
             var tasksDao = Restangular.all('tasks');
 

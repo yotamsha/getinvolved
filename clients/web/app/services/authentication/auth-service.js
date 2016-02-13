@@ -7,15 +7,15 @@
 'use strict';
 
 angular.module('app.services.authentication.auth-service', [])
-    .service('AuthService', ['Restangular','$rootScope','$cookieStore', '$http','$timeout',
+    .service('AuthService', ['Restangular', '$rootScope', '$cookieStore', '$http', '$timeout',
         function (Restangular, $rootScope, $cookieStore, $http, $timeout) {
             var facebookAuthenticator = {
 
-                watchAuthenticationStatusChange : function() {
+                watchAuthenticationStatusChange: function () {
 
                     var _self = this;
 
-                    FB.Event.subscribe('auth.authResponseChange', function(res) {
+                    FB.Event.subscribe('auth.authResponseChange', function (res) {
 
                         if (res.status === 'connected') {
                             /*
@@ -44,29 +44,62 @@ angular.module('app.services.authentication.auth-service', [])
                     });
 
                 },
-                getUserInfo : function() {
-
+                getUserInfo: function () {
                     var _self = this;
-
-                    FB.api('/me', function(res) {
-
-                        $rootScope.$apply(function() {
-                            //alert("fb logged in");
-                            console.log("facebook login completed: " +res);
-                            $rootScope.user = _self.user = res;
-
-                        });
-
+                    FB.getLoginStatus(function (response) {
+                        if (response.authResponse) {
+                            console.log(response.authResponse);
+                            _self.signup(response.authResponse);
+                        } else {
+                            // do something...maybe show a login prompt
+                        }
                     });
 
+                    /*                    FB.api('/me', function(res) {
+
+                     $rootScope.$apply(function() {
+                     //alert("fb logged in");
+                     console.log("facebook login completed: " +res);
+                     $rootScope.user = _self.user = res;
+
+                     });
+
+                     })*/
+                    ;
+
                 },
-                logout : function() {
+                login: function () {
+
+                },
+                signup: function (authResponse) {
+                    var newUser = {
+                        /*                        "first_name": "One",
+                         "last_name": "User",
+                         "user_name": "one_user@gi.net",
+                         "email": "one_user@gi.net",
+                         "facebook_id": "1234567890431",*/
+                        "facebook_access_token": authResponse.accessToken
+                        /*
+                         "role": "ROLE_USER"
+                         */
+                    };
+/*                    var baseUsers = Restangular.all('users');
+                    baseUsers.post(newUser).then(function (response) {
+                        console.log("response: ", response);
+                    });*/
+                    $http.get("http://localhost:5000/login/fb_token/" + authResponse.accessToken).success(function(response){
+                        console.log(response);
+                    }).error(function(error){
+                        console.log(error);
+                    })
+                },
+                logout: function () {
 
                     var _self = this;
 
-                    FB.logout(function(response) {
+                    FB.logout(function (response) {
 
-                        $rootScope.$apply(function() {
+                        $rootScope.$apply(function () {
 
                             $rootScope.user = _self.user = {};
 
@@ -77,8 +110,8 @@ angular.module('app.services.authentication.auth-service', [])
                 }
 
             };
-        return {
-            facebookAuthenticator : facebookAuthenticator
+            return {
+                facebookAuthenticator: facebookAuthenticator
 
-        };
-    }]);
+            };
+        }]);

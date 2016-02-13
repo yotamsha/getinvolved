@@ -64,7 +64,10 @@ angular.module('app', [
 
         }])
     .run(['moment', '$http', '$rootScope', 'AuthService','$window', function (moment, $http, $rootScope, AuthService, $window) {
-
+        // TODO
+        // - Get session state, and set it to the stateManager, and to the Authorization header.
+        // - Add an event listener that validate that each route that requires authentication or authorization
+        // passes the tests.
         function facebookInit(){
             $rootScope.user = {};
 
