@@ -23,5 +23,8 @@
   },
   "devDependencies": {
     "moment": "~2.11.1"
+  },
+  "resolutions": {
+    "angular": "^1.3"
   }
 }
