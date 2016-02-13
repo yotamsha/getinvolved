@@ -2,11 +2,13 @@
 
 angular.module('app.view1', [])
 
-    .config(['$stateProvider', function ($stateProvider) {
+    .config(['$stateProvider','USER_ROLES', function ($stateProvider, USER_ROLES) {
         $stateProvider.state('view1', {
             url : "/view1",
             templateUrl: 'view1/view1.html',
-            controller: 'View1Ctrl'
+            data: {
+                authorizedRoles: [USER_ROLES.admin]
+            }
         });
     }])
 

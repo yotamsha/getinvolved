@@ -9,14 +9,19 @@ angular.module('app.casesSearch', [])
         $stateProvider.state('casesSearch', {
             url: "/cases",
             templateUrl: 'casesSearch/casesSearch.html',
-            controller: 'casesSearchCtrl'
+            controller: 'casesSearchCtrl',
+            data: {
+                header: {
+                    shouldShowButton: true,
+                    subTitle: "מגוון אפשרויות להתנדבות חד פעמית שיהפכו רגע פנוי לרגע של שינוי",
+                    title: "בואו נתערב"
+                }
+            }
         });
     }])
-    .controller('casesSearchCtrl', ['$scope', 'Restangular', '$stateParams','DialogsService','moment','$rootScope',
+    .controller('casesSearchCtrl', ['$scope', 'Restangular', '$stateParams', 'DialogsService', 'moment', '$rootScope',
         function ($scope, Restangular, $stateParams, DialogsService, moment, $rootScope) {
-            $rootScope.header.title = "בואו נתערב"
-            $rootScope.header.subTitle = "מגוון אפשרויות להתנדבות חד פעמית שיהפכו רגע פנוי לרגע של שינוי";
-            $rootScope.header.shouldShowButton = true;
+
             // --- INNER FUNCTIONS --- //
             // function createCasesArr(){
             //   var arr = [];
@@ -33,16 +38,16 @@ angular.module('app.casesSearch', [])
 
             function _init() {
                 $scope.vm = {
-                  cases : [],
-                  reverse: false
+                    cases: [],
+                    reverse: false
                 };
 
                 var baseCases = Restangular.all('cases');
-                baseCases.getList().then(function(cases){
-                  $scope.vm.cases = cases;
+                baseCases.getList().then(function (cases) {
+                    $scope.vm.cases = cases;
                 });
 
-                $scope.vm.changeSort = function(isReversed){
+                $scope.vm.changeSort = function (isReversed) {
                     $scope.vm.reverse = isReversed;
                 }
             }

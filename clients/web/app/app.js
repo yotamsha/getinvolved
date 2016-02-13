@@ -11,6 +11,8 @@ angular.module('app', [
         'restangular',
         'ui.router',
 
+        // common
+        'app.common.constants',
         // App views
         'app.view1',
         'app.view2',
@@ -27,6 +29,7 @@ angular.module('app', [
         'app.services.language-service',
         'app.services.dialogs-service',
         'app.services.authentication.auth-service',
+        'app.services.interceptors',
 
         // 3rd-Party Wrappers - We wrap 3rd party libraries that aren't angular modules in order
         // to keep the global window clean. Only these libraries are accessible through a single variable: window._thirdParty
@@ -41,7 +44,12 @@ angular.module('app', [
         },
         'preferredLocale': 'he_HE'
     })
-    .config(['$urlRouterProvider', '$translateProvider', '$mdThemingProvider', 'RestangularProvider','$httpProvider',
+/*    .constant('USER_ROLES', {
+        admin: 'admin_role',
+        user: 'user_role',
+        public: 'public_role'
+    })*/
+    .config(['$urlRouterProvider', '$translateProvider', '$mdThemingProvider', 'RestangularProvider', '$httpProvider',
         function ($urlRouterProvider, $translateProvider, $mdThemingProvider, RestangularProvider, $httpProvider) {
 
             RestangularProvider.setBaseUrl('http://localhost:5000/api');
@@ -64,48 +72,35 @@ angular.module('app', [
             $urlRouterProvider.otherwise("/cases");
 
         }])
-    .run(['moment', '$http', '$rootScope', 'AuthService','$window', function (moment, $http, $rootScope, AuthService, $window) {
+    .run(['moment', '$http', '$rootScope', 'AuthService', '$window', function (moment, $http, $rootScope, AuthService, $window) {
         // TODO
         // - Get session state, and set it to the stateManager, and to the Authorization header.
         // - Add an event listener that validate that each route that requires authentication or authorization
         // passes the tests.
         facebookInit();
         moment.locale('he');
-        initHeaderData();
 
-        function initHeaderData(){
-          $rootScope.header = {};
-          resetHeaderData();
-          $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-            resetHeaderData();
-          });
-        }
 
-        function resetHeaderData(){
-          $rootScope.header.title='';
-          $rootScope.header.subTitle='';
-          $rootScope.header.shouldShowButton = false;
-        };
-
-        function facebookInit(){
+        function facebookInit() {
             $rootScope.user = {};
 
-            $window.fbAsyncInit = function() {
+            $window.fbAsyncInit = function () {
                 // Executed when the SDK is loaded
                 FB.init({
-                    appId      : '836437249818535',
-                    cookie     : true,  // enable cookies to allow the server to access
-                                        // the session
-                    xfbml      : true,  // parse social plugins on this page
-                    version    : 'v2.2' // use version 2.2
+                    appId: '836437249818535',
+                    cookie: true,  // enable cookies to allow the server to access
+                                   // the session
+                    xfbml: true,  // parse social plugins on this page
+                    version: 'v2.2' // use version 2.2
                 });
                 AuthService.facebookAuthenticator.watchAuthenticationStatusChange();
 
             };
-            (function(d, s, id) {
+            (function (d, s, id) {
                 var js, fjs = d.getElementsByTagName(s)[0];
                 if (d.getElementById(id)) return;
-                js = d.createElement(s); js.id = id;
+                js = d.createElement(s);
+                js.id = id;
                 js.src = "//connect.facebook.net/en_US/sdk.js";
                 fjs.parentNode.insertBefore(js, fjs);
             }(document, 'script', 'facebook-jssdk'));
