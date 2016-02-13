@@ -276,11 +276,12 @@ class GIServerUsersTestCase(unittest.TestCase):
                           json=_load('a_user_with_str_phone_number.json', self.config_folder))
         self.assertEqual(r.status_code, 400)
 
-    def test_create_a_user_bad_access_token(self):
+    def test_doesnt_require_access_anymore(self):
+        self.remove_users_from_db()
         _AUTH = AccessTokenAuth('this is fake and should crashhh')
         r = requests.post('%s/users' % SERVER_URL_API, auth=_AUTH,
-                          json=_load('a_user_with_str_phone_number.json', self.config_folder))
-        self.assertEqual(r.status_code, 401)
+                          json=_load('a_user.json', self.config_folder))
+        self.assertEqual(r.status_code, 201)
 
     @unittest.skip("Skipping... It needs to run under production mode")
     def test_create_a_user_with_real_credentials(self):
