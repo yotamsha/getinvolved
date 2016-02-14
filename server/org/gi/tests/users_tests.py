@@ -1,4 +1,4 @@
-from org.gi.server.web_token import AccessTokenAuth
+from org.gi.server.web_token import AccessTokenAuth, generate_access_token
 
 __author__ = 'avishayb'
 
@@ -284,6 +284,20 @@ class GIServerUsersTestCase(unittest.TestCase):
         r = requests.post('%s/users' % SERVER_URL_API, auth=_AUTH,
                           json=_load('a_user.json', self.config_folder))
         self.assertEqual(r.status_code, utils.HTTP_CREATED)
+
+    def test_get_me(self):
+        self.remove_users_from_db()
+        r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH,
+                json=_load('a_user.json', self.config_folder))
+        db_user = json.loads(r.content)
+        db_user['_id'] = db_user['id']
+        access_token = generate_access_token(db_user)
+        _AUTH = AccessTokenAuth(access_token)
+        r = requests.get('%s/users/me' % SERVER_URL_API, auth=_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_OK)
+        returned_user = json.loads(r.content)
+        for key in returned_user.keys():
+            self.assertEqual(db_user[key], returned_user[key])
 
     @unittest.skip("Skipping... It needs to run under production mode")
     def test_create_a_user_with_real_credentials(self):
