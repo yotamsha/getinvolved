@@ -7,6 +7,8 @@ import sys
 import json
 import os
 from org.gi.server.web_token import generate_access_token, AccessTokenAuth
+import org.gi.server.utils as utils
+
 from requests.exceptions import ConnectionError
 
 DB_URI = config.get_db_uri()
@@ -22,7 +24,7 @@ def validate_server_is_up():
     try:
         ping_url = '%s/ping' % SERVER_URL_API
         r = requests.get(ping_url)
-        if r.status_code != 200:
+        if r.status_code != utils.HTTP_OK:
             raise Exception(SERVER_NO_PING % (r.status_code, ping_url))
     except ConnectionError as ce:
         raise Exception (SERVER_DOWN_MSG % str(ce))
@@ -31,7 +33,7 @@ def validate_server_is_up():
 def _get_id(self):
     _push_to_db(MONGO, 'users', self.users)
     r = requests.get('%s/users' % SERVER_URL_API)
-    self.assertEqual(r.status_code, 200)
+    self.assertEqual(r.status_code, utils.HTTP_OK)
     return r.json()['users'][0]['id']
 
 
