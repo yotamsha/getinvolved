@@ -73,6 +73,19 @@
 }
 
 .how-it-works-section{
+  padding-top: 30px;
   max-width: 1000px;
   margin: auto;
+
+  img{
+    width: 230px;
+  }
+}
+
+.how-it-works-link{
+  text-align: center;
+
+  .orange-bubble {
+    margin: 10px auto;
+  }
 }

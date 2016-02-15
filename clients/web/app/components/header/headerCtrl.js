@@ -7,7 +7,6 @@ angular.module('app.header.header-ctrl', [])
     .controller('headerCtrl', ['$location','$rootScope','$scope', function($location, $rootScope, $scope) {
         var ctrl = this;
 
-
         ctrl.title = $rootScope.header.title;
         $scope.$watch(function () { return $rootScope.header.title; }, function (newValue, oldValue) {
           if (newValue !== oldValue)
@@ -51,11 +50,4 @@ angular.module('app.header.header-ctrl', [])
             var currentRoute = $location.path();
             return route.link === currentRoute ? 'active ' + route.classes : '';
         };
-        /*        "views.main.header.login_or_signup" : "כניסה / הרשמה",
-                    "views.main.header.ask_help" : "לבקש עזרה",
-                    "views.main.header.about_us" : "קצת עלינו",
-                    "views.main.header.donors" : "תורמים",
-                    "views.main.header.opportunities" : "הזדמנויות",
-                    "views.main.header.success_stories" : "הצלחות",
-                    "views.main.header.troubleshooting" : "מסתבכים? דברו איתנו",*/
     }]);
