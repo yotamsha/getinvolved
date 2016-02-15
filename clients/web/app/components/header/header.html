@@ -2,6 +2,14 @@
   <div layout="row">
     <div class="logo"></div>
     <div hide-xs class="nav-bar" layout="row">
+      <div class="user-profile-link route-link" flex-offset="5">
+        <div ng-show="ctrl.authModel.isAuthenticated">
+          {{ctrl.authModel.userSession.first_name}} | <a href="#" ng-click="ctrl.authSrv.logout()">logout</a>
+        </div>
+        <div ng-show="!ctrl.authModel.isAuthenticated && !ctrl.authModel.isLoading" ng-click="ctrl.openLoginDialog()">
+          login
+        </div>
+      </div>
       <div  flex-offset="5" ng-repeat="route in ctrl.headerLinks" >
         <div class="route-link" ng-class="ctrl.navClass(route)" >
           <a href="#{{route.link}}"> {{route.textKey | translate}}</a>
@@ -9,11 +17,11 @@
       </div>
     </div>
   </div>
-  <div flex layout="row" flex layout-align="center start">
+  <div layout="row" flex layout-align="center start">
     <div flex layout="column" layout-align="start center">
-      <div class="header-title" hide show-gt-xs> {{ctrl.title}} </div>
-      <div class="header-subtitle" hide show-gt-xs> {{ctrl.subTitle}} </div>
-      <button class="header-btn" ng-click='ctrl.OnHeaderButtonClick()' ng-show='ctrl.shouldShowButton'> איך זה עובד </button>
+      <div class="header-title" hide show-gt-xs> {{ctrl.headerAttributes.title}} </div>
+      <div class="header-subtitle" hide show-gt-xs> {{ctrl.headerAttributes.subTitle}} </div>
+      <button class="header-btn" ng-show='ctrl.headerAttributes.shouldShowButton' ng-click='ctrl.onHeaderButtonClick()'> איך זה עובד </button>
     </div>
   </div>
 </div>

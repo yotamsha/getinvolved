@@ -1,9 +1,6 @@
 /**
  * Created by yotam on 13/2/2016.
  */
-/**
- * Created by yotam on 13/2/2016.
- */
 angular.module('app.services.interceptors')
     .factory('AuthInterceptor', function ($rootScope, $q, AUTH_EVENTS) {
         return {

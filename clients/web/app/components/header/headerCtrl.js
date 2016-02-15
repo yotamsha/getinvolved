@@ -4,49 +4,35 @@
 
 angular.module('app.header.header-ctrl', [])
 
-    .controller('headerCtrl', ['$location','$rootScope','$scope', function($location, $rootScope, $scope) {
+    .controller('headerCtrl', ['$location','$rootScope','AuthService','DialogsService',
+        function($location, $rootScope, AuthService, DialogsService) {
         var ctrl = this;
-
-        ctrl.title = $rootScope.header.title;
-        $scope.$watch(function () { return $rootScope.header.title; }, function (newValue, oldValue) {
-          if (newValue !== oldValue)
-            ctrl.title = newValue;
-        });
-        ctrl.subTitle = $rootScope.header.subTitle;
-        $scope.$watch(function () { return $rootScope.header.subTitle; }, function (newValue, oldValue) {
-          if (newValue !== oldValue)
-            ctrl.subTitle = newValue;
-        });
-        ctrl.shouldShowButton = $rootScope.header.shouldShowButton;
-        $scope.$watch(function () { return $rootScope.header.shouldShowButton; }, function (newValue, oldValue) {
-          if (newValue !== oldValue)
-            ctrl.shouldShowButton = newValue;
-        });
-
-        ctrl.showHowItWorksSection = false;
-        ctrl.OnHeaderButtonClick = function(){
-          ctrl.showHowItWorksSection = !ctrl.showHowItWorksSection;
-        }
-
-        ctrl.headerLinks = [
-            {
-                textKey : "views.main.header.ask_help",
-                link : "/cases",
-                classes : "ask-help"
-            },
-            {
-                textKey : "views.main.header.login_or_signup",
-                link : "/case/1",
-                classes : "login-signup"
-            },
-            {
-                textKey : "views.main.header.about_us",
-                link : "/about_us",
-                classes : "about-us"
-            }
-        ];
-
-        ctrl.howItWorksLinks = [
+        var _headerDefaults = {
+            title : "",
+            subTitle : "",
+            shouldShowButton : false
+        };
+        function _init(){
+          ctrl.showHowItWorksSection = false;
+          ctrl.headerLinks = [
+                {
+                    textKey : "views.main.header.ask_help",
+                    link : "/cases",
+                    classes : "ask-help"
+                },
+                {
+                    textKey : "views.main.header.login_or_signup",
+                    link : "/case/1",
+                    classes : "login-signup"
+                },
+                {
+                    textKey : "views.main.header.about_us",
+                    link : "/about_us",
+                    classes : "about-us"
+                }
+            ];
+          ctrl.headerAttributes = angular.copy(_headerDefaults);
+        	ctrl.howItWorksLinks = [
             {
                 title: "מגוון מקרים",
                 subtitle: "בקשות עזרה מכל הארץ ובכל תחום מחכות להתערבות שלך",
@@ -65,10 +51,29 @@ angular.module('app.header.header-ctrl', [])
               url : "/cases",
               imageUrl : "\\assets\\img\\how-it-works\\help-and-change-banner.png"
             }
-        ];
+          ];
+        }
 
         ctrl.navClass = function (route) {
             var currentRoute = $location.path();
             return route.link === currentRoute ? 'active ' + route.classes : '';
         };
+
+        ctrl.onHeaderButtonClick = function(){
+          ctrl.showHowItWorksSection = !ctrl.showHowItWorksSection;
+        }
+
+        ctrl.updateHeaderContent = function(toState){
+            var newStateProperties = toState.data || {};
+            angular.extend(ctrl.headerAttributes,_headerDefaults,newStateProperties.header || {})
+        };
+        ctrl.openLoginDialog = function(ev) {
+            DialogsService.openDialog({dialog : 'login'});
+        };
+
+        $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+            ctrl.updateHeaderContent(toState);
+        });
+
+        _init();
     }]);
