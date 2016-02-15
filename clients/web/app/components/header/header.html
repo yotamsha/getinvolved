@@ -1,4 +1,4 @@
-<div class="header">
+<div class="header" layout="column">
   <div layout="row">
     <div class="logo"></div>
     <div hide-xs class="nav-bar" layout="row">
@@ -9,11 +9,22 @@
       </div>
     </div>
   </div>
-  <div layout="row" layout-fill layout-align="center start">
-    <div layout="column" layout-align="start center">
+  <div flex layout="row" flex layout-align="center start">
+    <div flex layout="column" layout-align="start center">
       <div class="header-title" hide show-gt-xs> {{ctrl.title}} </div>
       <div class="header-subtitle" hide show-gt-xs> {{ctrl.subTitle}} </div>
-      <button class="header-btn" ng-show='ctrl.shouldShowButton'> איך זה עובד </button>
+      <button class="header-btn" ng-click='ctrl.OnHeaderButtonClick()' ng-show='ctrl.shouldShowButton'> איך זה עובד </button>
     </div>
+  </div>
+</div>
+<div class="how-it-works-section" layout="row" layout-wrap ng-if="ctrl.showHowItWorksSection" class="how-it-works-section">
+  <div flex-gt-sm="33" flex-sm="50" flex-xs="100">
+    lalala
+  </div>
+  <div flex-gt-sm="33" flex-sm="50" flex-xs="100">
+    lalala
+  </div>
+  <div flex-gt-sm="33" flex-sm="50" flex-xs="100">
+    lalala
   </div>
 </div>

@@ -24,6 +24,12 @@ angular.module('app.header.header-ctrl', [])
             ctrl.shouldShowButton = newValue;
         });
 
+        ctrl.showHowItWorksSection = false;
+
+        ctrl.OnHeaderButtonClick = function(){
+          ctrl.showHowItWorksSection = !ctrl.showHowItWorksSection;
+        }
+
         ctrl.headerLinks = [
             {
                 textKey : "views.main.header.ask_help",
