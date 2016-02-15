@@ -11,3 +11,4 @@ pycountry
 googlemaps
 requests==2.2.1
 flask-cors
+jinja2

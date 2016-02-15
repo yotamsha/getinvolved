@@ -2,6 +2,7 @@
 
 // Declare app level module which depends on views, and components
 angular.module('app', [
+
         // External modules
         'angularUtils.directives.dirPagination',
         'ngRoute',
@@ -11,6 +12,9 @@ angular.module('app', [
         'pascalprecht.translate',// angular-translate
         'restangular',
         'ui.router',
+
+        // common
+        'app.common.constants',
 
         // App views
         'app.view1',
@@ -28,6 +32,7 @@ angular.module('app', [
         'app.services.language-service',
         'app.services.dialogs-service',
         'app.services.authentication.auth-service',
+        'app.services.interceptors',
 
         // 3rd-Party Wrappers - We wrap 3rd party libraries that aren't angular modules in order
         // to keep the global window clean. Only these libraries are accessible through a single variable: window._thirdParty
@@ -42,8 +47,11 @@ angular.module('app', [
         },
         'preferredLocale': 'he_HE'
     })
-    .config(['$urlRouterProvider', '$translateProvider', '$mdThemingProvider', 'RestangularProvider','$httpProvider',
-        function ($urlRouterProvider, $translateProvider, $mdThemingProvider, RestangularProvider, $httpProvider) {
+    .constant('APP_CONFIG', {
+        'homeRoute' : '/cases'
+    })
+    .config(['$urlRouterProvider', '$translateProvider', '$mdThemingProvider', 'RestangularProvider','APP_CONFIG',
+        function ($urlRouterProvider, $translateProvider, $mdThemingProvider, RestangularProvider, APP_CONFIG) {
 
             RestangularProvider.setBaseUrl('http://localhost:5000/api');
             RestangularProvider.setDefaultHeaders({
@@ -62,10 +70,11 @@ angular.module('app', [
             $translateProvider.preferredLanguage('he_HE');// is applied on first load
             $translateProvider.useLocalStorage();// saves selected language to localStorage
             // App routing is using ui-router module - https://github.com/angular-ui/ui-router
-            $urlRouterProvider.otherwise("/cases");
+            $urlRouterProvider.otherwise(APP_CONFIG.homeRoute);
 
         }])
-    .run(['moment', '$http', '$rootScope', 'AuthService','$window', function (moment, $http, $rootScope, AuthService, $window) {
+    .run(['moment', '$http', '$rootScope', 'AuthService','$window','APP_CONFIG','$state','AUTH_EVENTS',
+        function (moment, $http, $rootScope, AuthService, $window, APP_CONFIG, $state, AUTH_EVENTS) {
         facebookInit();
         moment.locale('he');
         initHeaderData();
@@ -85,8 +94,6 @@ angular.module('app', [
         };
 
         function facebookInit(){
-            $rootScope.user = {};
-
             $window.fbAsyncInit = function() {
                 // Executed when the SDK is loaded
                 FB.init({

@@ -7,7 +7,12 @@ module.exports = function(config){
       'app/bower_components/angular/angular.js',
       'app/bower_components/angular-route/angular-route.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
-      'app/components/**/*.js',
+      'app/bower_components/angular-ui-router/release/angular-ui-router.min.js',
+      'app/bower_components/restangular/dist/restangular.min.js',
+      'app/bower_components/underscore/underscore-min.js',
+      'app/bower_components/angular-translate/angular-translate.min.js',
+
+        'app/components/**/*.js',
       'app/view*/**/*.js'
     ],
 

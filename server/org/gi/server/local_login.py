@@ -10,7 +10,7 @@ local_login_bp = Blueprint('local_login_bp', __name__)
 @local_login_bp.route('/login', methods=['GET', 'POST'])
 @requires_user_password
 def login():
-    username = request.authorization.username
+    username = session['username']
     user = db.users.find_one({'user_name': username})
     if user:
         return generate_access_token(user)
