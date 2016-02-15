@@ -4,6 +4,7 @@
   background-repeat: no-repeat;
   height: 270px;
   width: 100%;
+
   .logo {
     background-image: url("../img/logo.png");
     background-size: contain;
@@ -61,7 +62,6 @@
     }
     a {
       color: #ffffff;
-      text-decoration: none;
     }
     a:visited {
       color: #ffffff;
@@ -87,5 +87,10 @@
 
   .orange-bubble {
     margin: 10px auto;
+  }
+
+  .subtitle {
+    margin: auto;
+    width: 230px;
   }
 }

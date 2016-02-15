@@ -24,7 +24,6 @@ angular.module('app.header.header-ctrl', [])
         });
 
         ctrl.showHowItWorksSection = false;
-
         ctrl.OnHeaderButtonClick = function(){
           ctrl.showHowItWorksSection = !ctrl.showHowItWorksSection;
         }
@@ -46,6 +45,28 @@ angular.module('app.header.header-ctrl', [])
                 classes : "about-us"
             }
         ];
+
+        ctrl.howItWorksLinks = [
+            {
+                title: "מגוון מקרים",
+                subtitle: "בקשות עזרה מכל הארץ ובכל תחום מחכות להתערבות שלך",
+                url : "/cases",
+                imageUrl : "\\assets\\img\\how-it-works\\variety-Of-cases-banner.png"
+            },
+            {
+              title: "בדרך שלך",
+              subtitle: "איפה שנוח לך, מתי שמתאים לך, ולמי שחשוב לך",
+              url : "/cases",
+              imageUrl : "\\assets\\img\\how-it-works\\your-way-banner.png"
+            },
+            {
+              title: "לעזור ולשנות",
+              subtitle: "מתערבים בקטנה, משפיעים בגדול",
+              url : "/cases",
+              imageUrl : "\\assets\\img\\how-it-works\\help-and-change-banner.png"
+            }
+        ];
+
         ctrl.navClass = function (route) {
             var currentRoute = $location.path();
             return route.link === currentRoute ? 'active ' + route.classes : '';
