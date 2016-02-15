@@ -4,7 +4,8 @@
 
 angular.module('app.header.header-ctrl', [])
 
-    .controller('headerCtrl', ['$location','$rootScope','$scope', function($location, $rootScope, $scope) {
+    .controller('headerCtrl', ['$location','$rootScope','AuthService','DialogsService',
+        function($location, $rootScope, AuthService, DialogsService) {
         var ctrl = this;
         var _headerDefaults = {
             title : "",
@@ -30,12 +31,11 @@ angular.module('app.header.header-ctrl', [])
                 }
             ];
             ctrl.headerAttributes = angular.copy(_headerDefaults);
+
+            ctrl.authSrv = AuthService;
+            ctrl.authModel = AuthService.model();
         }
 
-
-/*        $rootScope.header.title = "בואו נתערב"
-        $rootScope.header.subTitle = "מגוון אפשרויות להתנדבות חד פעמית שיהפכו רגע פנוי לרגע של שינוי";
-        $rootScope.header.shouldShowButton = true;*/
         ctrl.navClass = function (route) {
             var currentRoute = $location.path();
             return route.link === currentRoute ? 'active ' + route.classes : '';
@@ -44,6 +44,9 @@ angular.module('app.header.header-ctrl', [])
         ctrl.updateHeaderContent = function(toState){
             var newStateProperties = toState.data || {};
             angular.extend(ctrl.headerAttributes,_headerDefaults,newStateProperties.header || {})
+        };
+        ctrl.openLoginDialog = function(ev) {
+            DialogsService.openDialog({dialog : 'login'});
         };
 
         $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {

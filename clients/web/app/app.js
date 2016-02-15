@@ -82,7 +82,6 @@ angular.module('app', [
 
 
         function facebookInit() {
-            $rootScope.user = {};
 
             $window.fbAsyncInit = function () {
                 // Executed when the SDK is loaded

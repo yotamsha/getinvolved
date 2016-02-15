@@ -2,6 +2,14 @@
   <div layout="row">
     <div class="logo"></div>
     <div hide-xs class="nav-bar" layout="row">
+      <div class="user-profile-link route-link" flex-offset="5">
+        <div ng-show="ctrl.authModel.isAuthenticated">
+          {{ctrl.authModel.userSession.first_name}} | <a href="#" ng-click="ctrl.authSrv.logout()">logout</a>
+        </div>
+        <div ng-show="!ctrl.authModel.isAuthenticated && !ctrl.authModel.isLoading" ng-click="ctrl.openLoginDialog()">
+          login
+        </div>
+      </div>
       <div  flex-offset="5" ng-repeat="route in ctrl.headerLinks" >
         <div class="route-link" ng-class="ctrl.navClass(route)" >
           <a href="#{{route.link}}"> {{route.textKey | translate}}</a>

@@ -5,8 +5,8 @@
 
 angular.module('app.login', [])
 
-    .controller('loginCtrl', ['$scope', '$mdDialog','AuthService','$timeout',
-        function ($scope, $mdDialog, AuthService, $timeout) {
+    .controller('loginCtrl', ['$scope', '$mdDialog','AuthService','$timeout','AUTH_EVENTS',
+        function ($scope, $mdDialog, AuthService, $timeout, AUTH_EVENTS) {
 
             // --- INNER FUNCTIONS --- //
 
@@ -16,6 +16,9 @@ angular.module('app.login', [])
                 $timeout(function(){
                     FB.XFBML.parse();
                 },0);
+                $scope.$on(AUTH_EVENTS.authenticationCompleted,function(){
+                    $scope.hide();
+                })
             }
 
             // --- SCOPE FUNCTIONS --- //

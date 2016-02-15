@@ -11,8 +11,13 @@
     </md-toolbar>
     <md-dialog-content>
         <div class="md-dialog-content" style="overflow: hidden">
-            <fb:login-button scope="public_profile,email" >
-            </fb:login-button>
+            <div class="col">
+                <div class="row fb-button">
+                    <fb:login-button scope="public_profile,email" >
+                    </fb:login-button>
+                </div>
+            </div>
+
 <!--            <div class="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="false" data-auto-logout-link="false"></div>
 
 &lt;!&ndash;
@@ -22,13 +27,13 @@
     </md-dialog-content>
     <md-dialog-actions layout="row">
 
-        <span flex></span>
+<!--        <span flex></span>
         <md-button ng-click="answer('not useful')">
             Not Useful
         </md-button>
         <md-button ng-click="answer('useful')" style="margin-right:20px;">
             Useful
-        </md-button>
+        </md-button>-->
     </md-dialog-actions>
 </form>
 </md-dialog>
