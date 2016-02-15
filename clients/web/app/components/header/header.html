@@ -11,9 +11,9 @@
   </div>
   <div layout="row" layout-fill layout-align="center start">
     <div layout="column" layout-align="start center">
-      <div class="header-title" hide show-gt-xs> {{ctrl.title}} </div>
-      <div class="header-subtitle" hide show-gt-xs> {{ctrl.subTitle}} </div>
-      <button class="header-btn" ng-show='ctrl.shouldShowButton'> איך זה עובד </button>
+      <div class="header-title" hide show-gt-xs> {{ctrl.headerAttributes.title}} </div>
+      <div class="header-subtitle" hide show-gt-xs> {{ctrl.headerAttributes.subTitle}} </div>
+      <button class="header-btn" ng-show='ctrl.headerAttributes.shouldShowButton'> איך זה עובד </button>
     </div>
   </div>
 </div>
