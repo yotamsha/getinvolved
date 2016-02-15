@@ -80,6 +80,30 @@
   img{
     width: 230px;
   }
+
+  &.ng-enter, &.ng-leave {
+    -webkit-transition: 0.5s linear all;
+    -moz-transition: 0.5s linear all;
+    -ms-transition: 0.5s linear all;
+    -o-transition: 0.5s linear all;
+    transition: 0.5s linear all;
+  }
+
+  &.ng-leave.ng-leave-active,
+  &.ng-enter {
+		max-height: 0;
+    opacity: 0;
+	}
+  
+	&.ng-enter.ng-enter-active,
+	&.ng-leave {
+		max-height: 600px;
+    opacity: 1;
+	}
+
+	&.ng-leave, &.ng-enter {
+		transition: all 350ms linear;
+	}
 }
 
 .how-it-works-link{

@@ -4,6 +4,7 @@
 angular.module('app', [
 
         // External modules
+        'ngAnimate',
         'ngRoute',
         'ngMaterial',
         'ngCookies',
