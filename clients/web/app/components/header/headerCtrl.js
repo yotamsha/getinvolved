@@ -34,20 +34,20 @@ angular.module('app.header.header-ctrl', [])
           ctrl.headerAttributes = angular.copy(_headerDefaults);
         	ctrl.howItWorksLinks = [
             {
-                title: "מגוון מקרים",
-                subtitle: "בקשות עזרה מכל הארץ ובכל תחום מחכות להתערבות שלך",
+                title: "views.main.header.how-it-works.variety_of_cases",
+                subtitle: "views.main.header.how-it-works.variety_of_cases_subtitle",
                 url : "/cases",
                 imageUrl : "\\assets\\img\\how-it-works\\variety-Of-cases-banner.png"
             },
             {
-              title: "בדרך שלך",
-              subtitle: "איפה שנוח לך, מתי שמתאים לך, ולמי שחשוב לך",
+              title: "views.main.header.how-it-works.your_way",
+              subtitle: "views.main.header.how-it-works.your_way_subtitle",
               url : "/cases",
               imageUrl : "\\assets\\img\\how-it-works\\your-way-banner.png"
             },
             {
-              title: "לעזור ולשנות",
-              subtitle: "מתערבים בקטנה, משפיעים בגדול",
+              title: "views.main.header.how-it-works.help_and_change",
+              subtitle: "views.main.header.how-it-works.help_and_change_subtitle",
               url : "/cases",
               imageUrl : "\\assets\\img\\how-it-works\\help-and-change-banner.png"
             }
