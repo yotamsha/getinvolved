@@ -13,8 +13,8 @@ angular.module('app.casesSearch', [])
             data: {
                 header: {
                     shouldShowButton: true,
-                    subTitle: "מגוון אפשרויות להתנדבות חד פעמית שיהפכו רגע פנוי לרגע של שינוי",
-                    title: "בואו נתערב"
+                    subTitle: "views.casesSearch.case.header_subtitle",
+                    title: "views.casesSearch.case.header_title"
                 }
             }
         });
