@@ -1,0 +1,25 @@
+{
+  "tasks": [
+    {
+      "type": "GENERAL",
+      "title": "t1",
+      "due_date": "__REPLACE__",
+      "description": "I need help with T1"
+    },
+    {
+      "type": "GENERAL",
+      "title": "t2",
+      "due_date": "__REPLACE__",
+      "description": "I need help with T2"
+    },
+    {
+      "type": "GENERAL",
+      "title": "t3",
+      "due_date": "__REPLACE__",
+      "description": "I need help with T3"
+    }
+  ],
+  "petitioner_id": "__REPLACE__",
+  "description": "I need help with...",
+  "title": "Help requests.."
+}

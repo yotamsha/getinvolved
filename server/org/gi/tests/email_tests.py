@@ -1,7 +1,7 @@
 __author__ = 'avishayb'
 import unittest
 
-from org.gi.server.services import send_email as e
+from org.gi.server.service import send_email as e
 
 
 class GIEmailTestCase(unittest.TestCase):

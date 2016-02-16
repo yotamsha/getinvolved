@@ -1,7 +1,9 @@
 __author__ = 'avishayb'
 import unittest
+
 from misc import _load
-from org.gi.server import validations as v
+from org.gi.server.validation import validations as v
+
 
 class GIAddressValidationTestCase(unittest.TestCase):
     def __init__(self, *args, **kwargs):

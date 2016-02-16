@@ -1,6 +1,6 @@
 import unittest
 
-from org.gi.server.services.send_sms import send_sms
+from org.gi.server.service.send_sms import send_sms
 
 
 class GISMSTestCase(unittest.TestCase):
