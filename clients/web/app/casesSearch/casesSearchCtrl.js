@@ -50,6 +50,9 @@ angular.module('app.casesSearch', [])
                 $scope.vm.changeSort = function (isReversed) {
                     $scope.vm.reverse = isReversed;
                 }
+                $scope.vm.onPageChange = function(){
+                  // We want to scroll to top of the list here
+                }
             }
 
             // --- INIT --- //

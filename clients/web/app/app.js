@@ -5,6 +5,7 @@ angular.module('app', [
 
         // External modules
         'ngAnimate',
+        'angularUtils.directives.dirPagination',
         'ngRoute',
         'ngMaterial',
         'ngCookies',

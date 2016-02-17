@@ -37,4 +37,31 @@
   .case-title {
     margin-bottom: 10px;
   }
+
+  .paging-controls-container{
+    text-align: center;
+
+    li {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 16px;
+      text-decoration: none;
+      border: 1px solid #D9D9D9;
+      color: #22A5B9;
+
+      &.active {
+        background-color: #22A5B9;
+        color: #ffffff;
+      }
+
+      &.disabled {
+        color: #999;
+        a { cursor: default; }
+      }
+    }
+
+    a {
+      text-decoration:none;
+    }
+  }
 }
