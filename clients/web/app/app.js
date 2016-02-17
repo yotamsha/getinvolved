@@ -4,6 +4,7 @@
 angular.module('app', [
 
         // External modules
+        'ngAnimate',
         'angularUtils.directives.dirPagination',
         'ngRoute',
         'ngMaterial',
@@ -73,43 +74,34 @@ angular.module('app', [
             $urlRouterProvider.otherwise(APP_CONFIG.homeRoute);
 
         }])
-    .run(['moment', '$http', '$rootScope', 'AuthService','$window','APP_CONFIG','$state','AUTH_EVENTS',
-        function (moment, $http, $rootScope, AuthService, $window, APP_CONFIG, $state, AUTH_EVENTS) {
+    .run(['moment', '$http', '$rootScope', 'AuthService', '$window', function (moment, $http, $rootScope, AuthService, $window) {
+        // TODO
+        // - Get session state, and set it to the stateManager, and to the Authorization header.
+        // - Add an event listener that validate that each route that requires authentication or authorization
+        // passes the tests.
         facebookInit();
         moment.locale('he');
-        initHeaderData();
 
-        function initHeaderData(){
-          $rootScope.header = {};
-          resetHeaderData();
-          $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-            resetHeaderData();
-          });
-        }
 
-        function resetHeaderData(){
-          $rootScope.header.title='';
-          $rootScope.header.subTitle='';
-          $rootScope.header.shouldShowButton = false;
-        };
+        function facebookInit() {
 
-        function facebookInit(){
-            $window.fbAsyncInit = function() {
+            $window.fbAsyncInit = function () {
                 // Executed when the SDK is loaded
                 FB.init({
-                    appId      : '836437249818535',
-                    cookie     : true,  // enable cookies to allow the server to access
-                                        // the session
-                    xfbml      : true,  // parse social plugins on this page
-                    version    : 'v2.2' // use version 2.2
+                    appId: '836437249818535',
+                    cookie: true,  // enable cookies to allow the server to access
+                                   // the session
+                    xfbml: true,  // parse social plugins on this page
+                    version: 'v2.2' // use version 2.2
                 });
                 AuthService.facebookAuthenticator.watchAuthenticationStatusChange();
 
             };
-            (function(d, s, id) {
+            (function (d, s, id) {
                 var js, fjs = d.getElementsByTagName(s)[0];
                 if (d.getElementById(id)) return;
-                js = d.createElement(s); js.id = id;
+                js = d.createElement(s);
+                js.id = id;
                 js.src = "//connect.facebook.net/en_US/sdk.js";
                 fjs.parentNode.insertBefore(js, fjs);
             }(document, 'script', 'facebook-jssdk'));

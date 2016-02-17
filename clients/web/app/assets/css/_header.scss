@@ -4,6 +4,7 @@
   background-repeat: no-repeat;
   height: 270px;
   width: 100%;
+
   .logo {
     background-image: url("../img/logo.png");
     background-size: contain;
@@ -38,9 +39,6 @@
   }
 
   .nav-bar {
-    /*
-    margin-top: 45px;
-    */
     margin-right: 40px;
     min-width: 600px;
     color: #ffffff;
@@ -64,7 +62,6 @@
     }
     a {
       color: #ffffff;
-      text-decoration: none;
     }
     a:visited {
       color: #ffffff;
@@ -72,5 +69,52 @@
     a:hover {
       color: #F4EEEE;
     }
+  }
+}
+
+.how-it-works-section{
+  padding-top: 30px;
+  max-width: 1000px;
+  margin: auto;
+
+  img{
+    width: 230px;
+  }
+
+  &.ng-enter, &.ng-leave {
+    -webkit-transition: 0.5s linear all;
+    -moz-transition: 0.5s linear all;
+    -ms-transition: 0.5s linear all;
+    -o-transition: 0.5s linear all;
+    transition: 0.5s linear all;
+  }
+
+  &.ng-leave.ng-leave-active,
+  &.ng-enter {
+		max-height: 0;
+    opacity: 0;
+	}
+  
+	&.ng-enter.ng-enter-active,
+	&.ng-leave {
+		max-height: 600px;
+    opacity: 1;
+	}
+
+	&.ng-leave, &.ng-enter {
+		transition: all 350ms linear;
+	}
+}
+
+.how-it-works-link{
+  text-align: center;
+
+  .orange-bubble {
+    margin: 10px auto;
+  }
+
+  .subtitle {
+    margin: auto;
+    width: 230px;
   }
 }

@@ -4,10 +4,14 @@
 'use strict';
 
 angular.module('app.services.authentication.auth-service', [])
-    .service('AuthService', ['Restangular', '$rootScope', '$cookieStore', '$http', 'USER_ROLES','$q',
-        function (Restangular, $rootScope, $cookieStore, $http, USER_ROLES, $q) {
+    .service('AuthService', ['Restangular', '$rootScope', '$cookieStore', '$http', 'USER_ROLES', '$q', 'AUTH_EVENTS',
+        function (Restangular, $rootScope, $cookieStore, $http, USER_ROLES, $q, AUTH_EVENTS) {
             var LOCAL_TOKEN_KEY = "AUTH-TOKEN";
-            var _isAuthenticated = false;
+            var authModel = {
+                isAuthenticated: false,
+                userSession: null,
+                isLoading: true
+            }
             var facebookAuthenticator = {
                 watchAuthenticationStatusChange: function () {
 
@@ -67,27 +71,23 @@ angular.module('app.services.authentication.auth-service', [])
 
                 },
                 login: function (authResponse) {
-                    var newUser = {
-                        /*                        "first_name": "One",
-                         "last_name": "User",
-                         "user_name": "one_user@gi.net",
-                         "email": "one_user@gi.net",
-                         "facebook_id": "1234567890431",*/
-                        "facebook_access_token": authResponse.accessToken
-                        /*
-                         "role": "ROLE_USER"
-                         */
-                    };
                     /*                    var baseUsers = Restangular.all('users');
                      baseUsers.post(newUser).then(function (response) {
                      console.log("response: ", response);
                      });*/
-                    $http.get("http://localhost:5000/login/fb_token/" + authResponse.accessToken)
-                        .success(function (response) {
-                            console.log(response);
-                            $http.get("http://localhost:5000/api/users" );
-                            setToken();
-                            storeUserCredentials(response);
+                    return $http.get("http://localhost:5000/login/fb_token/" + authResponse.accessToken)
+                        .success(function (token) {
+                            console.log(token);
+                            setToken(token);
+                            return $http.get("http://localhost:5000/api/users/me")
+                                .success(function (user) {
+                                    storeUserCredentials(token,user);
+                                    $rootScope.$broadcast(AUTH_EVENTS.authenticationCompleted);
+                                    return user;
+                                }).error(function(){
+                                    return null;
+                            });
+
                         }).error(function (error) {
                         console.log(error);
                     })
@@ -101,23 +101,26 @@ angular.module('app.services.authentication.auth-service', [])
                     });
                 }
             };
-            var _userSession = null;
 
             function loadUserCredentials() {
                 console.log("loadUserCredentials");
                 var deferred = $q.defer();
-                if (_userSession){
+                if (authModel.userSession) {
                     deferred.resolve();
                 } else {
                     var token = window.localStorage.getItem(LOCAL_TOKEN_KEY);
                     if (token) {
-                        setToken();
-                        // TODO add a code that retrieves the current user session with it's token.
-                        // retrieve user session:
-                        storeUserCredentials({});
-                        deferred.resolve();
+                        setToken(token);
+                        $http.get("http://localhost:5000/api/users/me")
+                            .success(function (user) {
+                                storeUserCredentials(null,user);
+                                deferred.resolve();
+                            }).error(function(){
+                            deferred.reject();
+                        });
+
                     } else { // no token saved.
-                        return deferred.reject();
+                        deferred.reject();
                     }
 
                 }
@@ -126,17 +129,18 @@ angular.module('app.services.authentication.auth-service', [])
 
             }
 
-            function storeUserCredentials(token) {
-                _userSession = {
-                    role : USER_ROLES.user
-                };
-                _isAuthenticated = true;
-                window.localStorage.setItem(LOCAL_TOKEN_KEY, token);
-                console.log("storeUserCredentials");
+            function storeUserCredentials(token,user) {
+                console.log("storing user" , user);
+
+                authModel.userSession = user;
+                authModel.isAuthenticated = true;
+                if (token) {
+                    window.localStorage.setItem(LOCAL_TOKEN_KEY, token);
+                }
 
             }
 
-            function setToken(token, userSession) {
+            function setToken(token) {
                 console.log("setToken");
 
                 // Set the token as header for your requests!
@@ -144,8 +148,8 @@ angular.module('app.services.authentication.auth-service', [])
             }
 
             function destroyUserCredentials() {
-                _isAuthenticated = false;
-                _userSession = null;
+                authModel.isAuthenticated = false;
+                authModel.userSession = null;
                 $http.defaults.headers.common['Authorization'] = undefined;
                 window.localStorage.removeItem(LOCAL_TOKEN_KEY);
             }
@@ -153,29 +157,32 @@ angular.module('app.services.authentication.auth-service', [])
             function isAuthorized(authorizedRoles) {
                 console.log("isAuthorized");
                 var deferred = $q.defer();
-                function authorize(){
+
+                function authorize() {
                     if (!angular.isArray(authorizedRoles)) {
                         authorizedRoles = [authorizedRoles];
                     }
-                    return _isAuthenticated && authorizedRoles.indexOf(_userSession.role) !== -1
+                    return authModel.isAuthenticated && authorizedRoles.indexOf(authModel.userSession.role) !== -1
                 }
-                function sessionRetrieved(){
-                    if (authorize()){
+
+                function sessionRetrieved() {
+                    if (authorize()) {
                         deferred.resolve();
                     } else {
                         $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
                         deferred.reject();
                     }
                 }
-                if (_userSession){
+
+                if (authModel.userSession) {
                     sessionRetrieved();
                 } else {
                     // TODO if user is already being retrieved, no need to do it again.
                     loadUserCredentials()
-                        .success(function(){
+                        .success(function () {
                             sessionRetrieved();
                         })
-                        .error(function(){
+                        .error(function () {
                             deferred.reject();
                         });
                 }
@@ -183,14 +190,31 @@ angular.module('app.services.authentication.auth-service', [])
                 return deferred.promise;
             };
 
-            loadUserCredentials();
+            loadUserCredentials().then(function () {
+                // success
+                authModel.isLoading = false;
+            }, function () {
+                // error
+                authModel.isLoading = false;
+
+            });
 
             return {
                 facebookAuthenticator: facebookAuthenticator,
                 loadUserCredentials: loadUserCredentials,
                 isAuthorized: isAuthorized,
-                isAuthenticated : function() {return _isAuthenticated; },
-                role: function() {return _userSession && _userSession.role;}
+                isAuthenticated: function () {
+                    return authModel.isAuthenticated;
+                },
+                role: function () {
+                    return authModel.userSession && authModel.userSession.role;
+                },
+                model: function () {
+                    return authModel;
+                },
+                logout: function () {
+                    destroyUserCredentials();
+                }
 
 
             };

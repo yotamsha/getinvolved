@@ -2,11 +2,11 @@ from flask import request, abort, session
 from flask_restful import Resource, reqparse
 
 import org.gi.server.authorization as auth
-from org.gi.server import validations as v
-from org.gi.server.authorization import requires_auth
 from org.gi.server import utils as u
+from org.gi.server.authorization import requires_auth
 from org.gi.server.db import db
 from org.gi.server.log import log
+from org.gi.server.validation import validations as v
 
 
 class UserList(Resource):

@@ -1,13 +1,16 @@
 import json
-
-from org.gi.server import utils as u
-
-__author__ = 'avishayb'
 import re
 import phonenumbers
 import pycountry
 import time
+
+from org.gi.server import utils as u
+from org.gi.server.db import db
+from org.gi.server.validation.case_state_machine import VALID_CASE_STATES, CASE_COMPLETED, CASE_TRANSITIONS
+from org.gi.server.validation.task_state_machine import VALID_TASK_STATES, TASK_COMPLETED, TASK_TRANSITIONS
 import org.gi.server.authorization as auth
+
+__author__ = 'avishayb'
 
 MANDATORY = True
 
@@ -215,13 +218,14 @@ def validate_description(description, faults):
             description, DESCRIPTION_NAME_MIN, DESCRIPTION_NAME_MAX))
 
 
-def validate_petitioner_id(db, petitioner_id, faults):
-    if not entity_exists(db, 'users', petitioner_id):
+def validate_petitioner_id(petitioner_id, faults):
+    if not entity_exists('users', petitioner_id):
         faults.append('There is no petitioner having the id %s' % petitioner_id)
 
 
 def validate_transportation_task(task, faults):
-    post_validate(task, TASK_META, faults, mandatory=True)
+    validate_mandatory_and_present_fields(task, TASK_META, faults)
+    # post_validate(task, TASK_META, faults, mandatory=True)
     if not task.get('destination_address'):
         faults.append('Transportation task must contain destination address')
     if not task.get('address'):
@@ -247,11 +251,12 @@ def validate_tasks(tasks, faults, current_tasks=None):
             validate_transportation_task(task, faults)
         else:
             if not current_task:
-                post_validate(task, TASK_META, faults, mandatory=True)
+                validate_mandatory_and_present_fields(task, TASK_META, faults)
+                # post_validate(task, TASK_META, faults, mandatory=True)
             else:
                 _validate_status_transition(current_task['state'], task['state'], VALID_TASK_STATES, TASK_TRANSITIONS,
                                             faults)
-                put_validate(task, TASK_META, faults, mandatory=False)
+                validate_mandatory_and_present_fields(task, TASK_META, faults, mandatory=False)
 
     if not tasks:
         faults.append('A Case must have at least one task')
@@ -277,63 +282,6 @@ def validate_case_state(state, faults):
 
 def _validate_len_in_range(value, _min, _max):
     return value and _min <= len(value.strip()) <= _max
-
-
-CASE_UNDEFINED = '__undefined__'
-CASE_PENDING_APPROVAL = 'pending_approval'
-CASE_PENDING_INVOLVEMENT = 'pending_involvement'
-CASE_PARTIALLY_ASSIGNED = 'partially_assigned'
-CASE_ASSIGNED = 'assigned'
-CASE_PARTIALLY_COMPLETED = 'partially_completed'
-CASE_COMPLETED = 'completed'
-CASE_CANCELLED_BY_USER = 'cancelled_by_user'
-CASE_CANCELLED_BY_ADMIN = 'cancelled_by_admin'
-CASE_MISSING_INFO = 'missing_info'
-CASE_REJECTED = 'rejected'
-CASE_OVERDUE = 'overdue'
-
-VALID_CASE_STATES = {CASE_PENDING_APPROVAL, CASE_PENDING_INVOLVEMENT, CASE_PARTIALLY_ASSIGNED, CASE_ASSIGNED,
-                     CASE_PARTIALLY_COMPLETED, CASE_COMPLETED, CASE_CANCELLED_BY_USER, CASE_CANCELLED_BY_ADMIN,
-                     CASE_MISSING_INFO, CASE_REJECTED, CASE_OVERDUE, CASE_UNDEFINED}
-
-CASE_TRANSITIONS = dict()
-CASE_TRANSITIONS[CASE_PENDING_APPROVAL] = {CASE_MISSING_INFO, CASE_REJECTED, CASE_OVERDUE, CASE_PENDING_APPROVAL,
-                                           CASE_CANCELLED_BY_USER, CASE_CANCELLED_BY_ADMIN}
-CASE_TRANSITIONS[CASE_PENDING_APPROVAL] = {CASE_MISSING_INFO, CASE_REJECTED, CASE_OVERDUE, CASE_PENDING_APPROVAL,
-                                           CASE_CANCELLED_BY_USER, CASE_CANCELLED_BY_ADMIN}
-CASE_TRANSITIONS[CASE_MISSING_INFO] = {CASE_PENDING_APPROVAL, CASE_OVERDUE, CASE_CANCELLED_BY_USER,
-                                       CASE_CANCELLED_BY_ADMIN}
-CASE_TRANSITIONS[CASE_REJECTED] = {CASE_PENDING_INVOLVEMENT, CASE_CANCELLED_BY_USER, CASE_CANCELLED_BY_ADMIN}
-CASE_TRANSITIONS[CASE_PENDING_INVOLVEMENT] = {CASE_PARTIALLY_ASSIGNED, CASE_ASSIGNED, CASE_OVERDUE,
-                                              CASE_CANCELLED_BY_USER, CASE_CANCELLED_BY_ADMIN}
-CASE_TRANSITIONS[CASE_PARTIALLY_ASSIGNED] = {CASE_ASSIGNED, CASE_OVERDUE, CASE_CANCELLED_BY_USER,
-                                             CASE_CANCELLED_BY_ADMIN}
-CASE_TRANSITIONS[CASE_ASSIGNED] = {CASE_PARTIALLY_COMPLETED, CASE_COMPLETED, CASE_CANCELLED_BY_USER,
-                                   CASE_CANCELLED_BY_ADMIN}
-CASE_TRANSITIONS[CASE_PARTIALLY_COMPLETED] = {CASE_COMPLETED, CASE_CANCELLED_BY_USER, CASE_CANCELLED_BY_ADMIN}
-CASE_TRANSITIONS[CASE_COMPLETED] = set()
-CASE_TRANSITIONS[CASE_OVERDUE] = set()
-CASE_TRANSITIONS[CASE_UNDEFINED] = {CASE_PENDING_APPROVAL}
-
-TASK_UNDEFINED = '__undefined__'
-TASK_PENDING = 'pending'
-TASK_ASSIGNMENT_IN_PROCESS = 'assignment_in_process'
-TASK_PENDING_USER_APPROVAL = 'pending_user_approval'
-TASK_ASSIGNED = 'assigned'
-TASK_CANCELLED = 'cancelled'
-TASK_COMPLETED = 'completed'
-
-VALID_TASK_STATES = {TASK_UNDEFINED, TASK_PENDING, TASK_ASSIGNMENT_IN_PROCESS, TASK_PENDING_USER_APPROVAL,
-                     TASK_ASSIGNED, TASK_CANCELLED, TASK_COMPLETED}
-
-TASK_TRANSITIONS = dict()
-TASK_TRANSITIONS[TASK_UNDEFINED] = {TASK_PENDING}
-TASK_TRANSITIONS[TASK_PENDING] = {TASK_ASSIGNMENT_IN_PROCESS, TASK_ASSIGNED, TASK_CANCELLED}
-TASK_TRANSITIONS[TASK_ASSIGNMENT_IN_PROCESS] = {TASK_ASSIGNED, TASK_PENDING, TASK_PENDING_USER_APPROVAL, TASK_CANCELLED}
-TASK_TRANSITIONS[TASK_PENDING_USER_APPROVAL] = {TASK_PENDING, TASK_ASSIGNED}
-TASK_TRANSITIONS[TASK_ASSIGNED] = {TASK_COMPLETED, TASK_CANCELLED, TASK_PENDING}
-TASK_TRANSITIONS[TASK_CANCELLED] = set()
-TASK_TRANSITIONS[TASK_COMPLETED] = set()
 
 
 def _validate_status_transition(current_state, new_state, valid_states, valid_transitions, faults):
@@ -365,9 +313,9 @@ def validate_user_role(role, faults):
         faults.append("Invalid role %s. Valid roles are %s" % (role, str(auth.ROLES.keys())))
 
 
-def validate_mandatory_and_present_fields(payload, meta, faults):
-    FUNC = 0
-    MANDATORY = 1
+def validate_mandatory_and_present_fields(payload, meta, faults, mandatory=True):
+    FUNC_INDEX = 0
+    MANDATORY_INDEX = 1
     if not payload or not isinstance(payload, dict):
         faults.append('payload must be none empty dict')
         return
@@ -376,12 +324,13 @@ def validate_mandatory_and_present_fields(payload, meta, faults):
             faults.append('The field \'%s\' is invalid. Valid fields are %s' % (
                 key, str(meta.keys())))
     for field_name, validation_info in meta.iteritems():
-        if field_name not in payload and (isinstance(validation_info, tuple) and validation_info[MANDATORY]):
-            faults.append('The field %s is a mandatory field.' % field_name)
-            continue
-        if field_name in payload:
+        if mandatory:
+            if field_name not in payload and (isinstance(validation_info, tuple) and validation_info[MANDATORY_INDEX]):
+                faults.append('The field %s is a mandatory field.' % field_name)
+                continue
+        if field_name in payload and validation_info:
             if isinstance(validation_info, tuple):
-                validation_info[FUNC](payload[field_name], faults)
+                validation_info[FUNC_INDEX](payload[field_name], faults)
             else:
                 validation_info(payload[field_name], faults)
 
@@ -476,18 +425,26 @@ def validate_task_type(task_type, faults):
     if task_type not in TASK_TYPES:
         faults.append('task_type type must be none empty string belongs to the set %s' % str(TASK_TYPES))
 
+
 def validate_sms_notification(sms_val, faults):
     if not validate_boolean(sms_val):
         faults.append('sms notification field must have boolean value. current value is %s' % sms_val)
+
 
 def validate_email_notification(email_val, faults):
     if not validate_boolean(email_val):
         faults.append('email notification field must have boolean value. current value is %s' % email_val)
 
+
 def validate_boolean(val):
     return val is not None and isinstance(val, bool)
 
+
 def noop(nada, faults):
+    pass
+
+
+def validate_task_id(self, faults):
     pass
 
 
@@ -506,10 +463,6 @@ def validate_notifications(notification,faults):
             faults.append('\'%s\' field with value \'%s\' must has a boolean value' % (key, notification[key]))
 
 
-
-
-
-
 def validate_date_in_the_future(due_date, faults):
     if not due_date or not isinstance(due_date, int):
         faults.append('due_date must be none empty int')
@@ -525,6 +478,7 @@ def validate_task_description(validate_task, faults):
 
 def validate_task_title(task_title, faults):
     pass
+
 
 def validate_facebook_id(facebook_id, faults):
     if not facebook_id or not (isinstance(facebook_id, str) or isinstance(facebook_id, unicode)):
@@ -558,36 +512,38 @@ USER_META = {
 }
 
 CASE_META = {
-    'title': validate_title,
-    'description': validate_description,
-    'petitioner_id': noop,
-    'tasks': validate_tasks,
-    'state': validate_case_state,
+    'title': (validate_title, MANDATORY),
+    'description': (validate_description, MANDATORY),
+    'petitioner_id': (noop, MANDATORY),
+    'tasks': (validate_tasks, MANDATORY),
+    'state': (validate_case_state, not MANDATORY)
 }
 
 TASK_META = {
     'address': None,
     'destination_address': None,
     'volunteer_id': None,
-    'description': validate_task_description,
-    'title': validate_task_title,
+    'description': (validate_task_description, MANDATORY),
+    'title': (validate_task_title, MANDATORY),
     'state': validate_task_state,
-    'type': validate_task_type,
-    'due_date': validate_date_in_the_future,
+    'type': (validate_task_type, MANDATORY),
+    'due_date': (validate_date_in_the_future, MANDATORY),
     'created_at': None,
-    'updated_at': None
+    'updated_at': None,
+    'id': validate_task_id
 }
 
+# todo: Change its validation to 'validate_mandatory_and_present_fields' method
 ADDRESS_META = {
-    'street_name': (validate_street_name, True),
-    'street_number': (validate_street_number, True),
-    'entrance': (validate_entrance, False),
-    'floor': (validate_floor, False),
-    'apartment_number': (validate_apartment_number, False),
-    'zip_code': (validate_zip_code, False),
-    'city': (validate_city, True),
-    'state': (validate_state, False),
-    'country': (validate_country, True)
+    'street_name': (validate_street_name, MANDATORY),
+    'street_number': (validate_street_number, MANDATORY),
+    'entrance': (validate_entrance, not MANDATORY),
+    'floor': (validate_floor, not MANDATORY),
+    'apartment_number': (validate_apartment_number, not MANDATORY),
+    'zip_code': (validate_zip_code, not MANDATORY),
+    'city': (validate_city, MANDATORY),
+    'state': (validate_state, not MANDATORY),
+    'country': (validate_country, not MANDATORY),
 
 }
 
@@ -605,7 +561,7 @@ TASK_TYPES = [TASK_TYPE_GENERAL, TASK_TYPE_PRODUCT_REQUEST, TASK_TYPE_PRODUCT_DO
               TASK_TYPE_PRODUCT_TRANSPORTATION]
 
 
-def entity_exists(db, collection_name, entity_id):
+def entity_exists(collection_name, entity_id):
     try:
         entity = db[collection_name].find_one({'_id': u.to_object_id(entity_id)})
         return entity is not None
@@ -654,22 +610,26 @@ def validate_fields(fields, payload, meta, dummy_faults=None):
 
 
 def case_put_validate(current_case, updated_case, faults):
-    _validate_status_transition(current_case['state'], updated_case['state'], VALID_CASE_STATES, CASE_TRANSITIONS,
-                                faults)
-    if faults:
-        return
-    else:
+    if 'state' in updated_case:
+        _validate_status_transition(current_case['state'], updated_case['state'], VALID_CASE_STATES, CASE_TRANSITIONS,
+                                    faults)
+        if faults:
+            return
         if updated_case['state'] == CASE_COMPLETED and len(updated_case['tasks']) != sum(
                 1 for task in updated_case['tasks'] if task['state'] == TASK_COMPLETED):
             faults.append(
                 'A case cant be marked as %s until all tasks are marked as %s' % (CASE_COMPLETED, TASK_COMPLETED))
 
+    elif 'tasks' in updated_case:
+        validate_tasks(updated_case['tasks'], faults, current_case['tasks'])
 
-def case_post_validate(payload, db, faults):
-    post_validate(payload, CASE_META, faults)
+
+def case_post_validate(payload, faults):
+    validate_mandatory_and_present_fields(payload, CASE_META, faults)
+    # post_validate(payload, CASE_META, faults)
     if faults:
         return
-    validate_petitioner_id(db, payload['petitioner_id'], faults)
+    validate_petitioner_id(payload['petitioner_id'], faults)
 
 
 def put_validate(payload, meta, faults):

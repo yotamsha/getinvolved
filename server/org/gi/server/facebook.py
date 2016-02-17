@@ -1,14 +1,14 @@
 import json
 
-from flask import request, url_for, session, Blueprint, jsonify, Response
+from flask import request, url_for, session, Blueprint, Response
 from flask_oauth import OAuth
 
+import org.gi.server.utils as util
+import org.gi.server.validation.validations as valid
 from org.gi.config import config
 from org.gi.server.authorization import USER
 from org.gi.server.db import db
 from org.gi.server.web_token import generate_access_token, get_user_from_access_token
-import org.gi.server.utils as util
-import org.gi.server.validations as valid
 
 __author__ = 'bazza'
 
