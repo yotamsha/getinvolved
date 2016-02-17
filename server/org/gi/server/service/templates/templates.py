@@ -10,7 +10,6 @@ THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 class GIFileSystemLoader(FileSystemLoader):
     def __init__(self, root_folder, lang='en'):
         super(GIFileSystemLoader, self).__init__(root_folder + '/data/' + lang)
-        print('---> ' + self.searchpath[0])
 
     def get_source(self, environment, template):
         return super(GIFileSystemLoader, self).get_source(_j2_env, template)

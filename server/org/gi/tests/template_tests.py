@@ -21,15 +21,15 @@ class GITemplateTestCase(unittest.TestCase):
         self.assertRaises(Exception, merge, 'Hello {{name}}', {'___name': 'jack'})
 
     def test_load_and_merge(self):
-        self.assertEqual(load_and_merge('test_only.txt', {'name': 'jack'}), 'Hello jack')
+        self.assertEqual(load_and_merge('test_only.jinja', {'name': 'jack'}), 'Hello jack')
 
     def test_load_and_merge_fail_1(self):
-        self.assertRaises(Exception, load_and_merge, 'test_only.txt', {'___name': 'jack'})
+        self.assertRaises(Exception, load_and_merge, 'test_only.jinja', {'___name': 'jack'})
 
     def test_load_and_merge_fail_2(self):
-        self.assertRaises(Exception, load_and_merge, 'test_only.txt', ['jack'])
+        self.assertRaises(Exception, load_and_merge, 'test_only.jinja', ['jack'])
 
     def test_load_and_merge_fail_3(self):
-        self.assertRaises(Exception, load_and_merge, 'test_only.txt', {'name': 'jack'}, lang='xyz')
+        self.assertRaises(Exception, load_and_merge, 'test_only.jinja', {'name': 'jack'}, lang='xyz')
 
 
