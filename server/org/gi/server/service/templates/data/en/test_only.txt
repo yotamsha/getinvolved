@@ -1,0 +1,2 @@
+{# This a test only template - DO NOT CHANGE it or move it to any folder #}
+Hello {{name}}
