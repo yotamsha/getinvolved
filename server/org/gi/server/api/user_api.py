@@ -9,10 +9,10 @@ from org.gi.server.log import log
 from org.gi.server.validation import validations as v
 
 
-class UserList(Resource):
+class UserListApi(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
-        super(UserList, self).__init__()
+        super(UserListApi, self).__init__()
 
     # @requires_roles(auth.ROLE_ADMIN)
     @requires_auth
@@ -26,10 +26,10 @@ class UserList(Resource):
         return u.make_list(users), u.HTTP_OK
 
 
-class User(Resource):
+class UserApi(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
-        super(User, self).__init__()
+        super(UserApi, self).__init__()
 
     def _pad_with_roles(self, payload):
         if payload and isinstance(payload, dict) and not payload.get('role'):

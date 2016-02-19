@@ -1,0 +1,17 @@
+[
+  {
+    "state": "pending"
+  },
+  {
+    "state": "pending"
+  },
+  {
+    "state": "assignment_in_process"
+  },
+  {
+    "state": "pending_user_approval"
+  },
+  {
+    "state": "assigned"
+  }
+]

@@ -6,10 +6,9 @@ import requests
 
 from misc import _remove_from_db, _load, _push_to_db, MONGO, SERVER_URL_API, ACCESS_TOKEN_AUTH, validate_server_is_up
 from org.gi.server import utils as utils
-from org.gi.server.validation.case_state_machine import CASE_ASSIGNED, CASE_PENDING_APPROVAL, CASE_PENDING_INVOLVEMENT, CASE_PARTIALLY_ASSIGNED, \
-    CASE_PARTIALLY_COMPLETED, CASE_COMPLETED
-from org.gi.server.validation.task_state_machine import TASK_UNDEFINED, TASK_ASSIGNED, TASK_ASSIGNMENT_IN_PROCESS, \
-    TASK_PENDING_USER_APPROVAL, TASK_COMPLETED
+from org.gi.server.model.task import ALL_TASKS_SAME_STATE_TRANSITION
+import org.gi.server.validation.case_state_machine
+from org.gi.server.validation.task_state_machine import TASK_UNDEFINED, TASK_ASSIGNED, TASK_COMPLETED, TASK_PENDING
 
 __author__ = 'avishayb'
 
@@ -17,9 +16,9 @@ __author__ = 'avishayb'
 class TestGIServerCaseTestCase(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(TestGIServerCaseTestCase, self).__init__(*args, **kwargs)
-        self.config_folder = 'case'
-        self.users = _load('users.json', 'user')
-        self.cases = _load('cases.json', 'case')
+        self.config_folder = 'case_api'
+        self.users = _load('users.json', 'user_api')
+        self.cases = _load('cases.json', 'case_api')
 
     def setUp(self):
         _remove_from_db(MONGO, 'users')
@@ -66,8 +65,8 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         self.assertEqual(r.status_code, utils.HTTP_CREATED)
 
     def test_update_case_with_valid_state(self):
-        states = [CASE_PENDING_APPROVAL, CASE_PENDING_INVOLVEMENT, CASE_PARTIALLY_ASSIGNED, CASE_ASSIGNED,
-                  CASE_PARTIALLY_COMPLETED]
+        states = [org.gi.server.validation.case_state_machine.CASE_PENDING_APPROVAL, org.gi.server.validation.case_state_machine.CASE_PENDING_INVOLVEMENT, org.gi.server.validation.case_state_machine.CASE_PARTIALLY_ASSIGNED, org.gi.server.validation.case_state_machine.CASE_ASSIGNED,
+                  org.gi.server.validation.case_state_machine.CASE_PARTIALLY_COMPLETED]
         for state in states:
             case = {"state": state}
             r = requests.put('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]), json=case, auth=ACCESS_TOKEN_AUTH)
@@ -86,6 +85,24 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         r = requests.put('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]), json=case, auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_NO_CONTENT)
 
+    def test_inserted_case_and_task_state(self):
+        # SETUP
+        case_with_tasks = _load('case_with_tasks.json', self.config_folder)
+        self._replace(case_with_tasks)
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case_with_tasks, auth=ACCESS_TOKEN_AUTH)
+        case_id = json.loads(r.content)['id']
+
+        # TEST
+        inserted_case = self._get_case(case_id)
+        self.assertEqual(inserted_case['state'], org.gi.server.validation.case_state_machine.CASE_PENDING_APPROVAL)
+        for task in inserted_case['tasks']:
+            self.assertEqual(task['state'], TASK_PENDING)
+
+    def _get_case(self, case_id):
+        r = requests.get('%s/cases/%s' % (SERVER_URL_API, case_id), auth=ACCESS_TOKEN_AUTH)
+        inserted_case = json.loads(r.content)
+        return inserted_case
+
     def test_task_transitions(self):
         # SETUP
         case_with_tasks = _load('case_with_tasks.json', self.config_folder)
@@ -96,17 +113,14 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         case_tasks = {'tasks': inserted_case['tasks']}
 
         # TEST
-        task_states = [TASK_ASSIGNMENT_IN_PROCESS, TASK_PENDING_USER_APPROVAL, TASK_ASSIGNED, TASK_COMPLETED]
+        task_states = [TASK_ASSIGNED, TASK_COMPLETED]
         for state in task_states:
             for task in case_tasks['tasks']:
                 task['state'] = state
             r = requests.put('%s/cases/%s' % (SERVER_URL_API, case_id), json=case_tasks, auth=ACCESS_TOKEN_AUTH)
             self.assertEqual(utils.HTTP_NO_CONTENT, r.status_code)
-
-    def test_update_case_to_completed(self):
-        r = requests.get('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]))
-        case = json.loads(r.content)
-        print(case)
+            r = requests.get('%s/cases/%s' % (SERVER_URL_API, case_id), auth=ACCESS_TOKEN_AUTH)
+            self.assertEqual(json.loads(r.content)['state'], ALL_TASKS_SAME_STATE_TRANSITION[state])
 
     def test_create_case_fake_volunteer_id(self):
         case = _load('case_fake_volunteer_id.json', self.config_folder)
@@ -207,7 +221,7 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         self._replace(case)
         db = MONGO.get_default_database()
         result = db.cases.update_one({"tasks.state": TASK_UNDEFINED},
-                                     {'$set': {'state': CASE_ASSIGNED, 'tasks.$.state': TASK_ASSIGNED}})
+                                     {'$set': {'state': org.gi.server.validation.case_state_machine.CASE_ASSIGNED, 'tasks.$.state': TASK_ASSIGNED}})
         self.assertEqual(result.modified_count, 1)
         r = requests.put('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]), json=case, auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
@@ -216,6 +230,43 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         wrong_id = self.case_ids[0].replace(self.case_ids[0][0], str(int(self.case_ids[0][0]) + 1))
         r = requests.delete('%s/cases/%s' % (SERVER_URL_API, wrong_id), auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_NOT_FOUND)
+
+    def test_bad_task_update(self):
+        case_with_tasks = _load('case_with_tasks.json', self.config_folder)
+        self._replace(case_with_tasks)
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case_with_tasks, auth=ACCESS_TOKEN_AUTH)
+        inserted_case = json.loads(r.content)
+        case_id = inserted_case['id']
+        case_tasks = {'tasks': inserted_case['tasks']}
+        case_tasks['tasks'][0]['state'] = TASK_ASSIGNED
+        case_tasks['tasks'][1]['state'] = TASK_ASSIGNED
+        del case_tasks['tasks'][-1]
+        r = requests.put('%s/cases/%s' % (SERVER_URL_API, case_id), json=case_tasks, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(utils.HTTP_NO_CONTENT, r.status_code)
+
+        case_tasks = {}
+        for task in self._get_case(case_id)['tasks']:
+            if task['state'] == TASK_ASSIGNED:
+                task['state'] = TASK_COMPLETED
+                case_tasks['tasks'] = [task]
+                break
+        r = requests.put('%s/cases/%s' % (SERVER_URL_API, case_id), json=case_tasks, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(utils.HTTP_BAD_INPUT, r.status_code)
+        self.assertTrue('A case cannot have the following states together' in r.content)
+
+    def test_not_deleting_tasks_on_update(self):
+        case_with_tasks = _load('case_with_tasks.json', self.config_folder)
+        self._replace(case_with_tasks)
+        orig_num_tasks = len(case_with_tasks['tasks'])
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case_with_tasks, auth=ACCESS_TOKEN_AUTH)
+        inserted_case = json.loads(r.content)
+        case_id = inserted_case['id']
+        case_update = {'tasks': [inserted_case['tasks'][0]]}
+        case_update['tasks'][0]['state'] = TASK_ASSIGNED
+        r = requests.put('%s/cases/%s' % (SERVER_URL_API, case_id), json=case_update, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(utils.HTTP_NO_CONTENT, r.status_code)
+        updated_case = {'tasks': self._get_case(case_id)['tasks']}
+        self.assertEqual(orig_num_tasks, len(updated_case.get('tasks')))
 
 
 

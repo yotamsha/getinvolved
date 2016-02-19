@@ -15,7 +15,7 @@ import json
 class GIServerUsersTestCase(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(GIServerUsersTestCase, self).__init__(*args, **kwargs)
-        self.config_folder = 'user'
+        self.config_folder = 'user_api'
         self.users = _load('users.json', self.config_folder)
         self.passwords = {}
 

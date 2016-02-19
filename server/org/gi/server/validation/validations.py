@@ -626,7 +626,6 @@ def case_put_validate(current_case, updated_case, faults):
 
 def case_post_validate(payload, faults):
     validate_mandatory_and_present_fields(payload, CASE_META, faults)
-    # post_validate(payload, CASE_META, faults)
     if faults:
         return
     validate_petitioner_id(payload['petitioner_id'], faults)

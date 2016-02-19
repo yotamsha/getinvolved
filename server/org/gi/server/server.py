@@ -7,8 +7,8 @@ from flask_restful import Api
 
 from org.gi.config import config
 from org.gi.server import utils as u
-from org.gi.server.api.case import Case, CaseList
-from org.gi.server.api.user import User, UserList
+from org.gi.server.api.case_api import CaseApi, CaseListApi
+from org.gi.server.api.user_api import UserApi, UserListApi
 from org.gi.server.facebook import facebook_bp
 from org.gi.server.local_login import local_login_bp
 from org.gi.server.static import static_bp
@@ -31,11 +31,11 @@ def ping():
 
 api = Api(app)
 
-api.add_resource(UserList, '/api/users')
-api.add_resource(CaseList, '/api/cases')
+api.add_resource(UserListApi, '/api/users')
+api.add_resource(CaseListApi, '/api/cases')
 
-api.add_resource(User, '/api/users/<string:user_id>', '/api/users')
-api.add_resource(Case, '/api/cases/<string:case_id>', '/api/cases')
+api.add_resource(UserApi, '/api/users/<string:user_id>', '/api/users')
+api.add_resource(CaseApi, '/api/cases/<string:case_id>', '/api/cases')
 
 if __name__ == '__main__':
     if sys.version_info[0] != 2 or sys.version_info[1] != 7:
