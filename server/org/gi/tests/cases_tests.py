@@ -6,8 +6,8 @@ import requests
 
 from misc import _remove_from_db, _load, _push_to_db, MONGO, SERVER_URL_API, ACCESS_TOKEN_AUTH, validate_server_is_up
 from org.gi.server import utils as utils
-from org.gi.server.model.task import ALL_TASKS_SAME_STATE_TRANSITION
 import org.gi.server.validation.case_state_machine
+from org.gi.server.model.Task import ALL_TASKS_SAME_STATE_TRANSITION
 from org.gi.server.validation.task_state_machine import TASK_UNDEFINED, TASK_ASSIGNED, TASK_COMPLETED, TASK_PENDING
 
 __author__ = 'avishayb'

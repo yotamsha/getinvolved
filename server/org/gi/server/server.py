@@ -7,6 +7,7 @@ from flask_restful import Api
 
 from org.gi.config import config
 from org.gi.server import utils as u
+from org.gi.server.service.scheduler import get_scheduler
 from org.gi.server.api.case_api import CaseApi, CaseListApi
 from org.gi.server.api.user_api import UserApi, UserListApi
 from org.gi.server.facebook import facebook_bp
@@ -22,6 +23,24 @@ app.register_blueprint(static_bp)
 app.register_blueprint(facebook_bp)
 app.register_blueprint(local_login_bp)
 app.secret_key = config.get('secret_key')
+
+
+def start_notification_loop():
+    """
+    Start running the notification background thread
+    :return:
+    """
+    from datetime import datetime
+    def _notify(_data):
+        if mode == 'dev':
+            print('%s  > Notifier runs under dev mode...' % str(datetime.now()))
+        elif mode == 'prod':
+            #TODO implement the real notification logic see #194
+            pass
+    interval = 10 #TODO read from config
+    scheduler, stop = get_scheduler(interval, _notify, None)
+    scheduler.start()
+    return scheduler, stop
 
 
 @app.route('/api/ping')
@@ -47,6 +66,7 @@ if __name__ == '__main__':
     print('GI server starts under %s mode. Python version is %d.%d.%d' % (
     mode, sys.version_info[0], sys.version_info[1], sys.version_info[2]))
     print('------------------------------------------------------------------------------------')
+    start_notification_loop()
     app.run(debug=False)
 
 
