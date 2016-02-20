@@ -5,7 +5,7 @@ from org.gi.server import utils as u
 from org.gi.server.authorization import requires_auth
 from org.gi.server.db import db
 from org.gi.server.log import log
-from org.gi.server.model.case import Case
+from org.gi.server.model.Case import Case
 
 from org.gi.server.validation import validations as v
 
