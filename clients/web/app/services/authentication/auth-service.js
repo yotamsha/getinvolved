@@ -13,39 +13,6 @@ angular.module('app.services.authentication.auth-service', [])
                 isLoading: true
             }
             var facebookAuthenticator = {
-                watchAuthenticationStatusChange: function () {
-
-                    var _self = this;
-
-                    FB.Event.subscribe('auth.authResponseChange', function (res) {
-                        console.log("fb response detected:", res);
-                        if (res.status === 'connected') {
-                            /*
-                             The user is already logged,
-                             is possible retrieve his personal info
-                             */
-                            _self.getUserInfo();
-
-                            /*
-                             This is also the point where you should create a
-                             session for the current user.
-                             For this purpose you can use the data inside the
-                             res.authResponse object.
-                             */
-
-                        }
-                        else {
-
-                            /*
-                             The user is not logged to the app, or into Facebook:
-                             destroy the session on the server.
-                             */
-
-                        }
-
-                    });
-
-                },
                 statusChangeCallback: function (response) {
                     var _self = this;
                     console.log('statusChangeCallback');
@@ -83,29 +50,6 @@ angular.module('app.services.authentication.auth-service', [])
 
                     }
                 },
-                /*getUserInfo: function () {
-                    var _self = this;
-                    FB.getLoginStatus(function (response) {
-                        if (response.authResponse) {
-                            console.log(response.authResponse);
-                        } else {
-                            // do something...maybe show a login prompt
-                        }
-                    });
-
-                    /!*                    FB.api('/me', function(res) {
-
-                     $rootScope.$apply(function() {
-                     //alert("fb logged in");
-                     console.log("facebook login completed: " +res);
-                     $rootScope.user = _self.user = res;
-
-                     });
-
-                     })*!/
-                    ;
-
-                },*/
                 facebookSessionRetrieved: function (authResponse) {
                     return $http.get("http://localhost:5000/login/fb_token/" + authResponse.accessToken)
                         .success(function (token) {
@@ -253,13 +197,7 @@ angular.module('app.services.authentication.auth-service', [])
                     return authModel;
                 },
                 logout: function () {
-                    // TODO check if user is a fb user.
-                    /*                    var isFacebbokUser = true;
-                     if (isFacebbokUser){
-                     facebookAuthenticator.logout();
-                     } else {*/
                     destroyUserCredentials();
-                    //  }
                 },
                 login: function (type) {
                     if (type === "FACEBOOK"){
