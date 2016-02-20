@@ -1,9 +1,9 @@
 import unittest
 
 from org.gi.server.model.Task import Task, BadTaskStateException
-from org.gi.server.validation.case_state_machine import CASE_UNDEFINED, CASE_PENDING_INVOLVEMENT, \
+from org.gi.server.validation.case_state_machine import CASE_PENDING_INVOLVEMENT, \
     CASE_PARTIALLY_ASSIGNED, CASE_ASSIGNED, CASE_PARTIALLY_COMPLETED, CASE_COMPLETED
-from org.gi.server.validation.task_state_machine import TASK_PENDING, TASK_ASSIGNMENT_IN_PROCESS, \
+from org.gi.server.validation.task.task_state_machine import TASK_PENDING, TASK_ASSIGNMENT_IN_PROCESS, \
     TASK_PENDING_USER_APPROVAL, TASK_ASSIGNED, TASK_CANCELLED, TASK_COMPLETED
 from org.gi.tests.misc import _load
 

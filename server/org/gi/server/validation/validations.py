@@ -1,17 +1,17 @@
 import json
 import re
-import phonenumbers
 import time
 
+import phonenumbers
+
+import org.gi.server.authorization as auth
+import org.gi.server.validation.location_validator as location_validator
 from org.gi.server import utils as u
 from org.gi.server.db import db
-import org.gi.server.authorization as auth
-
 from org.gi.server.validation.case_state_machine import VALID_CASE_STATES, CASE_COMPLETED, CASE_TRANSITIONS
-from org.gi.server.validation.task_state_machine import VALID_TASK_STATES, TASK_COMPLETED, TASK_TRANSITIONS
-from org.gi.server.validation.task import TASK_TYPES
+from org.gi.server.validation.task import TASK_TYPES, TASK_TYPE_PRODUCT_TRANSPORTATION
+from org.gi.server.validation.task.task_state_machine import VALID_TASK_STATES, TASK_COMPLETED, TASK_TRANSITIONS
 from org.gi.server.validation.validation_utils import validate_len_in_range, validate_mandatory_and_present_fields
-import org.gi.server.validation.location_validator as location_validator
 
 __author__ = 'avishayb'
 

@@ -1,21 +1,23 @@
+from requests.auth import HTTPBasicAuth
+import requests
+import unittest
+
+import org.gi.server.authorization as auth
+import org.gi.server.utils as utils
 from org.gi.server.web_token import AccessTokenAuth, generate_access_token
+from misc import _remove_from_db, _load, _push_to_db, MONGO, SERVER_URL_API, ACCESS_TOKEN_AUTH, validate_server_is_up
+import json
 
 __author__ = 'avishayb'
 
-import requests
-from requests.auth import HTTPBasicAuth
-import unittest
-from misc import _remove_from_db, _load, _push_to_db, MONGO, SERVER_URL_API, ACCESS_TOKEN_AUTH, validate_server_is_up
-import org.gi.server.authorization as auth
-import org.gi.server.utils as utils
 
-import json
+CONFIG_DATA_DIRECTORY = 'user_api'
 
 
 class GIServerUsersTestCase(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(GIServerUsersTestCase, self).__init__(*args, **kwargs)
-        self.config_folder = 'user_api'
+        self.config_folder = CONFIG_DATA_DIRECTORY
         self.users = _load('users.json', self.config_folder)
         self.passwords = {}
 

@@ -4,21 +4,23 @@ import unittest
 
 import requests
 
+import org.gi.server.validation.case_state_machine
 from misc import _remove_from_db, _load, _push_to_db, MONGO, SERVER_URL_API, ACCESS_TOKEN_AUTH, validate_server_is_up
 from org.gi.server import utils as utils
-import org.gi.server.validation.case_state_machine
 from org.gi.server.model.Task import ALL_TASKS_SAME_STATE_TRANSITION
-from org.gi.server.validation.task_state_machine import TASK_UNDEFINED, TASK_ASSIGNED, TASK_COMPLETED, TASK_PENDING
-
+from org.gi.server.validation.task.task_state_machine import TASK_UNDEFINED, TASK_ASSIGNED, TASK_COMPLETED, TASK_PENDING
+from org.gi.tests.users_tests import CONFIG_DATA_DIRECTORY as USER_CONFIG_DATA_DIRECTORY
 __author__ = 'avishayb'
+
+CONFIG_DATA_DIRECTORY = 'case_api'
 
 
 class TestGIServerCaseTestCase(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(TestGIServerCaseTestCase, self).__init__(*args, **kwargs)
-        self.config_folder = 'case_api'
-        self.users = _load('users.json', 'user_api')
-        self.cases = _load('cases.json', 'case_api')
+        self.config_folder = CONFIG_DATA_DIRECTORY
+        self.users = _load('users.json', USER_CONFIG_DATA_DIRECTORY)
+        self.cases = _load('cases.json', CONFIG_DATA_DIRECTORY)
 
     def setUp(self):
         _remove_from_db(MONGO, 'users')
@@ -60,12 +62,6 @@ class TestGIServerCaseTestCase(unittest.TestCase):
 
     def test_validate_location(self):
         pass
-
-    def test_create_general_task_with_address(self):
-        case = _load('case_with_general_task_with_address.json', self.config_folder)
-        self._replace(case)
-        r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
-        self.assertEqual(r.status_code, utils.HTTP_CREATED)
 
     def test_create_general_task_with_address(self):
         case = _load('case_with_general_task_with_address.json', self.config_folder)
@@ -143,7 +139,26 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_CREATED)
 
+    def test_create_case_with_location(self):
+        case = _get_case(self)
+        case['location'] = {
+            'geo_location': {
+                'lat': 30.0,
+                'lng': 30.0
+            }
+        }
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_CREATED)
+
+
     # negatives
+
+    def test_create_cases_with_bad_transport_tasks(self):
+        cases = _load('cases_with_bad_transportation_task.json', self.config_folder)
+        for case in cases:
+            self._replace(case)
+            r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
+            self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
 
     def test_create_case_fake_petitioner_id(self):
         case = _load('case_fake_petitioner_id.json', self.config_folder)
@@ -278,4 +293,8 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         self.assertEqual(orig_num_tasks, len(updated_case.get('tasks')))
 
 
+def _get_case(test):
+    case = _load('case_with_tasks.json', CONFIG_DATA_DIRECTORY)
+    test._replace(case)
+    return case
 

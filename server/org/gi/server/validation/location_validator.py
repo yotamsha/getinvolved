@@ -2,20 +2,25 @@ import pycountry
 
 from org.gi.server.validation.validation_utils import validate_len_in_range, validate_mandatory_and_present_fields
 
-MANDATORY = True
-
 
 def validate_location(location, faults):
     if location.get('address'):
         if location.get('geo_location'):
-            faults.append('Location should only one ADDRESS or GEO_LOCATION')
+            faults.append('Location should have only one value: ADDRESS or GEO_LOCATION')
         validate_address(location.get('address'), faults)
     elif location.get('geo_location'):
         validate_geo_location(location.get('geo_location'), faults)
 
 
 def validate_geo_location(geo_location, faults):
-    raise Exception('validate_geo_location not implemented')
+    lat = geo_location.get('lat')
+    lng = geo_location.get('lng')
+    if not (lat and lng):
+        faults.append('geo_location requires both lng & lat')
+    if not (MIN_LATITUDE <= lat <= MAX_LATITUDE):
+        faults.append('{} <= lat <= {}'.format(MIN_LATITUDE, MAX_LATITUDE))
+    if not (MIN_LONGITUDE <= lng <= MAX_LONGITUDE):
+        faults.append('{} <= lng <= {}'.format(MIN_LONGITUDE, MAX_LONGITUDE))
 
 
 def validate_street_name(street_name, faults):
@@ -102,12 +107,13 @@ def validate_country(country, faults):
 def validate_address(address, faults):
     validate_mandatory_and_present_fields(address, ADDRESS_META, faults)
 
+
+MANDATORY = True
 LOCATION_META = {
     'geo_location': validate_geo_location,
     'address': validate_address
 }
 
-# todo: Change its validation to 'validate_mandatory_and_present_fields' method
 ADDRESS_META = {
     'street_name': (validate_street_name, MANDATORY),
     'street_number': (validate_street_number, MANDATORY),
@@ -147,3 +153,8 @@ ZIP_CODE_MIN_MAX = 7
 
 CITY_MIN = 3
 CITY_MAX = 25
+
+MAX_LATITUDE = 90
+MIN_LATITUDE = -90
+MAX_LONGITUDE = 180
+MIN_LONGITUDE = -180
