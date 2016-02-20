@@ -19,8 +19,8 @@
     <div class="hamburger-icon" ng-click="ctrl.toggleSideNav()"></div>
     <div class="logo"></div>
   </div>
-  <div class="backdrop" ng-show="ctrl.isSideNavOpen"></div>
-  <div class="side-nav-menu" ng-show="ctrl.isSideNavOpen">
+  <div class="backdrop" ng-show="ctrl.isSideNavOpen" hide show-sm show-xs></div>
+  <div class="side-nav-menu" ng-show="ctrl.isSideNavOpen" hide show-sm show-xs>
       <ul>
         <li ng-repeat="route in ctrl.headerLinks" ng-class="ctrl.navClass(route)" class="side-nav-option route-link ">
             <a href="#{{route.link}}"> {{route.textKey | translate}}</a>
