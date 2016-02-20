@@ -11,6 +11,7 @@ import org.gi.server.validation.validations as v
 
 
 class CaseApi(Resource):
+    @u.web_log
     def get(self, case_id):
         try:
             case = db.cases.find_one({'_id': u.to_object_id(case_id)})
@@ -19,6 +20,7 @@ class CaseApi(Resource):
             abort(u.HTTP_NOT_FOUND, str(e))
         return case, u.HTTP_OK
 
+    @u.web_log
     @requires_auth
     def delete(self, case_id):
         try:
@@ -29,6 +31,7 @@ class CaseApi(Resource):
             return str(e), u.HTTP_NOT_FOUND
         return '', u.HTTP_NO_CONTENT
 
+    @u.web_log
     @requires_auth
     def put(self, case_id):
         case = db.cases.find_one({'_id': u.to_object_id(case_id)})
@@ -52,6 +55,7 @@ class CaseApi(Resource):
                 abort(u.HTTP_BAD_INPUT, str(e))
             return '', u.HTTP_NO_CONTENT
 
+    @u.web_log
     @requires_auth
     def post(self):
         faults = []
@@ -78,6 +82,7 @@ class CaseListApi(Resource):
         self.reqparse = reqparse.RequestParser()
         super(CaseListApi, self).__init__()
 
+    @u.web_log
     def get(self):
         try:
             _filter, projection, sort, page_size_str, page_number_str = u.get_fields_projection_and_filter(request)

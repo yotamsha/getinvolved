@@ -3,6 +3,9 @@ __author__ = 'avishayb'
 from bson.objectid import ObjectId
 import urllib
 import pymongo
+from functools import wraps
+from flask import request
+import logging
 
 SORT_ORDER = {
     'ASCENDING': pymongo.ASCENDING,
@@ -30,6 +33,15 @@ HTTP_SERVER_ERROR = 500
 HTTP_SERVICE_UNAVAILABLE = 503
 HTTP_GATEWAY_TIMEOUT = 504
 
+
+
+
+def web_log(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        logging.error('%s : %s : %s' % (str(request), str(request.remote_addr), str(request.user_agent)))
+        return func(*args, **kwargs)
+    return wrapper
 
 def handle_sort_and_paging(cursor, sort, page_size_str, page_number_str):
     if cursor:
