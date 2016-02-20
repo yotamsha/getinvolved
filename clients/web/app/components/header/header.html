@@ -1,21 +1,31 @@
 <div class="header" layout="column">
-  <div layout="row">
+  <div class="nav-bar" layout="row" hide show-gt-sm>
     <div class="logo"></div>
-    <div hide-xs class="nav-bar" layout="row">
-      <div class="user-profile-link route-link" flex-offset="5">
-        <div ng-show="ctrl.authModel.isAuthenticated">
-          {{ctrl.authModel.userSession.first_name}} | <a href="#" ng-click="ctrl.authSrv.logout()">logout</a>
-        </div>
-        <div ng-show="!ctrl.authModel.isAuthenticated && !ctrl.authModel.isLoading" ng-click="ctrl.openLoginDialog()">
-          login
-        </div>
+    <div class="user-profile-link route-link" flex-offset="5">
+      <div ng-show="ctrl.authModel.isAuthenticated">
+        {{ctrl.authModel.userSession.first_name}} | <a href="#" ng-click="ctrl.authSrv.logout()">logout</a>
       </div>
-      <div  flex-offset="5" ng-repeat="route in ctrl.headerLinks" >
-        <div class="route-link" ng-class="ctrl.navClass(route)" >
-          <a href="#{{route.link}}"> {{route.textKey | translate}}</a>
-        </div>
+      <div ng-show="!ctrl.authModel.isAuthenticated && !ctrl.authModel.isLoading" ng-click="ctrl.openLoginDialog()">
+        login
       </div>
     </div>
+    <div flex-offset="5" ng-repeat="route in ctrl.headerLinks" >
+      <div class="route-link" ng-class="ctrl.navClass(route)" >
+        <a href="#{{route.link}}"> {{route.textKey | translate}}</a>
+      </div>
+    </div>
+  </div>
+  <div class="small-nav-bar" layout="row" layout-align="space-between center" hide show-sm show-xs>
+    <div class="hamburger-icon" ng-click="ctrl.toggleSideNav()"></div>
+    <div class="logo"></div>
+  </div>
+  <div class="backdrop" ng-show="ctrl.isSideNavOpen"></div>
+  <div class="side-nav-menu" ng-show="ctrl.isSideNavOpen">
+      <ul>
+        <li ng-repeat="route in ctrl.headerLinks" ng-class="ctrl.navClass(route)" class="side-nav-option route-link ">
+            <a href="#{{route.link}}"> {{route.textKey | translate}}</a>
+        </li>
+      </ul>
   </div>
   <div layout="row" flex layout-align="center start">
     <div flex layout="column" layout-align="start center">
