@@ -1,6 +1,6 @@
 import uuid
 
-from org.gi.server.model.task import Task
+from org.gi.server.model.Task import Task
 from org.gi.server import location as l
 from org.gi.server.validation.case_state_machine import CASE_UNDEFINED, CASE_PENDING_APPROVAL, CASE_MISSING_INFO, \
     CASE_REJECTED, CASE_OVERDUE, CASE_CANCELLED_BY_USER, CASE_CANCELLED_BY_ADMIN
