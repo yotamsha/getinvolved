@@ -1,5 +1,7 @@
 {
   "views.home.title": "עמוד הבית",
+  "views.main.header.hello" : "שלום",
+  "views.main.header.logout" : "התנתק",
   "views.main.header.login_or_signup" : "כניסה / הרשמה",
   "views.main.header.ask_help" : "לבקש עזרה",
   "views.main.header.about_us" : "קצת עלינו",
