@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 __author__ = 'avishayb'
 
-
-from org.gi.server import location as l
 import unittest
+
+from org.gi.server.service import location as l
 
 
 class GILocationTestCase(unittest.TestCase):

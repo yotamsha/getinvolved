@@ -2,17 +2,21 @@
   "state": "__undefined__",
   "tasks": [
     {
-      "address": {
-        "street_name": "Balfur",
-        "city": "loooooooooooooooooooooooooooooooooooooooooooooooooooong",
-        "street_number": "23",
-        "country": "IL"
+      "location": {
+        "address": {
+          "street_name": "Balfur",
+          "city": "loooooooooooooooooooooooooooooooooooooooooooooooooooong",
+          "street_number": "23",
+          "country": "IL"
+        }
       },
-      "destination_address": {
-        "street_name": "Dizingof",
-        "city": "Tel Aviv",
-        "street_number": "32",
-        "country": "IL"
+      "destination": {
+        "destination_address": {
+          "street_name": "Dizingof",
+          "city": "Tel Aviv",
+          "street_number": "32",
+          "country": "IL"
+        }
       },
       "state": "__undefined__",
       "type": "TRANSPORTATION",

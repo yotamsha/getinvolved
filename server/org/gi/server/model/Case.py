@@ -1,10 +1,10 @@
 import uuid
 
 from org.gi.server.model.Task import Task
-from org.gi.server import location as l
+from org.gi.server.service import location as l
 from org.gi.server.validation.case_state_machine import CASE_UNDEFINED, CASE_PENDING_APPROVAL, CASE_MISSING_INFO, \
     CASE_REJECTED, CASE_OVERDUE, CASE_CANCELLED_BY_USER, CASE_CANCELLED_BY_ADMIN
-from org.gi.server.validation.task_state_machine import TASK_PENDING
+from org.gi.server.validation.task.task_state_machine import TASK_PENDING
 
 
 class Case:
@@ -29,18 +29,6 @@ class Case:
         return updated_case
 
     @staticmethod
-    def handle_geo_location(case):
-        if 'tasks' not in case:
-            return
-        fields = ['destination_address', 'address']
-        for task in case['tasks']:
-            for field in fields:
-                address = task.get(field)
-                if address:
-                    geo = l.get_lat_lng(address)
-                    address['geo'] = geo
-
-    @staticmethod
     def prep_case_before_insert(case):
         if 'state' not in case or case['state'] == CASE_UNDEFINED:
             case['state'] = CASE_PENDING_APPROVAL
@@ -49,3 +37,26 @@ class Case:
             task['state'] = TASK_PENDING
         Case.handle_geo_location(case)
         return case
+
+    @staticmethod
+    def handle_geo_location(case):
+        if case.get('location'):
+            _retrieve_all_location_data(case.get('location'))
+        if 'tasks' not in case:
+            return
+        fields = ['destination', 'location']
+        for task in case['tasks']:
+            for field in fields:
+                location = task.get(field)
+                if location:
+                    _retrieve_all_location_data(location)
+
+
+def _retrieve_all_location_data(location):
+    if location.get('address'):
+        geo = l.get_lat_lng(location.get('address'))
+        location['geo_location'] = geo
+    elif location.get('geo_location'):
+        geo = location.get('geo_location')
+        address = l.get_address(geo.get('lat'), geo.get('lng'))
+        location['address'] = address

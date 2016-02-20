@@ -2,18 +2,22 @@
   "state": "__undefined__",
   "tasks": [
     {
-      "address": {
-        "street_name": "Balfur",
-        "city": "Tveria",
-        "street_number": "23",
-        "country": "IL",
-        "dummy" : "dummy"
+      "location": {
+        "address": {
+          "street_name": "Balfur",
+          "city": "Tveria",
+          "street_number": "23",
+          "country": "IL",
+          "dummy": "dummy"
+        }
       },
-      "destination_address": {
-        "street_name": "Dizingof",
-        "city": "Tel Aviv",
-        "street_number": "32",
-        "country": "IL"
+      "destination": {
+        "address": {
+          "street_name": "Dizingof",
+          "city": "Tel Aviv",
+          "street_number": "32",
+          "country": "IL"
+        }
       },
       "state": "__undefined__",
       "type": "TRANSPORTATION",

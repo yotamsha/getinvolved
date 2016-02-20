@@ -2,7 +2,7 @@ __author__ = 'avishayb'
 import unittest
 
 from misc import _load
-from org.gi.server.validation import validations as v
+from org.gi.server.validation import location_validator as v
 
 
 class GIAddressValidationTestCase(unittest.TestCase):

@@ -14,7 +14,7 @@ class UserListApi(Resource):
         self.reqparse = reqparse.RequestParser()
         super(UserListApi, self).__init__()
 
-    # @requires_roles(auth.ROLE_ADMIN)
+    @u.web_log
     @requires_auth
     def get(self):
         try:
@@ -35,6 +35,7 @@ class UserApi(Resource):
         if payload and isinstance(payload, dict) and not payload.get('role'):
             payload['role'] = auth.NONE
 
+    @u.web_log
     @requires_auth
     def get(self, user_id):
         try:
@@ -46,6 +47,7 @@ class UserApi(Resource):
             abort(u.HTTP_NOT_FOUND, str(e))
         return user, u.HTTP_OK
 
+    @u.web_log
     @requires_auth
     def delete(self, user_id):
         try:
@@ -56,6 +58,7 @@ class UserApi(Resource):
             return str(e), u.HTTP_NOT_FOUND
         return '', u.HTTP_NO_CONTENT
 
+    @u.web_log
     def post(self):
         faults = []
         payload = request.json
@@ -75,6 +78,7 @@ class UserApi(Resource):
         u.handle_id(created)
         return created, u.HTTP_CREATED
 
+    @u.web_log
     @requires_auth
     def put(self, user_id):
         user = db.users.find_one({'_id': u.to_object_id(user_id)})

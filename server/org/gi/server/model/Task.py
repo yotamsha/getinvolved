@@ -1,7 +1,7 @@
-from org.gi.server.validation.task_state_machine import TASK_PENDING_USER_APPROVAL, TASK_ASSIGNMENT_IN_PROCESS
 from org.gi.server.validation.case_state_machine import CASE_ASSIGNED, \
     CASE_PENDING_INVOLVEMENT, CASE_COMPLETED, CASE_PARTIALLY_ASSIGNED, CASE_PARTIALLY_COMPLETED
-from org.gi.server.validation.task_state_machine import TASK_PENDING, TASK_ASSIGNED, TASK_COMPLETED
+from org.gi.server.validation.task.task_state_machine import TASK_PENDING, TASK_ASSIGNED, TASK_COMPLETED
+from org.gi.server.validation.task.task_state_machine import TASK_PENDING_USER_APPROVAL, TASK_ASSIGNMENT_IN_PROCESS
 
 ALL_TASKS_SAME_STATE_TRANSITION = {
     TASK_PENDING: CASE_PENDING_INVOLVEMENT,

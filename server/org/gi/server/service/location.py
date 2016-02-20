@@ -1,8 +1,9 @@
-__author__ = 'avishayb'
 import requests
-#requests.packages.urllib3.disable_warnings()
 import time
 from org.gi.server import utils as u
+
+__author__ = 'avishayb'
+
 
 _API_KEY = 'AIzaSyCSDWhR_zQ-lFJuEHmBeG_Kawd2UBp8eTo'
 URL_TEMPLATE = 'https://maps.googleapis.com/maps/api/geocode/json?address=%s&key=%s'
@@ -24,7 +25,6 @@ def get_address(lat, lng, lang='iw'):
     else:
         address_list = reverse_result[0]['formatted_address'].split(',')
         return {'country': address_list[2], 'city': address_list[1], 'street': address_list[0]}
-
 
 
 def get_lat_lng(address):

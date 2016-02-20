@@ -68,5 +68,11 @@ if __name__ == '__main__':
     print('------------------------------------------------------------------------------------')
     start_notification_loop()
     app.run(debug=False)
+    if not app.debug:
+        import logging
+        from logging.handlers import RotatingFileHandler
+        file_handler = RotatingFileHandler('gi_server.log', maxBytes=10000000, backupCount=5)
+        file_handler.setLevel(logging.WARNING if mode != 'dev' else logging.DEBUG)
+        app.logger.addHandler(file_handler)
 
 
