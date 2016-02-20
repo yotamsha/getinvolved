@@ -7,21 +7,17 @@ angular.module('app.view1', [])
             url: "/view1",
             templateUrl: 'view1/view1.html',
             controller: 'View1Ctrl',
-            data: {
-                authorizedRoles: [USER_ROLES.admin]
-            },
-            resolve: {
+/*            resolve: {
                 authorize: ['AuthService', function (AuthService) {
                     return AuthService.isAuthorized(USER_ROLES.user);
                 }],
-            }
+            }*/
         });
     }])
 
-    .controller('View1Ctrl', ['$scope', '$http', '$timeout', '$q', '$filter', 'Restangular',
-        function View1Ctrl($scope, $http, $timeout, $q, $filter, Restangular) {
+    .controller('View1Ctrl', ['$scope', '$http', '$timeout', '$q', '$filter', 'CaseDao',
+        function View1Ctrl($scope, $http, $timeout, $q, $filter, CaseDao) {
 
-            var tasksDao = Restangular.all('tasks');
 
             // --- INNER FUNCTIONS --- //
 
@@ -35,19 +31,19 @@ angular.module('app.view1', [])
 
             // --- SCOPE FUNCTIONS --- //
 
-            $scope.getTasks = function () {
+            $scope.getCases = function () {
 
-                tasksDao.getList()
+                CaseDao.getList()
                     .then(function (data) {
                         $scope.vm.dbData = data;
                     });
             };
-            $scope.createTask = function () {
-                var task = {
+            $scope.createCase = function () {
+                var newCase = {
                     name: "newTask",
                     description: "bla bla.."
                 };
-                tasksDao.post(task)
+                CaseDao.post(newCase)
                     .then(function (result) {
                     });
             };

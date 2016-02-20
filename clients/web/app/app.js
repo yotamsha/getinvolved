@@ -28,6 +28,9 @@ angular.module('app', [
         'app.version',
         'app.header',
 
+        // Models
+        'app.models.case',
+
         // Services
         'app.services.data-access',
         'app.services.language-service',
