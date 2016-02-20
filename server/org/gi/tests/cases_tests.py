@@ -58,6 +58,15 @@ class TestGIServerCaseTestCase(unittest.TestCase):
 
     # positives
 
+    def test_validate_location(self):
+        pass
+
+    def test_create_general_task_with_address(self):
+        case = _load('case_with_general_task_with_address.json', self.config_folder)
+        self._replace(case)
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_CREATED)
+
     def test_create_general_task_with_address(self):
         case = _load('case_with_general_task_with_address.json', self.config_folder)
         self._replace(case)

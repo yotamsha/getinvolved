@@ -7,7 +7,7 @@ from org.gi.server.db import db
 from org.gi.server.log import log
 from org.gi.server.model.Case import Case
 
-from org.gi.server.validation import validations as v
+import org.gi.server.validation.validations as v
 
 
 class CaseApi(Resource):

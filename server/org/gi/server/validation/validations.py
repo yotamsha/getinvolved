@@ -1,14 +1,17 @@
 import json
 import re
 import phonenumbers
-import pycountry
 import time
 
 from org.gi.server import utils as u
 from org.gi.server.db import db
+import org.gi.server.authorization as auth
+
 from org.gi.server.validation.case_state_machine import VALID_CASE_STATES, CASE_COMPLETED, CASE_TRANSITIONS
 from org.gi.server.validation.task_state_machine import VALID_TASK_STATES, TASK_COMPLETED, TASK_TRANSITIONS
-import org.gi.server.authorization as auth
+from org.gi.server.validation.task import TASK_TYPES
+from org.gi.server.validation.validation_utils import validate_len_in_range, validate_mandatory_and_present_fields
+import org.gi.server.validation.location_validator as location_validator
 
 __author__ = 'avishayb'
 
@@ -89,58 +92,11 @@ TITLE_NAME_MAX = 22
 DESCRIPTION_NAME_MIN = 2
 DESCRIPTION_NAME_MAX = 22
 
-STREET_NAME_MIN = 3
-STREET_NAME_MAX = 25
-
-STREET_NUMBER_MIN = 1
-STREET_NUMBER_MAX = 6
-
-ENTRANCE_MIN = 1
-ENTRANCE_MAX = 4
-
-FLOOR_MIN = 1
-FLOOR_MAX = 4
-
-APARTMENT_NUMBER_MIN = 1
-APARTMENT_NUMBER_MAX = 5
-
-ZIP_CODE_MIN = 3
-ZIP_CODE_MIN_MAX = 7
-
-CITY_MIN = 3
-CITY_MAX = 25
-
 FB_TOKEN_MIN_LENGTH = 10
 FB_ID_MIN_LENGTH = 8
 FB_ID_MAX_LENGTH = 40
 
 MAX_DUE_DATE_HOURS = 24
-
-
-STATES = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE',
-          'FL', 'GA', 'HI', 'IA', 'ID', 'IN', 'IL', 'KS', 'KY',
-          'LA', 'MA', 'MD', 'ME', 'MI', 'MN', 'MO', 'MS', 'MT',
-          'NC', 'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', 'NY', 'OH',
-          'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT',
-          'VA', 'VT', 'WA', 'WI', 'WV', 'WY']
-
-
-def validate_state(state, faults):
-    if not state or not isinstance(state, (str, unicode)):
-        faults.append('state must be none empty string')
-        return
-    if state not in STATES:
-        faults.append('%s is invalid 2 chars state code.')
-
-
-def validate_country(country, faults):
-    if not country or not isinstance(country, (str, unicode)):
-        faults.append('country must be none empty string')
-        return
-    try:
-        pycountry.countries.get(alpha2=country)
-    except KeyError, e:
-        faults.append('%s is not a valid country name' % country)
 
 
 def validate_phone_number(phone_number, faults):
@@ -168,7 +124,7 @@ def validate_password(password, faults):
     if not password or not isinstance(password, (str, unicode)):
         faults.append('password must be none empty string')
         return
-    if not _validate_len_in_range(password, PASSWORD_MIN, PASSWORD_MAX):
+    if not validate_len_in_range(password, PASSWORD_MIN, PASSWORD_MAX):
         faults.append('%s is not a valid password. Password length should be in the range %d - %d' % (
             password, PASSWORD_MIN, PASSWORD_MAX))
 
@@ -177,7 +133,7 @@ def validate_first_name(first_name, faults):
     if not first_name or not isinstance(first_name, (str, unicode)):
         faults.append('first_name must be none empty string')
         return
-    if not _validate_len_in_range(first_name, FIRST_NAME_MIN, FIRST_NAME_MAX):
+    if not validate_len_in_range(first_name, FIRST_NAME_MIN, FIRST_NAME_MAX):
         faults.append('%s is not a valid first name. first name length should be in the range %d - %d' % (
             first_name, FIRST_NAME_MIN, FIRST_NAME_MAX))
 
@@ -186,7 +142,7 @@ def validate_last_name(last_name, faults):
     if not last_name or not isinstance(last_name, (str, unicode)):
         faults.append('last_name must be none empty string')
         return
-    if not _validate_len_in_range(last_name, LAST_NAME_MIN, LAST_NAME_MAX):
+    if not validate_len_in_range(last_name, LAST_NAME_MIN, LAST_NAME_MAX):
         faults.append('%s is not a valid first name. first name length should be in the range %d - %d' % (
             last_name, LAST_NAME_MIN, LAST_NAME_MAX))
 
@@ -195,7 +151,7 @@ def validate_user_name(user_name, faults):
     if not user_name or not isinstance(user_name, (str, unicode)):
         faults.append('user_name  must be none empty string')
         return
-    if not _validate_len_in_range(user_name, USER_NAME_MIN, USER_NAME_MAX):
+    if not validate_len_in_range(user_name, USER_NAME_MIN, USER_NAME_MAX):
         faults.append('%s is not a valid first name. first name length should be in the range %d - %d' % (
             user_name, USER_NAME_MIN, USER_NAME_MAX))
 
@@ -204,7 +160,7 @@ def validate_title(title, faults):
     if not title or not isinstance(title, (str, unicode)):
         faults.append('title  must be none empty string')
         return
-    if not _validate_len_in_range(title, TITLE_NAME_MIN, TITLE_NAME_MAX):
+    if not validate_len_in_range(title, TITLE_NAME_MIN, TITLE_NAME_MAX):
         faults.append('%s is not a valid title. title length should be in the range %d - %d' % (
             title, TITLE_NAME_MIN, TITLE_NAME_MAX))
 
@@ -213,7 +169,7 @@ def validate_description(description, faults):
     if not description or not isinstance(description, (str, unicode)):
         faults.append('description  must be none empty string')
         return
-    if not _validate_len_in_range(description, DESCRIPTION_NAME_MIN, DESCRIPTION_NAME_MAX):
+    if not validate_len_in_range(description, DESCRIPTION_NAME_MIN, DESCRIPTION_NAME_MAX):
         faults.append('%s is not a valid description. description length should be in the range %d - %d' % (
             description, DESCRIPTION_NAME_MIN, DESCRIPTION_NAME_MAX))
 
@@ -225,15 +181,14 @@ def validate_petitioner_id(petitioner_id, faults):
 
 def validate_transportation_task(task, faults):
     validate_mandatory_and_present_fields(task, TASK_META, faults)
-    # post_validate(task, TASK_META, faults, mandatory=True)
-    if not task.get('destination_address'):
-        faults.append('Transportation task must contain destination address')
-    if not task.get('address'):
-        faults.append('Transportation task must contain address')
+    if not task.get('location'):
+        faults.append('Transportation task must contain location')
+    if not task.get('destination'):
+        faults.append('Transportation task must contain destination')
     if faults:
         return
-    validate_address(task['destination_address'], faults)
-    validate_address(task['address'], faults)
+    location_validator.validate_location(task['location'], faults)
+    location_validator.validate_location(task['destination'], faults)
 
 
 def validate_tasks(tasks, faults, current_tasks=None):
@@ -280,10 +235,6 @@ def validate_case_state(state, faults):
         faults.append('%s is invalid case state. Valid cases states are %s' % (state, str(VALID_CASE_STATES)))
 
 
-def _validate_len_in_range(value, _min, _max):
-    return value and _min <= len(value.strip()) <= _max
-
-
 def _validate_status_transition(current_state, new_state, valid_states, valid_transitions, faults):
     if not current_state:
         faults.append('current_state argument not found')
@@ -311,109 +262,6 @@ def validate_user_role(role, faults):
         return
     if role not in auth.ROLES.keys():
         faults.append("Invalid role %s. Valid roles are %s" % (role, str(auth.ROLES.keys())))
-
-
-def validate_mandatory_and_present_fields(payload, meta, faults, mandatory=True):
-    FUNC_INDEX = 0
-    MANDATORY_INDEX = 1
-    if not payload or not isinstance(payload, dict):
-        faults.append('payload must be none empty dict')
-        return
-    for key in payload.keys():
-        if key not in meta.keys():
-            faults.append('The field \'%s\' is invalid. Valid fields are %s' % (
-                key, str(meta.keys())))
-    for field_name, validation_info in meta.iteritems():
-        if mandatory:
-            if field_name not in payload and (isinstance(validation_info, tuple) and validation_info[MANDATORY_INDEX]):
-                faults.append('The field %s is a mandatory field.' % field_name)
-                continue
-        if field_name in payload and validation_info:
-            if isinstance(validation_info, tuple):
-                validation_info[FUNC_INDEX](payload[field_name], faults)
-            else:
-                validation_info(payload[field_name], faults)
-
-
-def validate_address(address, faults):
-    FUNC = 0
-    MANDATORY = 1
-    if not address or not isinstance(address, dict):
-        faults.append('address must be none empty dict')
-        return
-    for key in address.keys():
-        if key not in ADDRESS_META.keys():
-            faults.append('The field \'%s\' is invalid address field. Valid address fields are %s' % (
-                key, str(ADDRESS_META.keys())))
-    for field_name, validation_info in ADDRESS_META.iteritems():
-        if field_name not in address and validation_info[MANDATORY]:
-            faults.append('The field %s is a mandatory field.' % field_name)
-            continue
-        if field_name in address:
-            validation_info[FUNC](address[field_name], faults)
-
-
-def validate_street_name(street_name, faults):
-    if not street_name or not isinstance(street_name, (str, unicode)):
-        faults.append('street_name  must be none empty string')
-        return
-    if not _validate_len_in_range(street_name, STREET_NAME_MIN, STREET_NAME_MAX):
-        faults.append('%s is not a valid street_name. street_name length should be in the range %d - %d' % (
-            street_name, STREET_NAME_MIN, STREET_NAME_MAX))
-
-
-def validate_street_number(street_number, faults):
-    if not street_number or not isinstance(street_number, (str, unicode)):
-        faults.append('street_number  must be none empty string')
-        return
-    if not _validate_len_in_range(street_number, STREET_NUMBER_MIN, STREET_NUMBER_MAX):
-        faults.append('%s is not a valid street_number. street_number length should be in the range %d - %d' % (
-            street_number, STREET_NUMBER_MIN, STREET_NUMBER_MAX))
-
-
-def validate_entrance(entrance, faults):
-    if not entrance or not isinstance(entrance, (str, unicode)):
-        faults.append('entrance  must be none empty string')
-        return
-    if not _validate_len_in_range(entrance, ENTRANCE_MIN, ENTRANCE_MAX):
-        faults.append('%s is not a valid entrance. entrance length should be in the range %d - %d' % (
-            entrance, ENTRANCE_MIN, ENTRANCE_MAX))
-
-
-def validate_floor(floor, faults):
-    if not floor or not isinstance(floor, (str, unicode)):
-        faults.append('floor must be none empty string')
-        return
-    if not _validate_len_in_range(floor, FLOOR_MIN, FLOOR_MAX):
-        faults.append('%s is not a valid floor. floor length should be in the range %d - %d' % (
-            floor, FLOOR_MIN, FLOOR_MAX))
-
-
-def validate_apartment_number(apartment_number, faults):
-    if not apartment_number or not isinstance(apartment_number, (str, unicode)):
-        faults.append('apartment_number must be none empty string')
-        return
-    if not _validate_len_in_range(apartment_number, APARTMENT_NUMBER_MIN, APARTMENT_NUMBER_MAX):
-        faults.append('%s is not a valid street_name. description length should be in the range %d - %d' % (
-            apartment_number, APARTMENT_NUMBER_MIN, APARTMENT_NUMBER_MAX))
-
-
-def validate_zip_code(zip_code, faults):
-    if not zip_code or not isinstance(zip_code, (str, unicode)):
-        faults.append('zip_code must be none empty string')
-        return
-    if not _validate_len_in_range(zip_code, ZIP_CODE_MIN, ZIP_CODE_MIN_MAX):
-        faults.append('%s is not a valid zip_code. zip_code length should be in the range %d - %d' % (
-            zip_code, ZIP_CODE_MIN, ZIP_CODE_MIN_MAX))
-
-
-def validate_city(city, faults):
-    if not city or not isinstance(city, (str, unicode)):
-        faults.append('city must be none empty string')
-        return
-    if not _validate_len_in_range(city, CITY_MIN, CITY_MAX):
-        faults.append('%s is not a valid city. city length should be in the range %d - %d' % (
-            city, CITY_MIN, CITY_MAX))
 
 
 def validate_task_state(state, faults):
@@ -444,7 +292,7 @@ def noop(nada, faults):
     pass
 
 
-def validate_task_id(self, faults):
+def validate_task_id(task_id, faults):
     pass
 
 
@@ -516,12 +364,13 @@ CASE_META = {
     'description': (validate_description, MANDATORY),
     'petitioner_id': (noop, MANDATORY),
     'tasks': (validate_tasks, MANDATORY),
-    'state': (validate_case_state, not MANDATORY)
+    'state': (validate_case_state, not MANDATORY),
+    'location': (location_validator.validate_location, not MANDATORY)
 }
 
 TASK_META = {
-    'address': None,
-    'destination_address': None,
+    'location': None,
+    'destination': None,
     'volunteer_id': None,
     'description': (validate_task_description, MANDATORY),
     'title': (validate_task_title, MANDATORY),
@@ -533,32 +382,10 @@ TASK_META = {
     'id': validate_task_id
 }
 
-# todo: Change its validation to 'validate_mandatory_and_present_fields' method
-ADDRESS_META = {
-    'street_name': (validate_street_name, MANDATORY),
-    'street_number': (validate_street_number, MANDATORY),
-    'entrance': (validate_entrance, not MANDATORY),
-    'floor': (validate_floor, not MANDATORY),
-    'apartment_number': (validate_apartment_number, not MANDATORY),
-    'zip_code': (validate_zip_code, not MANDATORY),
-    'city': (validate_city, MANDATORY),
-    'state': (validate_state, not MANDATORY),
-    'country': (validate_country, not MANDATORY),
-
-}
-
 NOTIFICATIONS_META = {
     'sms': None,
     'email': None
 }
-
-TASK_TYPE_GENERAL = 'GENERAL'
-TASK_TYPE_PRODUCT_REQUEST = 'PRODUCT_REQUEST'
-TASK_TYPE_PRODUCT_DONATION = 'DONATION'
-TASK_TYPE_PRODUCT_TRANSPORTATION = 'TRANSPORTATION'
-
-TASK_TYPES = [TASK_TYPE_GENERAL, TASK_TYPE_PRODUCT_REQUEST, TASK_TYPE_PRODUCT_DONATION,
-              TASK_TYPE_PRODUCT_TRANSPORTATION]
 
 
 def entity_exists(collection_name, entity_id):
