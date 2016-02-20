@@ -1,6 +1,6 @@
 import unittest
 
-from org.gi.server.model.case import Case
+from org.gi.server.model.Case import Case
 from org.gi.server.validation.case_state_machine import CASE_UNDEFINED, CASE_PENDING_APPROVAL, CASE_MISSING_INFO, \
     CASE_REJECTED, CASE_OVERDUE, CASE_CANCELLED_BY_USER, CASE_CANCELLED_BY_ADMIN, CASE_PENDING_INVOLVEMENT, \
     CASE_PARTIALLY_ASSIGNED, CASE_ASSIGNED, CASE_PARTIALLY_COMPLETED, CASE_COMPLETED
