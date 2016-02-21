@@ -13,7 +13,7 @@ USER_PROJECTION = {
 }
 
 
-def __get_petitioner_from_case(case):
+def _get_petitioner_from_case(case):
     petitioner = {
         'case_title': case.get('title'),
         'user_id': case.get('petitioner_id'),
@@ -23,17 +23,17 @@ def __get_petitioner_from_case(case):
     return petitioner
 
 
-def __get_volunteer_from_case_and_task(case, task):
+def _get_volunteer_from_case_and_task(case, task):
     volunteer = {
         'case_title': case.get('title'),
         'user_id': task.get('volunteer_id'),
         'details': db.users.find_one({'_id': u.to_object_id(task.get('volunteer_id'))}, projection=USER_PROJECTION),
-        'tasks': [__get_task_name_and_id(task)]
+        'tasks': [_get_task_name_and_id(task)]
     }
     return volunteer
 
 
-def __get_task_name_and_id(_task):
+def _get_task_name_and_id(_task):
     task = {
         'task_title': _task.get('title'),
         'id': _task.get('id')
@@ -41,17 +41,17 @@ def __get_task_name_and_id(_task):
     return task
 
 
-def __get_lists_from_cases(cases, upto_due_date):
+def _get_lists_from_cases(cases, upto_due_date):
     petitioner_list = []
     volunteer_list = []
     for case in cases:
-        petitioner = __get_petitioner_from_case(case)
+        petitioner = _get_petitioner_from_case(case)
         for task in case.get('tasks'):
             if task.get('due_date') <= upto_due_date:
-                volunteer_list.append(__get_volunteer_from_case_and_task(case, task))
+                volunteer_list.append(_get_volunteer_from_case_and_task(case, task))
                 if not is_a_list(petitioner.get('tasks')):
                     petitioner['tasks'] = []
-                petitioner['tasks'].append(__get_task_name_and_id(task))
+                petitioner['tasks'].append(_get_task_name_and_id(task))
         petitioner_list.append(petitioner)
     return petitioner_list, volunteer_list
 
@@ -73,5 +73,5 @@ def fetch_users_with_x_hours_until_task(hours_till_task):
     }
     cases = db.cases.find(filter=filter)
     cases = u.make_list(cases)
-    petitioner_list, volunteer_list = __get_lists_from_cases(cases, upto_due_date)
+    petitioner_list, volunteer_list = _get_lists_from_cases(cases, upto_due_date)
     return petitioner_list, volunteer_list

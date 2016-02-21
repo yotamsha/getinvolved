@@ -378,7 +378,7 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         updated_case = {'tasks': _get_case_from_db(case_id)['tasks']}
         self.assertEqual(orig_num_tasks, len(updated_case.get('tasks')))
 
-    # Needed to bum off some capabilities here
+    # fetching user notifications is related to cases/tasks
     def test_fetch_users_to_notify(self):
         self._get_inserted_case()
         petitioner_list, volunteer_list = fetch_users_with_x_hours_until_task(DUE_DATE_HOURS + 1)
