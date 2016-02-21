@@ -23,8 +23,17 @@ class Case:
     def prep_case_before_update(updated_case, db_case):
         if not Case._update_state_overrides_transition(updated_case.get('state')) and updated_case.get('tasks'):
             updated_case['state'] = Task.get_updated_case_state(updated_case.get('tasks'), db_case.get('tasks'))
+
         if updated_case.get('tasks'):
             updated_case['tasks'] = Task.merge_non_updated_tasks(updated_case.get('tasks'), db_case.get('tasks'))
+            for task in updated_case['tasks']:
+                if not task.get('id'):
+                    task['id'] = str(uuid.uuid4())
+
+        # We add this param.
+        if 'id' in updated_case:
+            del updated_case['id']
+
         Case.handle_geo_location(updated_case)
         return updated_case
 
