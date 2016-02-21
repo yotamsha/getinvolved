@@ -1,3 +1,5 @@
+import logging
+
 import requests
 import time
 from org.gi.server import utils as u
@@ -21,10 +23,14 @@ def get_address(lat, lng, lang='iw'):
         raise Exception('Lng must be a floating number')
     reverse_result = _get_result(REVERSE_URL_TEMPLATE % (lat, lng, lang, _API_KEY))
     if not reverse_result:
-        raise Exception('Failed to get address for [%d,%d]' % (lat,lng))
+        logging.error('Failed to get address for [%d,%d]' % (lat, lng))
+        return {}
     else:
         address_list = reverse_result[0]['formatted_address'].split(',')
-        return {'country': address_list[2], 'city': address_list[1], 'street': address_list[0]}
+        if len(address_list) == 2:
+            return {'country': address_list[1], 'city': address_list[0]}
+        else:
+            return {'country': address_list[2], 'city': address_list[1], 'street': address_list[0]}
 
 
 def get_lat_lng(address):
