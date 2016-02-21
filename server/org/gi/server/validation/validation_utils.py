@@ -5,6 +5,14 @@ def validate_len_in_range(value, _min, _max):
     return value and _min <= len(value.strip()) <= _max
 
 
+def validate_number_in_range(number, _min, _max):
+    return number and is_a_number(number) and (_min <= number <= _max)
+
+
+def is_a_number(number):
+    return isinstance(number, (int, long, float))
+
+
 def validate_mandatory_and_present_fields(payload, meta, faults, mandatory=True):
     FUNC_INDEX = 0
     MANDATORY_INDEX = 1
