@@ -13,6 +13,10 @@ def is_a_number(number):
     return isinstance(number, (int, long, float))
 
 
+def is_a_list(_list):
+    return _list and isinstance(_list, list)
+
+
 def validate_mandatory_and_present_fields(payload, meta, faults, mandatory=True):
     FUNC_INDEX = 0
     MANDATORY_INDEX = 1

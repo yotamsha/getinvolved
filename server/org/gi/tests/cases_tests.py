@@ -7,6 +7,7 @@ import requests
 from misc import _remove_from_db, _load, _push_to_db, MONGO, SERVER_URL_API, ACCESS_TOKEN_AUTH, validate_server_is_up
 from org.gi.server import utils as utils
 from org.gi.server.model.Task import ALL_TASKS_SAME_STATE_TRANSITION
+from org.gi.server.service.notification.fetch_users_to_notify import fetch_users_with_x_hours_until_task
 from org.gi.server.validation.task.task_state_machine import TASK_UNDEFINED, TASK_ASSIGNED, TASK_COMPLETED, TASK_PENDING
 from org.gi.tests.users_tests import CONFIG_DATA_DIRECTORY as USER_CONFIG_DATA_DIRECTORY
 import org.gi.server.validation.case_state_machine
@@ -15,6 +16,7 @@ from org.gi.server.validation.case_state_machine import CASE_PARTIALLY_ASSIGNED
 __author__ = 'avishayb'
 
 CONFIG_DATA_DIRECTORY = 'case_api'
+DUE_DATE_HOURS = 4
 
 
 class TestGIServerCaseTestCase(unittest.TestCase):
@@ -68,7 +70,7 @@ class TestGIServerCaseTestCase(unittest.TestCase):
             for count, task in enumerate(case['tasks']):
                 if 'volunteer_id' in task and task['volunteer_id'] == '__REPLACE__':
                     task['volunteer_id'] = self.user_ids[count]
-                task['due_date'] = int(time.time()) + 4 * 60 * 60 + count
+                task['due_date'] = int(time.time()) + DUE_DATE_HOURS * 60 * 60 + count
 
     # positives
 
@@ -375,6 +377,29 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         self.assertEqual(utils.HTTP_NO_CONTENT, r.status_code)
         updated_case = {'tasks': _get_case_from_db(case_id)['tasks']}
         self.assertEqual(orig_num_tasks, len(updated_case.get('tasks')))
+
+    # Needed to bum off some capabilities here
+    def test_fetch_users_to_notify(self):
+        self._get_inserted_case()
+        petitioner_list, volunteer_list = fetch_users_with_x_hours_until_task(DUE_DATE_HOURS + 1)
+        self.assertTrue(len(petitioner_list) == 1)
+        petitioner = petitioner_list[0]
+        self.assertTrue(petitioner.get('case_title'))
+        self.assertTrue(petitioner.get('details'))
+        self.assertTrue(petitioner.get('user_id'))
+        self.assertTrue(len(petitioner.get('tasks')) == 3)
+        self.assertTrue(len(volunteer_list) == 3)
+        for volunteer in volunteer_list:
+            self.assertTrue(volunteer.get('case_title'))
+            self.assertTrue(volunteer.get('details'))
+            self.assertTrue(volunteer.get('user_id'))
+            self.assertTrue(len(volunteer.get('tasks')) == 1)
+
+    def test_fetch_users_return_none(self):
+        self._get_inserted_case()
+        petitioner_list, volunteer_list = fetch_users_with_x_hours_until_task(DUE_DATE_HOURS - 1)
+        self.assertTrue(len(petitioner_list) == 0)
+        self.assertTrue(len(volunteer_list) == 0)
 
 
 def _get_case_from_db(case_id):
