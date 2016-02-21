@@ -81,6 +81,7 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_CREATED)
 
+
     def test_update_case_with_valid_state(self):
         states = [org.gi.server.validation.case_state_machine.CASE_PENDING_APPROVAL,
                   org.gi.server.validation.case_state_machine.CASE_PENDING_INVOLVEMENT,

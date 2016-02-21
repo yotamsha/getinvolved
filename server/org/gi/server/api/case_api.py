@@ -15,7 +15,7 @@ class CaseApi(Resource):
     def get(self, case_id):
         try:
             case = db.cases.find_one({'_id': u.to_object_id(case_id)})
-            u.handle_id(case)
+            Case.prep_case_for_client(case)
         except Exception as e:
             abort(u.HTTP_NOT_FOUND, str(e))
         return case, u.HTTP_OK
@@ -73,7 +73,7 @@ class CaseApi(Resource):
             msg = 'Failed to find a newly created case. Using id %s' % u.to_object_id(_id)
             log.debug(msg)
             abort(u.HTTP_SERVER_ERROR, msg)
-        u.handle_id(created)
+        Case.prep_case_for_client(created)
         return created, u.HTTP_CREATED
 
 
@@ -88,6 +88,8 @@ class CaseListApi(Resource):
             _filter, projection, sort, page_size_str, page_number_str = u.get_fields_projection_and_filter(request)
             cases = db.cases.find(projection=projection, filter=_filter)
             cases = u.handle_sort_and_paging(cases, sort, page_size_str, page_number_str)
+            for case in cases:
+                Case.prep_case_for_client(case)
             if cases and sort:
                 cases = cases.sort(sort)
         except Exception as e:

@@ -1,7 +1,8 @@
 import uuid
 
+from org.gi.server.model.Location import Location
 from org.gi.server.model.Task import Task
-from org.gi.server.service import location as l
+from org.gi.server import utils as utils
 from org.gi.server.validation.case_state_machine import CASE_UNDEFINED, CASE_PENDING_APPROVAL, CASE_MISSING_INFO, \
     CASE_REJECTED, CASE_OVERDUE, CASE_CANCELLED_BY_USER, CASE_CANCELLED_BY_ADMIN
 from org.gi.server.validation.task.task_state_machine import TASK_PENDING
@@ -50,7 +51,8 @@ class Case:
     @staticmethod
     def handle_geo_location(case):
         if case.get('location'):
-            _retrieve_all_location_data(case.get('location'))
+            Location.retrieve_all_location_data(case.get('location'))
+            Location.change_geo_location_to_db_format(case.get('location'))
         if 'tasks' not in case:
             return
         fields = ['destination', 'location']
@@ -58,14 +60,12 @@ class Case:
             for field in fields:
                 location = task.get(field)
                 if location:
-                    _retrieve_all_location_data(location)
+                    Location.retrieve_all_location_data(location)
+                    Location.change_geo_location_to_db_format(location)
 
-
-def _retrieve_all_location_data(location):
-    if location.get('address'):
-        geo = l.get_lat_lng(location.get('address'))
-        location['geo_location'] = geo
-    elif location.get('geo_location'):
-        geo = location.get('geo_location')
-        address = l.get_address(geo.get('lat'), geo.get('lng'))
-        location['address'] = address
+    @classmethod
+    def prep_case_for_client(cls, case):
+        utils.handle_id(case)
+        Location.change_geo_location_to_client_format(case.get('location'))
+        for task in case.get('tasks'):
+            Location.change_geo_location_to_client_format(task.get('location'))
