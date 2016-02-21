@@ -32,6 +32,9 @@ angular.module('app.login', [])
             $scope.answer = function(answer) {
                 $mdDialog.hide(answer);
             };
+            $scope.fbLogin = function(){
+                AuthService.login("FACEBOOK");
+            };
             // --- INIT --- //
 
             _init();
