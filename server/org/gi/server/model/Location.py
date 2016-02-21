@@ -7,10 +7,10 @@ class Location:
 
     @staticmethod
     def retrieve_all_location_data(location):
-        if location.get('address'):
+        if not location.get('geo_location'):
             geo = location_service.get_lat_lng(location.get('address'))
             location['geo_location'] = geo
-        elif location.get('geo_location'):
+        if not location.get('address'):
             geo = location.get('geo_location')
             address = location_service.get_address(geo.get('lat'), geo.get('lng'))
             location['address'] = address

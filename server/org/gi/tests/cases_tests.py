@@ -81,7 +81,6 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_CREATED)
 
-
     def test_update_case_with_valid_state(self):
         states = [org.gi.server.validation.case_state_machine.CASE_PENDING_APPROVAL,
                   org.gi.server.validation.case_state_machine.CASE_PENDING_INVOLVEMENT,
@@ -177,7 +176,65 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_CREATED)
 
+    def test_get_cases_near_coord_and_by_distance(self):
+        case = self._get_case()
+        increment_latitude = 0.5
+        base_lat = 32.0
+        for i in range(0, 5):
+            case['location'] = {
+                'geo_location': {
+                    'lng': 30.0,
+                    'lat': base_lat + (i * increment_latitude)
+                }
+            }
+            r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
+            self.assertEqual(r.status_code, utils.HTTP_CREATED)
+        near_query = {
+            "location.geo_location":
+                {"$near":
+                    {
+                        "$geometry": {
+                            "type": "Point",
+                            "coordinates": [30.00, 29.5]
+                        },
+                        "$maxDistance": 10000000
+                    }
+                }
+        }
+        r = requests.get('%s/cases?filter=%s' % (SERVER_URL_API, near_query), auth=ACCESS_TOKEN_AUTH)
+        cases = json.loads(r.content)
+        self.assertTrue(len(cases) >= 1)
+        for i in range(0, 5):
+            self.assertEqual(base_lat + (i * increment_latitude), cases[i]['location']['geo_location']['lat'])
+
+
     # negatives
+
+    def test_case_too_far(self):
+        case = self._get_case()
+        case['location'] = {
+            'geo_location': {
+                'lat': 30.0,
+                'lng': 30.0
+            }
+        }
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_CREATED)
+        near_query = {
+            "location.geo_location":
+                {"$near":
+                    {
+                        "$geometry": {
+                            "type": "Point",
+                            "coordinates": [40, 40]
+                        },
+                        "$maxDistance": 100
+                    }
+                }
+        }
+        r = requests.get('%s/cases?filter=%s' % (SERVER_URL_API, near_query), auth=ACCESS_TOKEN_AUTH)
+        cases = json.loads(r.content)
+        self.assertTrue(len(cases) == 0)
 
     def test_create_cases_with_bad_transport_tasks(self):
         cases = _load('cases_with_bad_transportation_task.json', self.config_folder)
@@ -318,6 +375,7 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         self.assertEqual(utils.HTTP_NO_CONTENT, r.status_code)
         updated_case = {'tasks': _get_case_from_db(case_id)['tasks']}
         self.assertEqual(orig_num_tasks, len(updated_case.get('tasks')))
+
 
 def _get_case_from_db(case_id):
     r = requests.get('%s/cases/%s' % (SERVER_URL_API, case_id), auth=ACCESS_TOKEN_AUTH)
