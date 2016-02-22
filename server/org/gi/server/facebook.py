@@ -6,7 +6,7 @@ from flask_oauth import OAuth
 import org.gi.server.utils as util
 import org.gi.server.validation.validations as valid
 from org.gi.config import config
-from org.gi.server.authorization import USER
+from org.gi.server.authorization import USER, NONE
 from org.gi.server.db import db
 from org.gi.server.web_token import generate_access_token, get_user_from_access_token
 
@@ -70,7 +70,7 @@ def facebook_token(fb_token):
         'first_name': fb_resp.data['first_name'],
         'last_name': fb_resp.data['last_name'],
         'email': fb_resp.data['email'],
-        'role': USER,
+        'role': NONE,
         'facebook_id': fb_resp.data['id'],
         'facebook_access_token': fb_token
     }
