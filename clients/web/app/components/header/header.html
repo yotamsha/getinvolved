@@ -29,8 +29,8 @@
   </div>
   <div layout="row" flex layout-align="center start">
     <div flex layout="column" layout-align="start center">
-      <div class="header-title" hide show-gt-xs> {{ ctrl.headerAttributes.title | translate}} </div>
-      <div class="header-subtitle" hide show-gt-xs> {{ ctrl.headerAttributes.subTitle | translate}} </div>
+      <div class="header-title"> {{ ctrl.headerAttributes.title | translate}} </div>
+      <div class="header-subtitle"> {{ ctrl.headerAttributes.subTitle | translate}} </div>
       <button class="header-btn" ng-show='ctrl.headerAttributes.shouldShowButton' ng-click='ctrl.onHeaderButtonClick()'>
         {{"views.main.header.how_it_works_button" | translate}}
       </button>
@@ -38,7 +38,7 @@
   </div>
 </div>
 <div class="how-it-works-section" layout="row" layout-wrap ng-if="ctrl.showHowItWorksSection" class="how-it-works-section">
-  <div ng-repeat="link in ctrl.howItWorksLinks" class="how-it-works-link" flex-gt-sm="33" flex-sm="50" flex-xs="100">
+  <div ng-repeat="link in ctrl.howItWorksLinks" class="how-it-works-link" flex-gt-sm="33" flex-sm="100" flex-xs="100">
     <a ng-href="#{{ link.url }}">
       <img ng-src="{{ link.imageUrl }}">
       <div class="orange-bubble small"></diV>

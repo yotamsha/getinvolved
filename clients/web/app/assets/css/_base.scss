@@ -7,6 +7,11 @@ font-face {
   src: url('../fonts/Yed SemiComebackReg.otf?#iefix') format('truetype'), /* IE6-IE8 */
   url('../fonts/Yed SemiComebackReg.ttf')  format('truetype'), /* Safari, Android, iOS */
 }
+
+html, body {
+  height: auto;
+}
+
 body {
   min-width: 320px;
   font-family: 'Yed', 'arial';

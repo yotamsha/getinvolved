@@ -1,3 +1,5 @@
+@import "responsive";
+
 .header {
   background-image: url("/assets/img/header-bg-wide.png");
   background-size: cover;
@@ -109,8 +111,8 @@
   position: absolute;
   top: 40px;
   right: 0;
+  bottom: 0;
   width: 60%;
-  height: 100%;
   z-index: 1;
 }
 
@@ -161,6 +163,7 @@
 
 .how-it-works-link{
   text-align: center;
+  margin-bottom: 15px;
 
   .orange-bubble {
     margin: 10px auto;
@@ -169,5 +172,18 @@
   .subtitle {
     margin: auto;
     width: 230px;
+  }
+}
+
+@include media-max($layout-breakpoint-sm) {
+  .header {
+    .header-title {
+      font-size: 28px;
+    }
+
+    .header-subtitle {
+      font-size: 16px;
+      width: 270px;
+    }
   }
 }
