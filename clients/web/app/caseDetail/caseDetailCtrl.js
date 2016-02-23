@@ -9,16 +9,31 @@ angular.module('app.caseDetail', [])
         $stateProvider.state('caseDetail', {
             url: "/case/:caseId",
             templateUrl: 'caseDetail/caseDetail.html',
-            controller: 'caseDetailCtrl'
+            controller: 'caseDetailCtrl',
+            resolve: { // complete the following requests before page is loaded.
+                caseData: ['CaseDao', '$stateParams', function (CaseDao, $stateParams) {
+                    return CaseDao.get($stateParams.caseId); // load the case data.
+                }],
+                userSession : ['AuthService', function(AuthService){ // verify that session retrieval is completed.
+                    return AuthService.authRetrievalCompleted();
+                }]
+            }
         });
     }])
 
-    .controller('caseDetailCtrl', ['$scope', 'Restangular', '$stateParams', 'DialogsService', 'moment', 'CaseDao',
-        function ($scope, Restangular, $stateParams, DialogsService, moment, CaseDao) {
+    .controller('caseDetailCtrl', ['$scope', 'Restangular', '$stateParams', 'DialogsService', 'moment', 'CaseDao', 'caseData','AuthService',
+        function ($scope, Restangular, $stateParams, DialogsService, moment, CaseDao, caseData, AuthService) {
 
-            //var caseDao = Restangular.all('cases');
-            //caseDao.getList();
+            // --- INNER VARIABLES --- //
+
+            var _authModel = AuthService.model();
+            //console.log( Restangular.all('cases'));
+
             // --- INNER FUNCTIONS --- //
+            function caseLoaded(caseData) {
+                $scope.vm.case = caseData;
+
+            }
 
             function _init() {
                 $scope.vm = {
@@ -46,22 +61,34 @@ angular.module('app.caseDetail', [])
                      }*/
 
                 };
-                CaseDao.get($stateParams.caseId)
-                    .then(function (caseResult) {
-                        $scope.vm.case = caseResult;
-                    }, function () {
+                $scope.vm.case = caseData;
+                console.log( $scope.vm.case);
 
-                    });
+                /*                $scope.$on(AUTH_EVENTS.authenticationCompleted,function(user){
+                                    console.log("caseDetailCtrl: user session loaded", JSON.stringify(user));
+                                });*/
+
             }
-
+            function _taskAssignedCb(){
+                console.log("task assigned");
+            }
             // --- SCOPE FUNCTIONS --- //
             $scope.openLoginDialog = function (ev) {
                 DialogsService.openDialog({dialog: 'login'});
             };
-            $scope.applyForTask = function(task){
-                //TODO check if user is suthenticated.
-                $scope.openLoginDialog();
-            };
+            $scope.assignTaskToUser = function (task) {
+                if (_authModel.userSession) { // if user is allowed to be assigned a task
+                    $scope.vm.case.assignTaskState(task.id, 'assigned', _authModel.userSession.id).then(_taskAssignedCb,function(){
+
+                    });
+                } else {
+                    $scope.openLoginDialog();
+                }
+
+
+
+
+            }
             // --- INIT --- //
 
             _init();

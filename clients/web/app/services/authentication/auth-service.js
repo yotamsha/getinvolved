@@ -58,7 +58,7 @@ angular.module('app.services.authentication.auth-service', [])
                             return $http.get("http://localhost:5000/api/users/me")
                                 .success(function (user) {
                                     storeUserCredentials(token, user);
-                                    $rootScope.$broadcast(AUTH_EVENTS.authenticationCompleted);
+                                    $rootScope.$broadcast(AUTH_EVENTS.authenticationCompleted,authModel.userSession);
                                     return user;
                                 }).error(function () {
                                     return null;
@@ -90,7 +90,7 @@ angular.module('app.services.authentication.auth-service', [])
                 console.log("loadUserCredentials");
                 var deferred = $q.defer();
                 if (authModel.userSession) {
-                    deferred.resolve();
+                    deferred.resolve(authModel.userSession);
                 } else {
                     var token = window.localStorage.getItem(LOCAL_TOKEN_KEY);
                     if (token) {
@@ -98,7 +98,7 @@ angular.module('app.services.authentication.auth-service', [])
                         $http.get("http://localhost:5000/api/users/me")
                             .success(function (user) {
                                 storeUserCredentials(null, user);
-                                deferred.resolve();
+                                deferred.resolve(authModel.userSession);
                             }).error(function () {
                             deferred.reject();
                         });
@@ -174,13 +174,14 @@ angular.module('app.services.authentication.auth-service', [])
                 return deferred.promise;
             };
 
-            loadUserCredentials().then(function () {
+            var initialLoadPromise = loadUserCredentials().then(function (user) {
                 // success
                 authModel.isLoading = false;
+                return user;
             }, function () {
                 // error
                 authModel.isLoading = false;
-
+                return null;
             });
 
             return {
@@ -189,6 +190,9 @@ angular.module('app.services.authentication.auth-service', [])
                 isAuthorized: isAuthorized,
                 isAuthenticated: function () {
                     return authModel.isAuthenticated;
+                },
+                authRetrievalCompleted : function(){
+                    return initialLoadPromise;
                 },
                 role: function () {
                     return authModel.userSession && authModel.userSession.role;
