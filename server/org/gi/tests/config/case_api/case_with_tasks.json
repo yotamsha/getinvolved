@@ -4,19 +4,22 @@
       "type": "GENERAL",
       "title": "t1",
       "due_date": "__REPLACE__",
-      "description": "I need help with T1"
+      "description": "I need help with T1",
+      "volunteer_id": "__REPLACE__"
     },
     {
       "type": "GENERAL",
       "title": "t2",
       "due_date": "__REPLACE__",
-      "description": "I need help with T2"
+      "description": "I need help with T2",
+      "volunteer_id": "__REPLACE__"
     },
     {
       "type": "GENERAL",
       "title": "t3",
       "due_date": "__REPLACE__",
-      "description": "I need help with T3"
+      "description": "I need help with T3",
+      "volunteer_id": "__REPLACE__"
     }
   ],
   "petitioner_id": "__REPLACE__",

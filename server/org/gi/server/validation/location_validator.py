@@ -17,6 +17,8 @@ def validate_geo_location(geo_location, faults):
     lng = geo_location.get('lng')
     if not (lat and lng):
         faults.append('geo_location requires both lng & lat')
+    if not (isinstance(lat, float) and isinstance(lng, float)):
+        faults.append('lng & lat must both be floating point numbers')
     if not (MIN_LATITUDE <= lat <= MAX_LATITUDE):
         faults.append('{} <= lat <= {}'.format(MIN_LATITUDE, MAX_LATITUDE))
     if not (MIN_LONGITUDE <= lng <= MAX_LONGITUDE):
@@ -156,5 +158,6 @@ CITY_MAX = 25
 
 MAX_LATITUDE = 90
 MIN_LATITUDE = -90
+
 MAX_LONGITUDE = 180
 MIN_LONGITUDE = -180

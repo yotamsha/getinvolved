@@ -46,7 +46,7 @@ class Task:
                 updated_case_state = CASE_PARTIALLY_COMPLETED
 
         if not updated_case_state:
-            raise BadTaskStateException('A case cannot have the following states together {}'.format(task_states))
+            raise BadTaskStateException('Cannot have the following TASK states together {}'.format(task_states))
 
         return updated_case_state
 

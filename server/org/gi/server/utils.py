@@ -134,7 +134,7 @@ def get_fields_projection_and_filter(request):
         return result
 
     if not request:
-        return None, None, None, None , None
+        return None, None, None, None, None
     if not request.query_string:
         return None, None, None, None, None
     _args = request.query_string.split('&')

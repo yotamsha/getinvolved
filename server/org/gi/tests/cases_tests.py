@@ -4,15 +4,19 @@ import unittest
 
 import requests
 
-import org.gi.server.validation.case_state_machine
 from misc import _remove_from_db, _load, _push_to_db, MONGO, SERVER_URL_API, ACCESS_TOKEN_AUTH, validate_server_is_up
 from org.gi.server import utils as utils
 from org.gi.server.model.Task import ALL_TASKS_SAME_STATE_TRANSITION
+from org.gi.server.service.notification.fetch_users_to_notify import fetch_users_with_x_hours_until_task
 from org.gi.server.validation.task.task_state_machine import TASK_UNDEFINED, TASK_ASSIGNED, TASK_COMPLETED, TASK_PENDING
 from org.gi.tests.users_tests import CONFIG_DATA_DIRECTORY as USER_CONFIG_DATA_DIRECTORY
+import org.gi.server.validation.case_state_machine
+from org.gi.server.validation.case_state_machine import CASE_PARTIALLY_ASSIGNED
+
 __author__ = 'avishayb'
 
 CONFIG_DATA_DIRECTORY = 'case_api'
+DUE_DATE_HOURS = 4
 
 
 class TestGIServerCaseTestCase(unittest.TestCase):
@@ -27,6 +31,16 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         _remove_from_db(MONGO, 'cases')
         self.user_ids = _push_to_db(MONGO, 'users', self.users)
         self.case_ids = _push_to_db(MONGO, 'cases', self.cases)
+
+    def _get_inserted_case(self):
+        case = self._get_case()
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
+        return json.loads(r.content)
+
+    def _get_case(self):
+        case = _load('case_with_tasks.json', CONFIG_DATA_DIRECTORY)
+        self._replace(case)
+        return case
 
     @classmethod
     def setUpClass(cls):
@@ -56,7 +70,7 @@ class TestGIServerCaseTestCase(unittest.TestCase):
             for count, task in enumerate(case['tasks']):
                 if 'volunteer_id' in task and task['volunteer_id'] == '__REPLACE__':
                     task['volunteer_id'] = self.user_ids[count]
-                task['due_date'] = int(time.time()) + 4 * 60 * 60 + count
+                task['due_date'] = int(time.time()) + DUE_DATE_HOURS * 60 * 60 + count
 
     # positives
 
@@ -70,7 +84,10 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         self.assertEqual(r.status_code, utils.HTTP_CREATED)
 
     def test_update_case_with_valid_state(self):
-        states = [org.gi.server.validation.case_state_machine.CASE_PENDING_APPROVAL, org.gi.server.validation.case_state_machine.CASE_PENDING_INVOLVEMENT, org.gi.server.validation.case_state_machine.CASE_PARTIALLY_ASSIGNED, org.gi.server.validation.case_state_machine.CASE_ASSIGNED,
+        states = [org.gi.server.validation.case_state_machine.CASE_PENDING_APPROVAL,
+                  org.gi.server.validation.case_state_machine.CASE_PENDING_INVOLVEMENT,
+                  org.gi.server.validation.case_state_machine.CASE_PARTIALLY_ASSIGNED,
+                  org.gi.server.validation.case_state_machine.CASE_ASSIGNED,
                   org.gi.server.validation.case_state_machine.CASE_PARTIALLY_COMPLETED]
         for state in states:
             case = {"state": state}
@@ -98,17 +115,12 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         case_id = json.loads(r.content)['id']
 
         # TEST
-        inserted_case = self._get_case(case_id)
+        inserted_case = _get_case_from_db(case_id)
         self.assertEqual(inserted_case['state'], org.gi.server.validation.case_state_machine.CASE_PENDING_APPROVAL)
         for task in inserted_case['tasks']:
             self.assertEqual(task['state'], TASK_PENDING)
 
-    def _get_case(self, case_id):
-        r = requests.get('%s/cases/%s' % (SERVER_URL_API, case_id), auth=ACCESS_TOKEN_AUTH)
-        inserted_case = json.loads(r.content)
-        return inserted_case
-
-    def test_task_transitions(self):
+    def test_case_tasks_transitions(self):
         # SETUP
         case_with_tasks = _load('case_with_tasks.json', self.config_folder)
         self._replace(case_with_tasks)
@@ -127,6 +139,22 @@ class TestGIServerCaseTestCase(unittest.TestCase):
             r = requests.get('%s/cases/%s' % (SERVER_URL_API, case_id), auth=ACCESS_TOKEN_AUTH)
             self.assertEqual(json.loads(r.content)['state'], ALL_TASKS_SAME_STATE_TRANSITION[state])
 
+    def test_case_assign_user_to_task(self):
+        # SETUP
+        case = self._get_inserted_case()
+        task = case['tasks'][0]
+        task['state'] = TASK_ASSIGNED
+        task['volunteer_id'] = self.user_ids[0]
+
+        # TEST
+        r = requests.put('%s/cases/%s' % (SERVER_URL_API, case['id']), json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(utils.HTTP_NO_CONTENT, r.status_code)
+        case = _get_case_from_db(case['id'])
+        task = case['tasks'][0]
+        self.assertEqual(self.user_ids[0], task['volunteer_id'])
+        self.assertEqual(TASK_ASSIGNED, task['state'])
+        self.assertEqual(CASE_PARTIALLY_ASSIGNED, case['state'])
+
     def test_create_case_fake_volunteer_id(self):
         case = _load('case_fake_volunteer_id.json', self.config_folder)
         self._replace(case)
@@ -140,7 +168,7 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         self.assertEqual(r.status_code, utils.HTTP_CREATED)
 
     def test_create_case_with_location(self):
-        case = _get_case(self)
+        case = self._get_case()
         case['location'] = {
             'geo_location': {
                 'lat': 30.0,
@@ -150,8 +178,65 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_CREATED)
 
+    def test_get_cases_near_coord_and_by_distance(self):
+        case = self._get_case()
+        increment_latitude = 0.5
+        base_lat = 32.0
+        for i in range(0, 5):
+            case['location'] = {
+                'geo_location': {
+                    'lng': 30.0,
+                    'lat': base_lat + (i * increment_latitude)
+                }
+            }
+            r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
+            self.assertEqual(r.status_code, utils.HTTP_CREATED)
+        near_query = {
+            "location.geo_location":
+                {"$near":
+                    {
+                        "$geometry": {
+                            "type": "Point",
+                            "coordinates": [30.00, 29.5]
+                        },
+                        "$maxDistance": 10000000
+                    }
+                }
+        }
+        r = requests.get('%s/cases?filter=%s' % (SERVER_URL_API, near_query), auth=ACCESS_TOKEN_AUTH)
+        cases = json.loads(r.content)
+        self.assertTrue(len(cases) >= 1)
+        for i in range(0, 5):
+            self.assertEqual(base_lat + (i * increment_latitude), cases[i]['location']['geo_location']['lat'])
+
 
     # negatives
+
+    def test_case_too_far(self):
+        case = self._get_case()
+        case['location'] = {
+            'geo_location': {
+                'lat': 30.0,
+                'lng': 30.0
+            }
+        }
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_CREATED)
+        near_query = {
+            "location.geo_location":
+                {"$near":
+                    {
+                        "$geometry": {
+                            "type": "Point",
+                            "coordinates": [40, 40]
+                        },
+                        "$maxDistance": 100
+                    }
+                }
+        }
+        r = requests.get('%s/cases?filter=%s' % (SERVER_URL_API, near_query), auth=ACCESS_TOKEN_AUTH)
+        cases = json.loads(r.content)
+        self.assertTrue(len(cases) == 0)
 
     def test_create_cases_with_bad_transport_tasks(self):
         cases = _load('cases_with_bad_transportation_task.json', self.config_folder)
@@ -245,7 +330,8 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         self._replace(case)
         db = MONGO.get_default_database()
         result = db.cases.update_one({"tasks.state": TASK_UNDEFINED},
-                                     {'$set': {'state': org.gi.server.validation.case_state_machine.CASE_ASSIGNED, 'tasks.$.state': TASK_ASSIGNED}})
+                                     {'$set': {'state': org.gi.server.validation.case_state_machine.CASE_ASSIGNED,
+                                               'tasks.$.state': TASK_ASSIGNED}})
         self.assertEqual(result.modified_count, 1)
         r = requests.put('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]), json=case, auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
@@ -269,14 +355,14 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         self.assertEqual(utils.HTTP_NO_CONTENT, r.status_code)
 
         case_tasks = {}
-        for task in self._get_case(case_id)['tasks']:
+        for task in _get_case_from_db(case_id)['tasks']:
             if task['state'] == TASK_ASSIGNED:
                 task['state'] = TASK_COMPLETED
                 case_tasks['tasks'] = [task]
                 break
         r = requests.put('%s/cases/%s' % (SERVER_URL_API, case_id), json=case_tasks, auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(utils.HTTP_BAD_INPUT, r.status_code)
-        self.assertTrue('A case cannot have the following states together' in r.content)
+        self.assertTrue('Cannot have the following TASK states together' in r.content)
 
     def test_not_deleting_tasks_on_update(self):
         case_with_tasks = _load('case_with_tasks.json', self.config_folder)
@@ -289,12 +375,34 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         case_update['tasks'][0]['state'] = TASK_ASSIGNED
         r = requests.put('%s/cases/%s' % (SERVER_URL_API, case_id), json=case_update, auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(utils.HTTP_NO_CONTENT, r.status_code)
-        updated_case = {'tasks': self._get_case(case_id)['tasks']}
+        updated_case = {'tasks': _get_case_from_db(case_id)['tasks']}
         self.assertEqual(orig_num_tasks, len(updated_case.get('tasks')))
 
+    # fetching user notifications is related to cases/tasks
+    def test_fetch_users_to_notify(self):
+        self._get_inserted_case()
+        petitioner_list, volunteer_list = fetch_users_with_x_hours_until_task(DUE_DATE_HOURS + 1)
+        self.assertTrue(len(petitioner_list) == 1)
+        petitioner = petitioner_list[0]
+        self.assertTrue(petitioner.get('case_title'))
+        self.assertTrue(petitioner.get('details'))
+        self.assertTrue(petitioner.get('user_id'))
+        self.assertTrue(len(petitioner.get('tasks')) == 3)
+        self.assertTrue(len(volunteer_list) == 3)
+        for volunteer in volunteer_list:
+            self.assertTrue(volunteer.get('case_title'))
+            self.assertTrue(volunteer.get('details'))
+            self.assertTrue(volunteer.get('user_id'))
+            self.assertTrue(len(volunteer.get('tasks')) == 1)
 
-def _get_case(test):
-    case = _load('case_with_tasks.json', CONFIG_DATA_DIRECTORY)
-    test._replace(case)
-    return case
+    def test_fetch_users_return_none(self):
+        self._get_inserted_case()
+        petitioner_list, volunteer_list = fetch_users_with_x_hours_until_task(DUE_DATE_HOURS - 1)
+        self.assertTrue(len(petitioner_list) == 0)
+        self.assertTrue(len(volunteer_list) == 0)
 
+
+def _get_case_from_db(case_id):
+    r = requests.get('%s/cases/%s' % (SERVER_URL_API, case_id), auth=ACCESS_TOKEN_AUTH)
+    inserted_case = json.loads(r.content)
+    return inserted_case
