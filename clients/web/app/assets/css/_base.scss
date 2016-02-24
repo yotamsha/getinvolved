@@ -7,6 +7,11 @@ font-face {
   src: url('../fonts/Yed SemiComebackReg.otf?#iefix') format('truetype'), /* IE6-IE8 */
   url('../fonts/Yed SemiComebackReg.ttf')  format('truetype'), /* Safari, Android, iOS */
 }
+
+html, body {
+  height: auto;
+}
+
 body {
   min-width: 320px;
   font-family: 'Yed', 'arial';
@@ -14,6 +19,13 @@ body {
   color : #666666;
   font-size: 12px;
 }
+
+ul {
+  margin:0;
+  padding: 0;
+  list-style-type: none;
+}
+
 h1 , h2, h3, h4, h5, h6 {
   margin: 0px;
   -webkit-margin-before: 0px;
@@ -142,4 +154,15 @@ button {
     font-size: 30px;
     background-color: #ffffff;
   }
+}
+
+.backdrop {
+  background-color: #212121;
+  opacity: 0.48;
+  z-index: 1;
+  position: absolute;
+  top: 40px;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }

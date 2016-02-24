@@ -1,0 +1,22 @@
+$layout-breakpoint-xs: 600px !default;
+$layout-breakpoint-sm: 960px !default;
+$layout-breakpoint-md: 1280px !default;
+$layout-breakpoint-lg: 1920px !default;
+
+@mixin media($min, $max) {
+  @media (min-width: #{$min}) and (max-width: #{$max - 1px}) {
+    @content;
+  }
+}
+
+@mixin media-min($min) {
+  @media (min-width: #{$min}) {
+    @content;
+  }
+}
+
+@mixin media-max($max) {
+  @media (max-width: #{$max - 1px}) {
+    @content;
+  }
+}
