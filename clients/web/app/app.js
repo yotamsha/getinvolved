@@ -30,6 +30,7 @@ angular.module('app', [
 
         // Models
         'app.models.case',
+        'app.models.user',
 
         // Services
         'app.services.data-access',
@@ -52,15 +53,15 @@ angular.module('app', [
         'preferredLocale': 'he_HE'
     })
     .constant('APP_CONFIG', {
-        'homeRoute' : '/cases'
+        'homeRoute': '/cases'
     })
-    .config(['$urlRouterProvider', '$translateProvider', '$mdThemingProvider', 'RestangularProvider','APP_CONFIG',
+    .config(['$urlRouterProvider', '$translateProvider', '$mdThemingProvider', 'RestangularProvider', 'APP_CONFIG',
         function ($urlRouterProvider, $translateProvider, $mdThemingProvider, RestangularProvider, APP_CONFIG) {
 
-            RestangularProvider.setBaseUrl('http://localhost:5000/api');
-            RestangularProvider.setDefaultHeaders({
-                "Authorization": "Basic YWRtaW46YWRtaW4="
-            });
+            RestangularProvider.setBaseUrl('http://127.0.0.1:5000/api');
+            /*            RestangularProvider.setDefaultHeaders({
+             "Authorization": "Basic YWRtaW46YWRtaW4="
+             });*/
 
             $mdThemingProvider.theme('default')
                 .primaryPalette('cyan')

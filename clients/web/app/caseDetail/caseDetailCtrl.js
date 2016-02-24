@@ -14,16 +14,18 @@ angular.module('app.caseDetail', [])
                 caseData: ['CaseDao', '$stateParams', function (CaseDao, $stateParams) {
                     return CaseDao.get($stateParams.caseId); // load the case data.
                 }],
-                userSession : ['AuthService', function(AuthService){ // verify that session retrieval is completed.
+                userSession: ['AuthService', function (AuthService) { // verify that session retrieval is completed.
                     return AuthService.authRetrievalCompleted();
-                }]
+                }],
+                users : ['UserDao', function (UserDao) {
+                    return UserDao.getList(); // load the case data.
+                }],
             }
         });
     }])
 
-    .controller('caseDetailCtrl', ['$scope', 'Restangular', '$stateParams', 'DialogsService', 'moment', 'CaseDao', 'caseData','AuthService',
-        function ($scope, Restangular, $stateParams, DialogsService, moment, CaseDao, caseData, AuthService) {
-
+    .controller('caseDetailCtrl', ['$scope', 'Restangular', '$stateParams', 'DialogsService', 'moment', 'CaseDao', 'caseData', 'AuthService', 'TASK_STATES', 'users',
+        function ($scope, Restangular, $stateParams, DialogsService, moment, CaseDao, caseData, AuthService, TASK_STATES, users) {
             // --- INNER VARIABLES --- //
 
             var _authModel = AuthService.model();
@@ -36,6 +38,7 @@ angular.module('app.caseDetail', [])
             }
 
             function _init() {
+                $scope.TASK_STATES = TASK_STATES;
                 $scope.vm = {
                     /*    case: {
                      title: "כותרת של המקרה..",
@@ -62,30 +65,31 @@ angular.module('app.caseDetail', [])
 
                 };
                 $scope.vm.case = caseData;
-                console.log( $scope.vm.case);
-
-                /*                $scope.$on(AUTH_EVENTS.authenticationCompleted,function(user){
-                                    console.log("caseDetailCtrl: user session loaded", JSON.stringify(user));
-                                });*/
-
+                $scope.vm.case.populateWithUsersData(users);
             }
-            function _taskAssignedCb(){
+
+            function _taskAssignedCb(task) {
+                task.state = TASK_STATES.TASK_ASSIGNED;
+                task.volunteer_id = _authModel.userSession.id;
+
                 console.log("task assigned");
             }
+
             // --- SCOPE FUNCTIONS --- //
             $scope.openLoginDialog = function (ev) {
                 DialogsService.openDialog({dialog: 'login'});
             };
             $scope.assignTaskToUser = function (task) {
                 if (_authModel.userSession) { // if user is allowed to be assigned a task
-                    $scope.vm.case.assignTaskState(task.id, 'assigned', _authModel.userSession.id).then(_taskAssignedCb,function(){
+                    $scope.vm.case.assignTaskState(task, TASK_STATES.TASK_ASSIGNED).then(
+                        function () { //success
+                            _taskAssignedCb(task);
+                        }, function () { //error
 
-                    });
+                        });
                 } else {
                     $scope.openLoginDialog();
                 }
-
-
 
 
             }
