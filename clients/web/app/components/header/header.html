@@ -3,10 +3,22 @@
     <div class="logo"></div>
     <div class="user-profile-link route-link" flex-offset="5">
       <div ng-show="ctrl.authModel.isAuthenticated">
-        {{ctrl.authModel.userSession.first_name}} | <a href="#" ng-click="ctrl.authSrv.logout()">logout</a>
+          <md-menu md-position-mode="target-right target" md-offset="0 35">
+            <a md-menu-origin ng-click="$mdOpenMenu($event)">
+              {{"views.main.header.hello" | translate}}  {{ctrl.authModel.userSession.first_name}}
+            </a>
+            <md-menu-content width="1">
+              <md-menu-item>
+                <md-button md-menu-align-target ng-click="ctrl.authSrv.logout()">
+                  {{"views.main.header.logout" | translate}}
+                </md-button>
+              </md-menu-item>
+            </md-menu-content>
+          </md-menu>
       </div>
+
       <div ng-show="!ctrl.authModel.isAuthenticated && !ctrl.authModel.isLoading" ng-click="ctrl.openLoginDialog()">
-        login
+          {{"views.main.header.login_or_signup" | translate}}
       </div>
     </div>
     <div flex-offset="5" ng-repeat="route in ctrl.headerLinks" >

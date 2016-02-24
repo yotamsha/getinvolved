@@ -1,10 +1,11 @@
 import uuid
 
-from org.gi.server.model.task import Task
-from org.gi.server import location as l
+from org.gi.server.model.Location import Location
+from org.gi.server.model.Task import Task
+from org.gi.server import utils as utils
 from org.gi.server.validation.case_state_machine import CASE_UNDEFINED, CASE_PENDING_APPROVAL, CASE_MISSING_INFO, \
     CASE_REJECTED, CASE_OVERDUE, CASE_CANCELLED_BY_USER, CASE_CANCELLED_BY_ADMIN
-from org.gi.server.validation.task_state_machine import TASK_PENDING
+from org.gi.server.validation.task.task_state_machine import TASK_PENDING
 
 
 class Case:
@@ -23,22 +24,19 @@ class Case:
     def prep_case_before_update(updated_case, db_case):
         if not Case._update_state_overrides_transition(updated_case.get('state')) and updated_case.get('tasks'):
             updated_case['state'] = Task.get_updated_case_state(updated_case.get('tasks'), db_case.get('tasks'))
+
         if updated_case.get('tasks'):
             updated_case['tasks'] = Task.merge_non_updated_tasks(updated_case.get('tasks'), db_case.get('tasks'))
+            for task in updated_case['tasks']:
+                if not task.get('id'):
+                    task['id'] = str(uuid.uuid4())
+
+        # We add this param.
+        if 'id' in updated_case:
+            del updated_case['id']
+
         Case.handle_geo_location(updated_case)
         return updated_case
-
-    @staticmethod
-    def handle_geo_location(case):
-        if 'tasks' not in case:
-            return
-        fields = ['destination_address', 'address']
-        for task in case['tasks']:
-            for field in fields:
-                address = task.get(field)
-                if address:
-                    geo = l.get_lat_lng(address)
-                    address['geo'] = geo
 
     @staticmethod
     def prep_case_before_insert(case):
@@ -49,3 +47,25 @@ class Case:
             task['state'] = TASK_PENDING
         Case.handle_geo_location(case)
         return case
+
+    @staticmethod
+    def handle_geo_location(case):
+        if case.get('location'):
+            Location.retrieve_all_location_data(case.get('location'))
+            Location.change_geo_location_to_db_format(case.get('location'))
+        if 'tasks' not in case:
+            return
+        fields = ['destination', 'location']
+        for task in case['tasks']:
+            for field in fields:
+                location = task.get(field)
+                if location:
+                    Location.retrieve_all_location_data(location)
+                    Location.change_geo_location_to_db_format(location)
+
+    @classmethod
+    def prep_case_for_client(cls, case):
+        utils.handle_id(case)
+        Location.change_geo_location_to_client_format(case.get('location'))
+        for task in case.get('tasks'):
+            Location.change_geo_location_to_client_format(task.get('location'))

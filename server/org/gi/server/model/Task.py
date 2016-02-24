@@ -1,7 +1,7 @@
-from org.gi.server.validation.task_state_machine import TASK_PENDING_USER_APPROVAL, TASK_ASSIGNMENT_IN_PROCESS
 from org.gi.server.validation.case_state_machine import CASE_ASSIGNED, \
     CASE_PENDING_INVOLVEMENT, CASE_COMPLETED, CASE_PARTIALLY_ASSIGNED, CASE_PARTIALLY_COMPLETED
-from org.gi.server.validation.task_state_machine import TASK_PENDING, TASK_ASSIGNED, TASK_COMPLETED
+from org.gi.server.validation.task.task_state_machine import TASK_PENDING, TASK_ASSIGNED, TASK_COMPLETED
+from org.gi.server.validation.task.task_state_machine import TASK_PENDING_USER_APPROVAL, TASK_ASSIGNMENT_IN_PROCESS
 
 ALL_TASKS_SAME_STATE_TRANSITION = {
     TASK_PENDING: CASE_PENDING_INVOLVEMENT,
@@ -46,7 +46,7 @@ class Task:
                 updated_case_state = CASE_PARTIALLY_COMPLETED
 
         if not updated_case_state:
-            raise BadTaskStateException('A case cannot have the following states together {}'.format(task_states))
+            raise BadTaskStateException('Cannot have the following TASK states together {}'.format(task_states))
 
         return updated_case_state
 

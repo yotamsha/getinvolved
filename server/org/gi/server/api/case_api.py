@@ -5,20 +5,22 @@ from org.gi.server import utils as u
 from org.gi.server.authorization import requires_auth
 from org.gi.server.db import db
 from org.gi.server.log import log
-from org.gi.server.model.case import Case
+from org.gi.server.model.Case import Case
 
-from org.gi.server.validation import validations as v
+import org.gi.server.validation.validations as v
 
 
 class CaseApi(Resource):
+    @u.web_log
     def get(self, case_id):
         try:
             case = db.cases.find_one({'_id': u.to_object_id(case_id)})
-            u.handle_id(case)
+            Case.prep_case_for_client(case)
         except Exception as e:
             abort(u.HTTP_NOT_FOUND, str(e))
         return case, u.HTTP_OK
 
+    @u.web_log
     @requires_auth
     def delete(self, case_id):
         try:
@@ -29,6 +31,7 @@ class CaseApi(Resource):
             return str(e), u.HTTP_NOT_FOUND
         return '', u.HTTP_NO_CONTENT
 
+    @u.web_log
     @requires_auth
     def put(self, case_id):
         case = db.cases.find_one({'_id': u.to_object_id(case_id)})
@@ -52,6 +55,7 @@ class CaseApi(Resource):
                 abort(u.HTTP_BAD_INPUT, str(e))
             return '', u.HTTP_NO_CONTENT
 
+    @u.web_log
     @requires_auth
     def post(self):
         faults = []
@@ -69,7 +73,7 @@ class CaseApi(Resource):
             msg = 'Failed to find a newly created case. Using id %s' % u.to_object_id(_id)
             log.debug(msg)
             abort(u.HTTP_SERVER_ERROR, msg)
-        u.handle_id(created)
+        Case.prep_case_for_client(created)
         return created, u.HTTP_CREATED
 
 
@@ -78,6 +82,7 @@ class CaseListApi(Resource):
         self.reqparse = reqparse.RequestParser()
         super(CaseListApi, self).__init__()
 
+    @u.web_log
     def get(self):
         try:
             _filter, projection, sort, page_size_str, page_number_str = u.get_fields_projection_and_filter(request)
@@ -87,4 +92,7 @@ class CaseListApi(Resource):
                 cases = cases.sort(sort)
         except Exception as e:
             abort(u.HTTP_SERVER_ERROR, str(e))
-        return u.make_list(cases), u.HTTP_OK
+        cases = u.make_list(cases)
+        for case in cases:
+            Case.prep_case_for_client(case)
+        return cases, u.HTTP_OK

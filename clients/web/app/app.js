@@ -28,6 +28,9 @@ angular.module('app', [
         'app.version',
         'app.header',
 
+        // Models
+        'app.models.case',
+
         // Services
         'app.services.data-access',
         'app.services.language-service',
@@ -94,7 +97,7 @@ angular.module('app', [
                     xfbml: true,  // parse social plugins on this page
                     version: 'v2.2' // use version 2.2
                 });
-                AuthService.facebookAuthenticator.watchAuthenticationStatusChange();
+                //AuthService.facebookAuthenticator.watchAuthenticationStatusChange();
 
             };
             (function (d, s, id) {

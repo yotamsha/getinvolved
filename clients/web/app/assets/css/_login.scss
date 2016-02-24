@@ -3,9 +3,12 @@
     color: #ffffff;
   }
   .fb-button {
-    height: 30px;
-    width: 100px;
-    overflow: hidden;
+    height: 50px;
+    cursor: pointer;
+    background-image: url("../img/fb-login-button.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
   }
   width: 320px;
   height: 400px;

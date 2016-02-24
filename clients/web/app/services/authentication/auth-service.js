@@ -13,84 +13,68 @@ angular.module('app.services.authentication.auth-service', [])
                 isLoading: true
             }
             var facebookAuthenticator = {
-                watchAuthenticationStatusChange: function () {
-
+                statusChangeCallback: function (response) {
                     var _self = this;
+                    console.log('statusChangeCallback');
+                    console.log(response);
+                    // The response object is returned with a status field that lets the
+                    // app know the current login status of the person.
+                    // Full docs on the response object can be found in the documentation
+                    // for FB.getLoginStatus().
+                    if (response.status === 'connected') {
+                        // Logged into your app and Facebook.
+                        console.log('Already connected to FB.');
+                        _self.facebookSessionRetrieved(response.authResponse);
 
-                    FB.Event.subscribe('auth.authResponseChange', function (res) {
 
-                        if (res.status === 'connected') {
-                            /*
-                             The user is already logged,
-                             is possible retrieve his personal info
-                             */
-                            _self.getUserInfo();
+                    } else if (response.status === 'not_authorized') {
+                        // The person is logged into Facebook, but not your app.
+                        console.log('Already connected to FB. But not authorized.');
+                        FB.login(function (loginRes) {
+                            // Handle the response object, like in statusChangeCallback() in our demo
+                            // code.
+                            _self.facebookSessionRetrieved(loginRes.authResponse);
 
-                            /*
-                             This is also the point where you should create a
-                             session for the current user.
-                             For this purpose you can use the data inside the
-                             res.authResponse object.
-                             */
+                        });
 
-                        }
-                        else {
+                    } else {
+                        // The person is not logged into Facebook, so we're not sure if
+                        // they are logged into this app or not.
+                        console.log('User is not logged to FB.');
+                        FB.login(function (loginRes) {
+                            // Handle the response object, like in statusChangeCallback() in our demo
+                            // code.
+                            _self.facebookSessionRetrieved(loginRes.authResponse);
 
-                            /*
-                             The user is not logged to the app, or into Facebook:
-                             destroy the session on the server.
-                             */
+                        });
 
-                        }
-
-                    });
-
+                    }
                 },
-                getUserInfo: function () {
-                    var _self = this;
-                    FB.getLoginStatus(function (response) {
-                        if (response.authResponse) {
-                            console.log(response.authResponse);
-                            _self.login(response.authResponse);
-                        } else {
-                            // do something...maybe show a login prompt
-                        }
-                    });
-
-                    /*                    FB.api('/me', function(res) {
-
-                     $rootScope.$apply(function() {
-                     //alert("fb logged in");
-                     console.log("facebook login completed: " +res);
-                     $rootScope.user = _self.user = res;
-
-                     });
-
-                     })*/
-                    ;
-
-                },
-                login: function (authResponse) {
-                    /*                    var baseUsers = Restangular.all('users');
-                     baseUsers.post(newUser).then(function (response) {
-                     console.log("response: ", response);
-                     });*/
+                facebookSessionRetrieved: function (authResponse) {
                     return $http.get("http://localhost:5000/login/fb_token/" + authResponse.accessToken)
                         .success(function (token) {
                             console.log(token);
                             setToken(token);
                             return $http.get("http://localhost:5000/api/users/me")
                                 .success(function (user) {
-                                    storeUserCredentials(token,user);
+                                    storeUserCredentials(token, user);
                                     $rootScope.$broadcast(AUTH_EVENTS.authenticationCompleted);
                                     return user;
-                                }).error(function(){
+                                }).error(function () {
                                     return null;
-                            });
+                                });
 
                         }).error(function (error) {
-                        console.log(error);
-                    })
+                            console.log(error);
+                        })
+                },
+                login: function () {
+                    var _self = this;
+                    FB.getLoginStatus(function (response) {
+                        _self.statusChangeCallback(response);
+                    });
+
+
                 },
                 logout: function () {
                     var _self = this;
@@ -113,9 +97,9 @@ angular.module('app.services.authentication.auth-service', [])
                         setToken(token);
                         $http.get("http://localhost:5000/api/users/me")
                             .success(function (user) {
-                                storeUserCredentials(null,user);
+                                storeUserCredentials(null, user);
                                 deferred.resolve();
-                            }).error(function(){
+                            }).error(function () {
                             deferred.reject();
                         });
 
@@ -129,8 +113,8 @@ angular.module('app.services.authentication.auth-service', [])
 
             }
 
-            function storeUserCredentials(token,user) {
-                console.log("storing user" , user);
+            function storeUserCredentials(token, user) {
+                console.log("storing user", user);
 
                 authModel.userSession = user;
                 authModel.isAuthenticated = true;
@@ -214,6 +198,11 @@ angular.module('app.services.authentication.auth-service', [])
                 },
                 logout: function () {
                     destroyUserCredentials();
+                },
+                login: function (type) {
+                    if (type === "FACEBOOK"){
+                        facebookAuthenticator.login();
+                    }
                 }
 
 
