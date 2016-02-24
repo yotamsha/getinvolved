@@ -55,7 +55,6 @@ angular.module('app.header.header-ctrl', [])
                 ];
                 ctrl.authSrv = AuthService;
                 ctrl.authModel = AuthService.model();
-
             }
 
             ctrl.navClass = function (route) {
@@ -69,21 +68,22 @@ angular.module('app.header.header-ctrl', [])
 
             ctrl.updateHeaderContent = function (toState) {
                 var newStateProperties = toState.data || {};
-            angular.extend(ctrl.headerAttributes,_headerDefaults,newStateProperties.header || {})
+                angular.extend(ctrl.headerAttributes,_headerDefaults,newStateProperties.header || {})
             };
+
             ctrl.openLoginDialog = function (ev) {
                 DialogsService.openDialog({dialog: 'login'});
             };
 
-        ctrl.isSideNavOpen = false;
-        ctrl.toggleSideNav = function (){
-          ctrl.isSideNavOpen = !ctrl.isSideNavOpen;
-        }
+            ctrl.isSideNavOpen = false;
+            ctrl.toggleSideNav = function (){
+              ctrl.isSideNavOpen = !ctrl.isSideNavOpen;
+            }
 
-	    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
-	        ctrl.updateHeaderContent(toState);
-	    	ctrl.isSideNavOpen = false;
-	    });
+      	    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+      	        ctrl.updateHeaderContent(toState);
+      	    	ctrl.isSideNavOpen = false;
+      	    });
 
-	    _init();
-	}]);
+	          _init();
+}]);
