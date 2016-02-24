@@ -21,6 +21,7 @@
   "views.caseDetail.tasks_list_item.when": "מתי?",
   "views.caseDetail.tasks_list_item.where": "איפה?",
   "views.caseDetail.tasks_list_item.apply": "אני בפנים",
+  "views.caseDetail.tasks_list_item.assigned_to": "מתנדב:",
   "views.casesSearch.case.showDetails": "הצג פרטים",
   "views.casesSearch.case.header_title": "בואו נתערב",
   "views.casesSearch.case.header_subtitle": "מגוון אפשרויות להתנדבות חד פעמית שיהפכו רגע פנוי לרגע של שינוי",

@@ -18,7 +18,10 @@ angular.module('app.models.case', [])
                         task.volunteer_name = volunteer.first_name + " " + volunteer.last_name;
                     }
                 });
-
+            },
+            chooseDefaultImage : function(){
+                var DEFAULT_TASKS_IMAGES_NUM = 9;
+                return "assets/img/tasks_defaults/task" + (Math.floor(Math.random() * DEFAULT_TASKS_IMAGES_NUM) + 1) + ".jpg";
             }
         };
     }])
@@ -37,7 +40,7 @@ angular.module('app.models.case', [])
      * Caching - if will be needed.
      * Define validations before save.
      */
-    .factory('CaseDao', ['Restangular','Case','TASK_STATES', function (Restangular, Case, TASK_STATES) {
+    .factory('CaseDao', ['Restangular','Case','moment', function (Restangular, Case, moment) {
 
         Restangular.extendModel('cases', function (obj) { // extend the Restangular functionality with the model.
             return angular.extend(obj, Case, {
@@ -47,6 +50,16 @@ angular.module('app.models.case', [])
                 transformForServer : function(){
                     return angular.copy(this);
                 },
+                // Perform all transformations before data is viewed in consumed by the client.
+                transformToClient : function(){
+                    this.imgUrl = this.imgUrl ? this.imgUrl : this.chooseDefaultImage();
+                    _.each(this.tasks,function(task){
+                        task.due_date_string_format = moment(task.due_date).format('LLLL');
+
+                    });
+                    return this;
+                },
+
                 assignTaskState: function (task, state) {
                     var toServerObj = this.transformForServer();
                     task.state = state;
@@ -55,6 +68,7 @@ angular.module('app.models.case', [])
                 }
             });
         });
+
         // It's also possible to extend the collection methods using Restangular.extendCollection().
         return Restangular.all('cases');
     }]);

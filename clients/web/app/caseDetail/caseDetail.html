@@ -32,14 +32,17 @@
                         <h5 class="task-title">{{task.title}}</h5>
                     </div>
                     <div class="task-detail">
-                       <span class="text-emphasized">{{"views.caseDetail.tasks_list_item.when" | translate}}</span>  {{task.date}}
+                       <span class="text-emphasized">{{"views.caseDetail.tasks_list_item.when" | translate}}</span>  {{task.due_date_string_format}}
                     </div>
-                    <div class="task-detail">
+                    <div ng-if="task.location" class="task-detail">
                         <span class="text-emphasized"> {{"views.caseDetail.tasks_list_item.where" | translate}} </span>
                          {{task.location}}
                     </div>
+                    <div ng-if="task.state === TASK_STATES.TASK_ASSIGNED" class="task-detail">
+                        <span class="text-emphasized"> {{"views.caseDetail.tasks_list_item.assigned_to" | translate}} </span>
+                        {{task.volunteer_name}}
+                    </div>
                     <button ng-show="task.state === TASK_STATES.TASK_PENDING" class="btn-primary" ng-click="assignTaskToUser(task)">{{"views.caseDetail.tasks_list_item.apply" | translate}} </button>
-                    <div ng-show="task.state === TASK_STATES.TASK_ASSIGNED"> Assigned to: {{task.volunteer_name}}</div>
                 </div>
 
             </div>

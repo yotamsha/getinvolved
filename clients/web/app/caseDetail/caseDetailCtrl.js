@@ -65,6 +65,7 @@ angular.module('app.caseDetail', [])
 
                 };
                 $scope.vm.case = caseData;
+                $scope.vm.case.transformToClient();
                 $scope.vm.case.populateWithUsersData(users);
             }
 
