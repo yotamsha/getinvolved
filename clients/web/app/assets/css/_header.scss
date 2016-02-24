@@ -13,12 +13,12 @@
     background-repeat: no-repeat;
   }
 
-  .header-title{
+  .header-title {
     color: #ffffff;
     font-size: 40px;
   }
 
-  .header-subtitle{
+  .header-subtitle {
     color: #ffffff;
     font-size: 28px;
     width: 470px;
@@ -53,11 +53,13 @@
   .route-link {
     padding-top: 45px;
     padding-bottom: 10px;
-    min-width: 60px;
     padding-left: 5px;
     padding-right: 5px;
+    margin-left: 30px;
+    min-width: 60px;
     text-align: center;
     cursor: pointer;
+  }
 
   a {
     color: #ffffff;
@@ -73,8 +75,17 @@
 }
 
 .route-link {
+  &.ask-help {
+    margin-top: -4px;
+    a {
+      padding: 5px 20px;
+      font-size: 16px;
+      background-color: #54585B;
+      background-color: rgba(84, 88, 91, 0.6);
+    }
+  }
+
   &.ask-help.active {
-    background-color: #F48220;
   }
 
   &.active {
@@ -184,6 +195,19 @@
     .header-subtitle {
       font-size: 16px;
       width: 270px;
+    }
+  }
+}
+
+@include media($layout-breakpoint-sm, $layout-breakpoint-md) {
+  .nav-bar{
+    .route-link {
+      margin-left: 22px;
+    }
+
+    .logo {
+      top: 33px;
+      width: 165px;
     }
   }
 }

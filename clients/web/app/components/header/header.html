@@ -21,7 +21,7 @@
           {{"views.main.header.login_or_signup" | translate}}
       </div>
     </div>
-    <div flex-offset="5" ng-repeat="route in ctrl.headerLinks" >
+    <div ng-repeat="route in ctrl.headerLinks" >
       <div class="route-link" ng-class="ctrl.navClass(route)" >
         <a href="#{{route.link}}"> {{route.textKey | translate}}</a>
       </div>

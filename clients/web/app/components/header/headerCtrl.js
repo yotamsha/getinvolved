@@ -17,19 +17,34 @@ angular.module('app.header.header-ctrl', [])
                 ctrl.showHowItWorksSection = false;
                 ctrl.headerLinks = [
                     {
-                        textKey: "views.main.header.ask_help",
+                        textKey: "views.main.header.nav-menu.opportunities",
                         link: "/cases",
-                        classes: "ask-help"
+                        classes: "cases"
                     },
-/*                    {
-                        textKey: "views.main.header.login_or_signup",
-                        link: "/case/1",
-                        classes: "login-signup"
-                    },*/
                     {
-                        textKey: "views.main.header.about_us",
+                        textKey: "views.main.header.nav-menu.about_us",
                         link: "/about_us",
                         classes: "about-us"
+                    },
+                    {
+                        textKey: "views.main.header.nav-menu.donors",
+                        link: "/donors",
+                        classes: "donors"
+                    },
+                    {
+                        textKey: "views.main.header.nav-menu.success_stories",
+                        link: "/success-stories",
+                        classes: "success-stories"
+                    },
+                    {
+                        textKey: "views.main.header.nav-menu.contact_us",
+                        link: "/contact",
+                        classes: "contact"
+                    },
+                    {
+                        textKey: "views.main.header.nav-menu.ask_help",
+                        link: "/ask-help",
+                        classes: "ask-help"
                     }
                 ];
                 ctrl.headerAttributes = angular.copy(_headerDefaults);
@@ -59,7 +74,7 @@ angular.module('app.header.header-ctrl', [])
 
             ctrl.navClass = function (route) {
                 var currentRoute = $location.path();
-                return route.link === currentRoute ? 'active ' + route.classes : '';
+                return route.link === currentRoute ? 'active ' + route.classes : route.classes;
             };
 
             ctrl.onHeaderButtonClick = function () {
