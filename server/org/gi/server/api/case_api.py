@@ -49,7 +49,7 @@ class CaseApi(Resource):
             except Exception as e:
                 log.debug("Failed to update a case. Exception:: %s", str(e))
                 abort(u.HTTP_BAD_INPUT, str(e))
-            return '', u.HTTP_NO_CONTENT
+            return self.get(case_id)
 
     @u.web_log
     @requires_auth

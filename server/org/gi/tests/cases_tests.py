@@ -92,7 +92,7 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         for state in states:
             case = {"state": state}
             r = requests.put('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]), json=case, auth=ACCESS_TOKEN_AUTH)
-            self.assertEqual(r.status_code, utils.HTTP_NO_CONTENT)
+            self.assertEqual(r.status_code, utils.HTTP_OK)
 
     def test_delete_case(self):
         r = requests.delete('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]), auth=ACCESS_TOKEN_AUTH)
@@ -102,10 +102,10 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         case = _load('case_state_transitions_4.json', self.config_folder)
         self._replace(case)
         r = requests.put('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]), json=case, auth=ACCESS_TOKEN_AUTH)
-        self.assertEqual(r.status_code, utils.HTTP_NO_CONTENT)
+        self.assertEqual(r.status_code, utils.HTTP_OK)
         case['state'] = 'cancelled_by_admin'
         r = requests.put('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]), json=case, auth=ACCESS_TOKEN_AUTH)
-        self.assertEqual(r.status_code, utils.HTTP_NO_CONTENT)
+        self.assertEqual(r.status_code, utils.HTTP_OK)
 
     def test_inserted_case_and_task_state(self):
         # SETUP
@@ -137,7 +137,7 @@ class TestGIServerCaseTestCase(unittest.TestCase):
                 if state == TASK_COMPLETED and use_valid_duration:
                     task['duration'] = 12
             r = requests.put('%s/cases/%s' % (SERVER_URL_API, case_id), json=case_tasks, auth=ACCESS_TOKEN_AUTH)
-            self.assertEqual(utils.HTTP_NO_CONTENT if use_valid_duration else utils.HTTP_BAD_INPUT, r.status_code)
+            self.assertEqual(utils.HTTP_OK if use_valid_duration else utils.HTTP_BAD_INPUT, r.status_code)
             r = requests.get('%s/cases/%s' % (SERVER_URL_API, case_id), auth=ACCESS_TOKEN_AUTH)
             self.assertEqual(json.loads(r.content)['state'], ALL_TASKS_SAME_STATE_TRANSITION[state])
 
@@ -157,7 +157,7 @@ class TestGIServerCaseTestCase(unittest.TestCase):
 
         # TEST
         r = requests.put('%s/cases/%s' % (SERVER_URL_API, case['id']), json=case, auth=ACCESS_TOKEN_AUTH)
-        self.assertEqual(utils.HTTP_NO_CONTENT, r.status_code)
+        self.assertEqual(utils.HTTP_OK, r.status_code)
         case = _get_case_from_db(case['id'])
         task = case['tasks'][0]
         self.assertEqual(self.user_ids[0], task['volunteer_id'])
@@ -361,7 +361,7 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         case_tasks['tasks'][1]['state'] = TASK_ASSIGNED
         del case_tasks['tasks'][-1]
         r = requests.put('%s/cases/%s' % (SERVER_URL_API, case_id), json=case_tasks, auth=ACCESS_TOKEN_AUTH)
-        self.assertEqual(utils.HTTP_NO_CONTENT, r.status_code)
+        self.assertEqual(utils.HTTP_OK, r.status_code)
 
         case_tasks = {}
         for task in _get_case_from_db(case_id)['tasks']:
@@ -382,7 +382,7 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         case_update = {'tasks': [inserted_case['tasks'][0]]}
         case_update['tasks'][0]['state'] = TASK_ASSIGNED
         r = requests.put('%s/cases/%s' % (SERVER_URL_API, case_id), json=case_update, auth=ACCESS_TOKEN_AUTH)
-        self.assertEqual(utils.HTTP_NO_CONTENT, r.status_code)
+        self.assertEqual(utils.HTTP_OK, r.status_code)
         updated_case = {'tasks': _get_case_from_db(case_id)['tasks']}
         self.assertEqual(orig_num_tasks, len(updated_case.get('tasks')))
 
@@ -417,7 +417,7 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         case_from_server = r.json()
         case_from_server['tasks'][0]['state'] = 'assigned'
         r = requests.put('%s/cases/%s' % (SERVER_URL_API, r.json()['id']), json=case_from_server, auth=ACCESS_TOKEN_AUTH)
-        self.assertEqual(r.status_code, utils.HTTP_NO_CONTENT)
+        self.assertEqual(r.status_code, utils.HTTP_OK)
         r = requests.get('%s/cases/%s' % (SERVER_URL_API, case_from_server['id']), auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_OK)
         self.assertTrue(r.json()['tasks'][0]['description'] is not None)

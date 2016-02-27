@@ -95,4 +95,4 @@ class UserApi(Resource):
                 db.users.update_one({'_id': u.to_object_id(user_id)}, request.json)
             except Exception as e:
                 abort(u.HTTP_BAD_INPUT, str(e))
-            return '', u.HTTP_NO_CONTENT
+            return self.get(user_id)
