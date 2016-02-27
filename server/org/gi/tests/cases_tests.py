@@ -409,6 +409,21 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         self.assertTrue(len(petitioner_list) == 0)
         self.assertTrue(len(volunteer_list) == 0)
 
+    def test_ticket_230(self):
+        case_with_tasks = _load('case_with_tasks_ticket_230.json', self.config_folder)
+        self._replace(case_with_tasks)
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case_with_tasks, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_CREATED)
+        case_from_server = r.json()
+        case_from_server['tasks'][0]['state'] = 'assigned'
+        r = requests.put('%s/cases/%s' % (SERVER_URL_API, r.json()['id']), json=case_from_server, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_NO_CONTENT)
+        r = requests.get('%s/cases/%s' % (SERVER_URL_API, case_from_server['id']), auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_OK)
+        self.assertTrue(r.json()['tasks'][0]['description'] is not None)
+
+
+
 
 def _get_case_from_db(case_id):
     r = requests.get('%s/cases/%s' % (SERVER_URL_API, case_id), auth=ACCESS_TOKEN_AUTH)
