@@ -28,7 +28,7 @@ module.exports = function(grunt) {
        'dev': {
            root: "app",
            port: 8000,
-           host: "127.0.0.1",
+           host: "getinvolved.org.il",
            showDir : true,
            autoIndex: true,
            ext: "html",
