@@ -120,7 +120,7 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         for task in inserted_case['tasks']:
             self.assertEqual(task['state'], TASK_PENDING)
 
-    def test_case_tasks_transitions(self):
+    def _case_tasks_transitions(self, use_valid_duration=True):
         # SETUP
         case_with_tasks = _load('case_with_tasks.json', self.config_folder)
         self._replace(case_with_tasks)
@@ -134,10 +134,19 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         for state in task_states:
             for task in case_tasks['tasks']:
                 task['state'] = state
+                if state == TASK_COMPLETED and use_valid_duration:
+                    task['duration'] = 12
             r = requests.put('%s/cases/%s' % (SERVER_URL_API, case_id), json=case_tasks, auth=ACCESS_TOKEN_AUTH)
-            self.assertEqual(utils.HTTP_NO_CONTENT, r.status_code)
+            self.assertEqual(utils.HTTP_NO_CONTENT if use_valid_duration else utils.HTTP_BAD_INPUT, r.status_code)
             r = requests.get('%s/cases/%s' % (SERVER_URL_API, case_id), auth=ACCESS_TOKEN_AUTH)
             self.assertEqual(json.loads(r.content)['state'], ALL_TASKS_SAME_STATE_TRANSITION[state])
+
+    def test_case_tasks_transitions(self):
+        self._case_tasks_transitions()
+
+    def test_case_tasks_transitions_no_duration(self, use_valid_duration=False):
+        self._case_tasks_transitions()
+
 
     def test_case_assign_user_to_task(self):
         # SETUP
@@ -362,7 +371,6 @@ class TestGIServerCaseTestCase(unittest.TestCase):
                 break
         r = requests.put('%s/cases/%s' % (SERVER_URL_API, case_id), json=case_tasks, auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(utils.HTTP_BAD_INPUT, r.status_code)
-        self.assertTrue('Cannot have the following TASK states together' in r.content)
 
     def test_not_deleting_tasks_on_update(self):
         case_with_tasks = _load('case_with_tasks.json', self.config_folder)
