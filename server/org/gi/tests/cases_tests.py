@@ -203,14 +203,14 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         near_query = {
             "location.geo_location":
                 {"$near":
-                    {
-                        "$geometry": {
-                            "type": "Point",
-                            "coordinates": [30.00, 29.5]
-                        },
-                        "$maxDistance": 10000000
-                    }
-                }
+                     {
+                         "$geometry": {
+                             "type": "Point",
+                             "coordinates": [30.00, 29.5]
+                         },
+                         "$maxDistance": 10000000
+                     }
+                 }
         }
         r = requests.get('%s/cases?filter=%s' % (SERVER_URL_API, near_query), auth=ACCESS_TOKEN_AUTH)
         cases = json.loads(r.content)
@@ -234,14 +234,14 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         near_query = {
             "location.geo_location":
                 {"$near":
-                    {
-                        "$geometry": {
-                            "type": "Point",
-                            "coordinates": [40, 40]
-                        },
-                        "$maxDistance": 100
-                    }
-                }
+                     {
+                         "$geometry": {
+                             "type": "Point",
+                             "coordinates": [40, 40]
+                         },
+                         "$maxDistance": 100
+                     }
+                 }
         }
         r = requests.get('%s/cases?filter=%s' % (SERVER_URL_API, near_query), auth=ACCESS_TOKEN_AUTH)
         cases = json.loads(r.content)
@@ -416,13 +416,39 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         self.assertEqual(r.status_code, utils.HTTP_CREATED)
         case_from_server = r.json()
         case_from_server['tasks'][0]['state'] = 'assigned'
-        r = requests.put('%s/cases/%s' % (SERVER_URL_API, r.json()['id']), json=case_from_server, auth=ACCESS_TOKEN_AUTH)
+        r = requests.put('%s/cases/%s' % (SERVER_URL_API, r.json()['id']), json=case_from_server,
+                         auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_OK)
         r = requests.get('%s/cases/%s' % (SERVER_URL_API, case_from_server['id']), auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_OK)
         self.assertTrue(r.json()['tasks'][0]['description'] is not None)
 
+    def test_add_volunteer_attributes_not_lazy(self):
+        case = self._fetch_case_with_volunteer_attributes(lazy=False)
+        for task in case['tasks']:
+            self.assertTrue(isinstance(task['volunteer'], dict))
+            self.assertTrue(isinstance(task['volunteer_id'], (str, unicode)))
 
+
+    def test_add_volunteer_attributes_lazy(self):
+        case = self._fetch_case_with_volunteer_attributes()
+        for task in case['tasks']:
+            self.assertTrue(isinstance(task['volunteer_id'], (str, unicode)))
+            self.assertTrue(task.get('volunteer') is None)
+
+
+
+    def _fetch_case_with_volunteer_attributes(self, lazy=True):
+        case = self._get_case()
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_CREATED)
+        if lazy:
+            r = requests.get('%s/cases/%s' % (SERVER_URL_API, r.json()['id']), auth=ACCESS_TOKEN_AUTH)
+        else:
+            r = requests.get('%s/cases/%s?add_volunteer_attributes=%s' % (SERVER_URL_API, r.json()['id'], 'yes'),
+                             auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_OK)
+        return r.json()
 
 
 def _get_case_from_db(case_id):

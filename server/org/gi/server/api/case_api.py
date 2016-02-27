@@ -14,8 +14,10 @@ class CaseApi(Resource):
     @u.web_log
     def get(self, case_id):
         try:
+            request_data = u.query_string_to_dict(request)
             case = db.cases.find_one({'_id': u.to_object_id(case_id)})
-            Case.prep_case_for_client(case)
+            Case.prep_case_for_client(case, add_volunteer_attributes=(request_data and request_data.get(
+                'add_volunteer_attributes') is not None))
         except Exception as e:
             abort(u.HTTP_NOT_FOUND, str(e))
         return case, u.HTTP_OK
