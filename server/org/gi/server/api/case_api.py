@@ -45,11 +45,7 @@ class CaseApi(Resource):
                 return {'errors': faults}, u.HTTP_BAD_INPUT
             try:
                 incoming_case = Case.prep_case_before_update(request.json, case)
-                result = db.cases.update_one({"_id": u.to_object_id(case_id)}, {'$set': incoming_case})
-                if result.modified_count != 1:
-                    msg = '%d cases where modified. One case only should be modified. \
-                     Case details: id: %s data for update %s' % (result.modified_count, case_id, str(incoming_case))
-                    raise Exception(msg)
+                db.cases.update_one({"_id": u.to_object_id(case_id)}, {'$set': incoming_case})
             except Exception as e:
                 log.debug("Failed to update a case. Exception:: %s", str(e))
                 abort(u.HTTP_BAD_INPUT, str(e))

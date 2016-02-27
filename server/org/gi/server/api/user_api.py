@@ -92,10 +92,7 @@ class UserApi(Resource):
             if faults:
                 return {'errors': faults}, u.HTTP_BAD_INPUT
             try:
-                result = db.users.update_one({'_id': u.to_object_id(user_id)}, request.json)
-                if result.modified_count != 1:
-                    msg = '%d users where modified. One user only should be modified.' % result.modified_count
-                    raise Exception(msg)
+                db.users.update_one({'_id': u.to_object_id(user_id)}, request.json)
             except Exception as e:
                 abort(u.HTTP_BAD_INPUT, str(e))
             return '', u.HTTP_NO_CONTENT
