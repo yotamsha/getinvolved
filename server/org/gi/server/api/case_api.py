@@ -83,14 +83,23 @@ class CaseListApi(Resource):
     @u.web_log
     def get(self):
         try:
-            _filter, projection, sort, page_size_str, page_number_str = u.get_fields_projection_and_filter(request)
+            _filter, projection, sort, page_size_str, page_number_str, _count = u.get_fields_projection_and_filter(request)
             cases = db.cases.find(projection=projection, filter=_filter)
-            cases = u.handle_sort_and_paging(cases, sort, page_size_str, page_number_str)
-            if cases and sort:
-                cases = cases.sort(sort)
+            count = None
+            if _count:
+                count = cases.count()
+            else:
+                cases = u.handle_sort_and_paging(cases, sort, page_size_str, page_number_str)
+                if cases and sort:
+                    cases = cases.sort(sort)
+        except ValueError as e:
+            abort(u.HTTP_BAD_INPUT, str(e))
         except Exception as e:
             abort(u.HTTP_SERVER_ERROR, str(e))
-        cases = u.make_list(cases)
-        for case in cases:
-            Case.prep_case_for_client(case)
-        return cases, u.HTTP_OK
+        if not count:
+            cases = u.make_list(cases)
+            for case in cases:
+                Case.prep_case_for_client(case)
+            return cases, u.HTTP_OK
+        else:
+            return {'count': count}, u.HTTP_OK

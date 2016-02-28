@@ -34,14 +34,14 @@ HTTP_SERVICE_UNAVAILABLE = 503
 HTTP_GATEWAY_TIMEOUT = 504
 
 
-
-
 def web_log(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         logging.error('%s : %s : %s' % (str(request), str(request.remote_addr), str(request.user_agent)))
         return func(*args, **kwargs)
+
     return wrapper
+
 
 def handle_sort_and_paging(cursor, sort, page_size_str, page_number_str):
     if cursor:
@@ -134,9 +134,9 @@ def get_fields_projection_and_filter(request):
         return result
 
     if not request:
-        return None, None, None, None, None
+        return None, None, None, None, None, None
     if not request.query_string:
-        return None, None, None, None, None
+        return None, None, None, None, None, None
     _args = request.query_string.split('&')
     _result = dict()
     if _args:
@@ -144,11 +144,22 @@ def get_fields_projection_and_filter(request):
             index = arg.find('=')
             if index != -1:
                 _result[arg[:index]] = arg[index + 1:]
+    invalid_args = [arg for arg in _result.keys() if
+                    arg not in ['sort', 'projection', 'count', 'page_size', 'page_number', 'filter']]
+    if invalid_args:
+        raise ValueError('%s is/are invalid query args ' % str(invalid_args))
     _filter = eval(urllib.unquote(_result.get('filter')).decode('utf8')) if _result.get('filter') else None
     _projection = {field_name: 1 for field_name in _result.get('projection').split(',')} if _result.get(
         'projection') else None
     _sort = _get_sort_args()
-    return _filter, _projection, _sort, _result.get("page_size"), _result.get("page_number")
+    _count = _result.get('count')
+    _page_size = _result.get("page_size")
+    _page_number = _result.get("page_number")
+    if _count:
+        if _projection or _page_size or _page_number or _sort:
+            raise ValueError(
+                'When count is specified in query args there is no support for paging  sorting or projection.')
+    return _filter, _projection, _sort, _page_size, _page_number, _count
 
 
 class Map(dict):
@@ -156,6 +167,7 @@ class Map(dict):
     Example:
     m = Map({'first_name': 'Eduardo'}, last_name='Pool', age=24, sports=['Soccer'])
     """
+
     def __init__(self, *args, **kwargs):
         super(Map, self).__init__(*args, **kwargs)
         for arg in args:

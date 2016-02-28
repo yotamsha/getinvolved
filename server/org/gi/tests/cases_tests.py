@@ -130,22 +130,28 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         case_tasks = {'tasks': inserted_case['tasks']}
 
         # TEST
-        task_states = [TASK_ASSIGNED, TASK_COMPLETED]
-        for state in task_states:
+        for state in [TASK_ASSIGNED, TASK_COMPLETED]:
             for task in case_tasks['tasks']:
                 task['state'] = state
                 if state == TASK_COMPLETED and use_valid_duration:
-                    task['duration'] = 12
+                    task['duration'] = 300
             r = requests.put('%s/cases/%s' % (SERVER_URL_API, case_id), json=case_tasks, auth=ACCESS_TOKEN_AUTH)
-            self.assertEqual(utils.HTTP_OK if use_valid_duration else utils.HTTP_BAD_INPUT, r.status_code)
+            if use_valid_duration:
+                self.assertEqual(utils.HTTP_OK, r.status_code)
+            else:
+                if state == TASK_COMPLETED:
+                    self.assertEqual(utils.HTTP_BAD_INPUT, r.status_code)
+                else:
+                    self.assertEqual(utils.HTTP_OK, r.status_code)
             r = requests.get('%s/cases/%s' % (SERVER_URL_API, case_id), auth=ACCESS_TOKEN_AUTH)
-            self.assertEqual(json.loads(r.content)['state'], ALL_TASKS_SAME_STATE_TRANSITION[state])
+            if state != TASK_COMPLETED:
+                self.assertEqual(r.json()['state'], ALL_TASKS_SAME_STATE_TRANSITION[state].encode('utf-8'))
 
     def test_case_tasks_transitions(self):
         self._case_tasks_transitions()
 
-    def test_case_tasks_transitions_no_duration(self, use_valid_duration=False):
-        self._case_tasks_transitions()
+    def test_case_tasks_transitions_no_duration(self):
+        self._case_tasks_transitions(use_valid_duration=False)
 
 
     def test_case_assign_user_to_task(self):
@@ -175,6 +181,24 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         self._replace(case)
         r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_CREATED)
+
+    def test_cases_count(self):
+        r = requests.get('%s/cases?count=1' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_OK)
+        self.assertEqual(len(self.case_ids), r.json()['count'])
+
+    def test_cases_count_mix_with_projection(self):
+        r = requests.get('%s/cases?count=1&projection=a,b,c' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
+
+    def test_cases_count_mix_with_sort(self):
+        r = requests.get('%s/cases?count=1&sort=[(\'first_name\',\'ASCENDING\'),(\'last_name\',\'DESCENDING\')]' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
+
+    def test_cases_invalid_query_args(self):
+        r = requests.get('%s/cases?count=1&zuzu=[(\'first_name\',\'ASCENDING\'),(\'last_name\',\'DESCENDING\')]' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
+
 
     def test_create_case_with_location(self):
         case = self._get_case()
