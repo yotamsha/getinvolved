@@ -101,6 +101,10 @@ MAX_DUE_DATE_HOURS = 24
 TASK_MIN_DURATION_MINUTES = 60
 TASK_MAX_DURATION_MINUTES = 60 * 24
 
+ONE_DAY_SECONDS = 60 * 60 * 24
+MIN_DUE_DATE_SECONDS = ONE_DAY_SECONDS
+MAX_DUE_DATE_SECONDS = ONE_DAY_SECONDS * 90
+
 
 def validate_phone_number(phone_number, faults):
     if not isinstance(phone_number, dict):
@@ -216,7 +220,7 @@ def validate_tasks(tasks, faults, current_tasks=None):
         if task.get('state') == TASK_COMPLETED and not _valid_task_duration(task):
             faults.append(
                 'In order to complete a Task an integer \'duration\' field should be passed. Valid values are in the range %d - %d' % (
-                TASK_MIN_DURATION_MINUTES, TASK_MAX_DURATION_MINUTES))
+                    TASK_MIN_DURATION_MINUTES, TASK_MAX_DURATION_MINUTES))
             return
 
         if task['type'] == TASK_TYPE_PRODUCT_TRANSPORTATION:
@@ -333,8 +337,9 @@ def validate_date_in_the_future(due_date, faults):
         faults.append('due_date must be none empty int')
         return
     now = int(time.time())
-    if due_date <= now or due_date >= now + MAX_DUE_DATE_HOURS * 60 * 60:
-        faults.append('Invalid due date. due date can not be in the past or later than %d hours' % MAX_DUE_DATE_HOURS)
+    if due_date < now + MIN_DUE_DATE_SECONDS or due_date > now + MAX_DUE_DATE_SECONDS:
+        faults.append('Invalid due date. Due date must be in the range %d - %d seconds. Current value is %d' % (
+        now + MIN_DUE_DATE_SECONDS, now + MAX_DUE_DATE_SECONDS, due_date))
 
 
 def validate_task_description(validate_task, faults):

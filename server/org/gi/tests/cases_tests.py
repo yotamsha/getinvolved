@@ -16,7 +16,7 @@ from org.gi.server.validation.case_state_machine import CASE_PARTIALLY_ASSIGNED
 __author__ = 'avishayb'
 
 CONFIG_DATA_DIRECTORY = 'case_api'
-DUE_DATE_HOURS = 4
+DUE_DATE_HOURS = 25
 
 
 class TestGIServerCaseTestCase(unittest.TestCase):
