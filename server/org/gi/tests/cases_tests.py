@@ -8,7 +8,8 @@ from misc import _remove_from_db, _load, _push_to_db, MONGO, SERVER_URL_API, ACC
 from org.gi.server import utils as utils
 from org.gi.server.model.Task import ALL_TASKS_SAME_STATE_TRANSITION
 from org.gi.server.service.notification.fetch_users_to_notify import fetch_users_with_x_hours_until_task
-from org.gi.server.validation.task.task_state_machine import TASK_UNDEFINED, TASK_ASSIGNED, TASK_COMPLETED, TASK_PENDING
+from org.gi.server.validation.task.task_state_machine import TASK_UNDEFINED, TASK_ASSIGNED, TASK_COMPLETED, TASK_PENDING, \
+    TASK_ATTENDANCE_CONFIRMED
 from org.gi.tests.users_tests import CONFIG_DATA_DIRECTORY as USER_CONFIG_DATA_DIRECTORY
 import org.gi.server.validation.case_state_machine
 from org.gi.server.validation.case_state_machine import CASE_PARTIALLY_ASSIGNED
@@ -130,7 +131,7 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         case_tasks = {'tasks': inserted_case['tasks']}
 
         # TEST
-        for state in [TASK_ASSIGNED, TASK_COMPLETED]:
+        for state in [TASK_ASSIGNED, TASK_ATTENDANCE_CONFIRMED, TASK_COMPLETED]:
             for task in case_tasks['tasks']:
                 task['state'] = state
                 if state == TASK_COMPLETED and use_valid_duration:
@@ -152,7 +153,6 @@ class TestGIServerCaseTestCase(unittest.TestCase):
 
     def test_case_tasks_transitions_no_duration(self):
         self._case_tasks_transitions(use_valid_duration=False)
-
 
     def test_case_assign_user_to_task(self):
         # SETUP
@@ -199,7 +199,6 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         r = requests.get('%s/cases?count=1&zuzu=[(\'first_name\',\'ASCENDING\'),(\'last_name\',\'DESCENDING\')]' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
 
-
     def test_create_case_with_location(self):
         case = self._get_case()
         case['location'] = {
@@ -241,7 +240,6 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         self.assertTrue(len(cases) >= 1)
         for i in range(0, 5):
             self.assertEqual(base_lat + (i * increment_latitude), cases[i]['location']['geo_location']['lat'])
-
 
     # negatives
 
@@ -453,14 +451,11 @@ class TestGIServerCaseTestCase(unittest.TestCase):
             self.assertTrue(isinstance(task['volunteer'], dict))
             self.assertTrue(isinstance(task['volunteer_id'], (str, unicode)))
 
-
     def test_add_volunteer_attributes_lazy(self):
         case = self._fetch_case_with_volunteer_attributes()
         for task in case['tasks']:
             self.assertTrue(isinstance(task['volunteer_id'], (str, unicode)))
             self.assertTrue(task.get('volunteer') is None)
-
-
 
     def _fetch_case_with_volunteer_attributes(self, lazy=True):
         case = self._get_case()
