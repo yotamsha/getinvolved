@@ -85,6 +85,9 @@ button {
     font-size: 14px;
     min-width: 130px;
   }
+  &[disabled="disabled"] {
+    opacity: 0.5;
+  }
 }
 
 .view-container {

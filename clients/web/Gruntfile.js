@@ -39,5 +39,6 @@ module.exports = function(grunt) {
 
   // Default task(s).
   grunt.registerTask('default', ['sass']);
+  grunt.registerTask('watch', ['watch']);
   grunt.registerTask('start', ['http-server:dev']);
 };

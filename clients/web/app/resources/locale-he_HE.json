@@ -1,4 +1,6 @@
 {
+
+  "views.general.save": "שמור",
   "views.home.title": "עמוד הבית",
   "views.main.header.hello" : "שלום",
   "views.main.header.logout" : "התנתק",
