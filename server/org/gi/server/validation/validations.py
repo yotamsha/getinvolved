@@ -105,6 +105,12 @@ ONE_DAY_SECONDS = 60 * 60 * 24
 MIN_DUE_DATE_SECONDS = ONE_DAY_SECONDS
 MAX_DUE_DATE_SECONDS = ONE_DAY_SECONDS * 90
 
+TASK_DESCRIPTION_MIN = 10
+TASK_DESCRIPTION_MAX = 50
+
+TASK_TITLE_MIN = 8
+TASK_TITLE_MAX = 25
+
 
 def validate_phone_number(phone_number, faults):
     if not isinstance(phone_number, dict):
@@ -232,7 +238,7 @@ def validate_tasks(tasks, faults, current_tasks=None):
             else:
                 _validate_status_transition(current_task['state'], task['state'], VALID_TASK_STATES, TASK_TRANSITIONS,
                                             faults)
-                validate_mandatory_and_present_fields(task, TASK_META, faults, mandatory=False)
+                validate_mandatory_and_present_fields(task, TASK_META, faults, mandatory=True)
 
     if not tasks:
         faults.append('A Case must have at least one task')
@@ -245,7 +251,7 @@ def validate_tasks(tasks, faults, current_tasks=None):
             if current_tasks:
                 for cur_task in current_tasks:
                     if cur_task['id'] == task['id']:
-                        _validate_task(task, faults, cur_task)
+                        _validate_task(task, faults, current_task=cur_task)
                         break
         else:
             _validate_task(task, faults)
@@ -339,15 +345,19 @@ def validate_date_in_the_future(due_date, faults):
     now = int(time.time())
     if due_date < now + MIN_DUE_DATE_SECONDS or due_date > now + MAX_DUE_DATE_SECONDS:
         faults.append('Invalid due date. Due date must be in the range %d - %d seconds. Current value is %d' % (
-        now + MIN_DUE_DATE_SECONDS, now + MAX_DUE_DATE_SECONDS, due_date))
+            now + MIN_DUE_DATE_SECONDS, now + MAX_DUE_DATE_SECONDS, due_date))
 
 
-def validate_task_description(validate_task, faults):
-    pass
+def validate_task_description(task_description, faults):
+    if not validate_len_in_range(task_description, TASK_DESCRIPTION_MIN, TASK_DESCRIPTION_MAX):
+        faults.append('%s is not a valid description. description length should be in the range %d - %d' % (
+            task_description, TASK_DESCRIPTION_MIN, TASK_DESCRIPTION_MAX))
 
 
 def validate_task_title(task_title, faults):
-    pass
+    if not validate_len_in_range(task_title, TASK_TITLE_MIN, TASK_TITLE_MAX):
+        faults.append('%s is not a valid title. title length should be in the range %d - %d' % (
+            task_title, TASK_TITLE_MIN, TASK_TITLE_MAX))
 
 
 def validate_facebook_id(facebook_id, faults):
@@ -465,6 +475,8 @@ def case_put_validate(current_case, updated_case, faults):
                                     faults)
         if faults:
             return
+        if updated_case.get('tasks'):
+            validate_tasks(updated_case['tasks'], faults, current_tasks=current_case['tasks'])
         if updated_case['state'] == CASE_COMPLETED and len(updated_case['tasks']) != sum(
                 1 for task in updated_case['tasks'] if task['state'] == TASK_COMPLETED):
             faults.append(

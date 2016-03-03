@@ -439,8 +439,15 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         r = requests.post('%s/cases' % SERVER_URL_API, json=case_with_tasks, auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_CREATED)
         case_from_server = r.json()
+        for task in case_from_server['tasks']:
+            del task['description']
         case_from_server['tasks'][0]['state'] = 'assigned'
         r = requests.put('%s/cases/%s' % (SERVER_URL_API, r.json()['id']), json=case_from_server,
+                         auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
+        for task in case_from_server['tasks']:
+            task['description'] = 'A description....'
+        r = requests.put('%s/cases/%s' % (SERVER_URL_API, case_from_server['id']), json=case_from_server,
                          auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_OK)
         r = requests.get('%s/cases/%s' % (SERVER_URL_API, case_from_server['id']), auth=ACCESS_TOKEN_AUTH)
