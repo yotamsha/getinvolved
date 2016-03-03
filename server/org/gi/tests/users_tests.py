@@ -275,6 +275,17 @@ class GIServerUsersTestCase(unittest.TestCase):
                           json=_load('a_user_with_int_password.json', self.config_folder))
         self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
 
+    def test_create_ticket_245(self):
+        r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH,
+                          json=_load('user_ticket_245.json', self.config_folder))
+        self.assertEqual(r.status_code, utils.HTTP_CREATED)
+        user_from_server = r.json()
+        r = requests.put('%s/users/%s' % (SERVER_URL_API,user_from_server['id']), auth=ACCESS_TOKEN_AUTH,
+                          json=user_from_server)
+        self.assertEqual(r.status_code, utils.HTTP_OK)
+
+
+
     def test_create_a_user_with_str_phone_num(self):
         r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH,
                           json=_load('a_user_with_str_phone_number.json', self.config_folder))
