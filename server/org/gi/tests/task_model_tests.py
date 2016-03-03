@@ -6,6 +6,7 @@ from org.gi.server.validation.case_state_machine import CASE_PENDING_INVOLVEMENT
 from org.gi.server.validation.task.task_state_machine import TASK_PENDING, TASK_ASSIGNMENT_IN_PROCESS, \
     TASK_PENDING_USER_APPROVAL, TASK_ASSIGNED, TASK_CANCELLED, TASK_COMPLETED
 from org.gi.tests.misc import _load
+from org.gi.server.validation import validations as v
 
 
 class TestTaskModel(unittest.TestCase):
@@ -76,5 +77,40 @@ class TestTaskModel(unittest.TestCase):
 
         merged_list = Task.merge_non_updated_tasks(partial_list, orig_list)
         self.assertEqual(3, len(merged_list))
+
+    def test_due_date_1(self):
+        faults = []
+        v.validate_date_in_the_future(None, faults)
+        self.assertTrue(len(faults), 1)
+
+    def test_due_date_2(self):
+        faults = []
+        v.validate_date_in_the_future(3, faults)
+        self.assertTrue(len(faults), 1)
+
+    def test_due_date_3(self):
+        import time
+        faults = []
+        v.validate_date_in_the_future(int(time.time()), faults)
+        self.assertTrue(len(faults), 1)
+
+    def test_due_date_4(self):
+        import time
+        faults = []
+        v.validate_date_in_the_future(int(time.time()) + 86300, faults)
+        self.assertTrue(len(faults), 1)
+
+    def test_due_date_5(self):
+        import time
+        faults = []
+        v.validate_date_in_the_future(int(time.time()) + 86401, faults)
+        self.assertTrue(len(faults) == 0)
+
+    def test_due_date_6(self):
+        import time
+        faults = []
+        v.validate_date_in_the_future(int(time.time()) + 86400 * 95, faults)
+        self.assertTrue(len(faults), 1)
+
 
 

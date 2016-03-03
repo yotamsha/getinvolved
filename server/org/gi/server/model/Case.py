@@ -6,6 +6,10 @@ from org.gi.server import utils as utils
 from org.gi.server.validation.case_state_machine import CASE_UNDEFINED, CASE_PENDING_APPROVAL, CASE_MISSING_INFO, \
     CASE_REJECTED, CASE_OVERDUE, CASE_CANCELLED_BY_USER, CASE_CANCELLED_BY_ADMIN
 from org.gi.server.validation.task.task_state_machine import TASK_PENDING
+from org.gi.server import utils as u
+from org.gi.server.db import db
+
+
 
 
 class Case:
@@ -64,8 +68,17 @@ class Case:
                     Location.change_geo_location_to_db_format(location)
 
     @classmethod
-    def prep_case_for_client(cls, case):
+    def prep_case_for_client(cls, case, add_volunteer_attributes=False):
         utils.handle_id(case)
         Location.change_geo_location_to_client_format(case.get('location'))
         for task in case.get('tasks'):
             Location.change_geo_location_to_client_format(task.get('location'))
+            if add_volunteer_attributes and task['volunteer_id']:
+                volunteer_id = task['volunteer_id']
+                user = db.users.find_one({'_id': u.to_object_id(volunteer_id)})
+                u.handle_id(user)
+                task['volunteer'] = user
+
+
+
+

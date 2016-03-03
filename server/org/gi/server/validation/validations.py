@@ -98,6 +98,13 @@ FB_ID_MAX_LENGTH = 40
 
 MAX_DUE_DATE_HOURS = 24
 
+TASK_MIN_DURATION_MINUTES = 60
+TASK_MAX_DURATION_MINUTES = 60 * 24
+
+ONE_DAY_SECONDS = 60 * 60 * 24
+MIN_DUE_DATE_SECONDS = ONE_DAY_SECONDS
+MAX_DUE_DATE_SECONDS = ONE_DAY_SECONDS * 90
+
 
 def validate_phone_number(phone_number, faults):
     if not isinstance(phone_number, dict):
@@ -192,6 +199,14 @@ def validate_transportation_task(task, faults):
 
 
 def validate_tasks(tasks, faults, current_tasks=None):
+    def _valid_task_duration(task):
+        duration = task.get('duration')
+        if not duration or not isinstance(duration, int):
+            return False
+        if duration >= TASK_MAX_DURATION_MINUTES or duration <= TASK_MIN_DURATION_MINUTES:
+            return False
+        return True
+
     def _validate_task(task, faults, current_task=None):
         if not task:
             faults.append("A task can not be null")
@@ -202,6 +217,12 @@ def validate_tasks(tasks, faults, current_tasks=None):
         if not task.get('type'):
             faults.append('A task must contain the property \'type\'. Valid type values are %s' % str(TASK_TYPES))
             return
+        if task.get('state') == TASK_COMPLETED and not _valid_task_duration(task):
+            faults.append(
+                'In order to complete a Task an integer \'duration\' field should be passed. Valid values are in the range %d - %d' % (
+                    TASK_MIN_DURATION_MINUTES, TASK_MAX_DURATION_MINUTES))
+            return
+
         if task['type'] == TASK_TYPE_PRODUCT_TRANSPORTATION:
             validate_transportation_task(task, faults)
         else:
@@ -296,7 +317,7 @@ def validate_task_id(task_id, faults):
     pass
 
 
-def validate_notifications(notification,faults):
+def validate_notifications(notification, faults):
     if notification and not isinstance(notification, dict):
         faults.append('notification must be a dict')
         return
@@ -316,8 +337,9 @@ def validate_date_in_the_future(due_date, faults):
         faults.append('due_date must be none empty int')
         return
     now = int(time.time())
-    if due_date <= now or due_date >= now + MAX_DUE_DATE_HOURS * 60 * 60:
-        faults.append('Invalid due date. due date can not be in the past or later than %d hours' % MAX_DUE_DATE_HOURS)
+    if due_date < now + MIN_DUE_DATE_SECONDS or due_date > now + MAX_DUE_DATE_SECONDS:
+        faults.append('Invalid due date. Due date must be in the range %d - %d seconds. Current value is %d' % (
+        now + MIN_DUE_DATE_SECONDS, now + MAX_DUE_DATE_SECONDS, due_date))
 
 
 def validate_task_description(validate_task, faults):
@@ -379,6 +401,7 @@ TASK_META = {
     'due_date': (validate_date_in_the_future, MANDATORY),
     'created_at': None,
     'updated_at': None,
+    'duration': None,
     'id': validate_task_id
 }
 
@@ -483,7 +506,8 @@ def post_validate(payload, meta, faults, mandatory=True):
             faults.append('The field \'%s\' can not be found in incoming payload' % field_name)
     for field_name in payload.keys():
         if field_name not in meta.keys():
-            faults.append('The field \'%s\' in invalid field. Valid field names are: %s' % (field_name, str(meta.keys())))
+            faults.append(
+                'The field \'%s\' in invalid field. Valid field names are: %s' % (field_name, str(meta.keys())))
     if faults:
         return
     for field_name, field_validator in meta.iteritems():

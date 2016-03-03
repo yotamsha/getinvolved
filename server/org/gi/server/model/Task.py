@@ -1,11 +1,13 @@
 from org.gi.server.validation.case_state_machine import CASE_ASSIGNED, \
     CASE_PENDING_INVOLVEMENT, CASE_COMPLETED, CASE_PARTIALLY_ASSIGNED, CASE_PARTIALLY_COMPLETED
-from org.gi.server.validation.task.task_state_machine import TASK_PENDING, TASK_ASSIGNED, TASK_COMPLETED
+from org.gi.server.validation.task.task_state_machine import TASK_PENDING, TASK_ASSIGNED, TASK_COMPLETED, \
+    TASK_ATTENDANCE_CONFIRMED
 from org.gi.server.validation.task.task_state_machine import TASK_PENDING_USER_APPROVAL, TASK_ASSIGNMENT_IN_PROCESS
 
 ALL_TASKS_SAME_STATE_TRANSITION = {
     TASK_PENDING: CASE_PENDING_INVOLVEMENT,
     TASK_ASSIGNED: CASE_ASSIGNED,
+    TASK_ATTENDANCE_CONFIRMED: CASE_ASSIGNED,
     TASK_COMPLETED: CASE_COMPLETED
 }
 
@@ -42,7 +44,14 @@ class Task:
         elif len(task_states) == 2:
             if {TASK_PENDING, TASK_ASSIGNED}.issubset(task_states):
                 updated_case_state = CASE_PARTIALLY_ASSIGNED
+            if {TASK_ASSIGNED, TASK_ATTENDANCE_CONFIRMED}.issubset(task_states):
+                updated_case_state = CASE_ASSIGNED
             if {TASK_COMPLETED, TASK_ASSIGNED}.issubset(task_states):
+                updated_case_state = CASE_PARTIALLY_COMPLETED
+            if {TASK_ATTENDANCE_CONFIRMED, TASK_COMPLETED}.issubset(task_states):
+                updated_case_state = CASE_PARTIALLY_COMPLETED
+        elif len(task_states) == 3:
+            if {TASK_ASSIGNED, TASK_ATTENDANCE_CONFIRMED, TASK_COMPLETED}.issubset(task_states):
                 updated_case_state = CASE_PARTIALLY_COMPLETED
 
         if not updated_case_state:

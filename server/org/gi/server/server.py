@@ -37,7 +37,7 @@ def start_notification_loop():
         elif mode == 'prod':
             #TODO implement the real notification logic see #194
             pass
-    interval = 10 #TODO read from config
+    interval = 100 #TODO read from config
     scheduler, stop = get_scheduler(interval, _notify, None)
     scheduler.start()
     return scheduler, stop

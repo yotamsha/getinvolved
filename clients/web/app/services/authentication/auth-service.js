@@ -35,7 +35,7 @@ angular.module('app.services.authentication.auth-service', [])
                             // code.
                             _self.facebookSessionRetrieved(loginRes.authResponse);
 
-                        });
+                        }, { scope: 'email'});
 
                     } else {
                         // The person is not logged into Facebook, so we're not sure if
@@ -46,7 +46,7 @@ angular.module('app.services.authentication.auth-service', [])
                             // code.
                             _self.facebookSessionRetrieved(loginRes.authResponse);
 
-                        });
+                        }, { scope: 'email' });
 
                     }
                 },
@@ -208,7 +208,5 @@ angular.module('app.services.authentication.auth-service', [])
                         facebookAuthenticator.login();
                     }
                 }
-
-
             };
         }]);

@@ -18,12 +18,21 @@ class UserListApi(Resource):
     @requires_auth
     def get(self):
         try:
-            _filter, projection, sort, page_size_str, page_number_str = u.get_fields_projection_and_filter(request)
+            _filter, projection, sort, page_size_str, page_number_str,_count = u.get_fields_projection_and_filter(request)
             users = db.users.find(projection=projection, filter=_filter)
-            users = u.handle_sort_and_paging(users, sort, page_size_str, page_number_str)
+            count = None
+            if _count:
+                count = users.count()
+            else:
+                users = u.handle_sort_and_paging(users, sort, page_size_str, page_number_str)
+        except ValueError as e:
+            abort(u.HTTP_BAD_INPUT, str(e))
         except Exception as e:
             abort(u.HTTP_SERVER_ERROR, str(e))
-        return u.make_list(users), u.HTTP_OK
+        if count:
+            return {'count': count}, u.HTTP_OK
+        else:
+            return u.make_list(users), u.HTTP_OK
 
 
 class UserApi(Resource):
@@ -92,10 +101,7 @@ class UserApi(Resource):
             if faults:
                 return {'errors': faults}, u.HTTP_BAD_INPUT
             try:
-                result = db.users.update_one({'_id': u.to_object_id(user_id)}, request.json)
-                if result.modified_count != 1:
-                    msg = '%d users where modified. One user only should be modified.' % result.modified_count
-                    raise Exception(msg)
+                db.users.update_one({'_id': u.to_object_id(user_id)}, request.json)
             except Exception as e:
                 abort(u.HTTP_BAD_INPUT, str(e))
-            return '', u.HTTP_NO_CONTENT
+            return self.get(user_id)
