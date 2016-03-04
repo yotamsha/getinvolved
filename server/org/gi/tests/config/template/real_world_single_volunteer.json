@@ -1,0 +1,21 @@
+{
+  "data": {
+    "case_title": "אבד לי החתול",
+    "details": {
+      "first_name": "משה"
+    },
+    "volunteers": [
+      {
+        "last_name": "זילבר",
+        "first_name": "אריאל",
+        "phone_number": {
+          "number": "050-4657879"
+        },
+        "email": "arizi@gmail.com"
+      }
+    ],
+    "gi_phone": "054-5420450",
+    "gi_email": "info@getinvolved.org.co.il"
+  },
+  "response": "משה שלום,\n אנחנו מזכירים לך שמחר יגיע/ תגיע אליך אריאל זילבר\n תוכלו ליצור עמם קשר במס' הטלפון 050-4657879\n או בכתובת מייל arizi@gmail.com\n\nאם יש בעיה אנא צרו איתנו קשר במייל -\ninfo@getinvolved.org.co.il\nאנחנו כאן לכל שאלה"
+}

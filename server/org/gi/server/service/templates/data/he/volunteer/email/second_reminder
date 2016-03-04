@@ -1,0 +1,23 @@
+{{details.first_name}} שלום,
+אנחנו רוצים להזכיר לך שההתנדבות שלך מתחילה עוד 3 שעות
+{% for task in tasks %}
+{% if task.location is defined %}
+איפה ?
+{{task.location.address.city}}, {{task.location.address.street_name}} {{task.location.address.street_number}}
+{% if task.location.address.apartment_number is defined %}
+{% if task.location.address.entrance is defined %} כניסה {{task.location.address.entrance}},{% endif %} דירה מס' {{task.location.address.apartment_number}}{% if task.location.address.floor is defined %}, קומה {{task.location.address.floor}}{% endif %}
+
+{% endif %}
+{% endif %}
+
+מתי?
+{{task.due_date}}
+{% endfor %}
+
+אנא צרו קשר על מנת לוודא את הגעתכם או במקרה של בעיה -
+בכתובת מייל: {{gi_email}}
+או במס' טלפון: {{gi_phone}}
+
+אנחנו כאן לכל שאלה
+ getinvolved
+*ניתן להשיב למייל זה

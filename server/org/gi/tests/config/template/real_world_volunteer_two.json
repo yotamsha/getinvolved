@@ -1,0 +1,22 @@
+{
+  "data": {
+    "details": {
+      "first_name": "משה"
+    },
+    "tasks": [
+      {
+        "location": {
+          "address": {
+            "city": "תל-אביב",
+            "street_name": "אלנבי",
+            "street_number": "9",
+            "apartment_number": 8
+          }
+        },
+        "due_date": "(02/26) יום ו׳ 12:08 אחה״צ"
+      }
+    ],
+    "gi_phone": "054-5420450",
+    "gi_email": "info@getinvolved.org.co.il"
+  }
+}

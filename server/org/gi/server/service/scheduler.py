@@ -1,7 +1,7 @@
 import threading
 
 
-def get_scheduler(sleep_time_sec,action, *args):
+def get_scheduler(sleep_time_sec, action, *args):
     """
     Get an instance of a Scheduler
     :param sleep_time_sec: Number of seconds to wait between each execution

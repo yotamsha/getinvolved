@@ -7,7 +7,7 @@ import requests
 from misc import _remove_from_db, _load, _push_to_db, MONGO, SERVER_URL_API, ACCESS_TOKEN_AUTH, validate_server_is_up
 from org.gi.server import utils as utils
 from org.gi.server.model.Task import ALL_TASKS_SAME_STATE_TRANSITION
-from org.gi.server.service.notification.fetch_users_to_notify import fetch_users_with_x_hours_until_task
+from org.gi.server.service.notification.fetch_users_to_notify import fetch_users_with_upto_x_hours_until_task
 from org.gi.server.validation.task.task_state_machine import TASK_UNDEFINED, TASK_ASSIGNED, TASK_COMPLETED, TASK_PENDING, \
     TASK_ATTENDANCE_CONFIRMED
 from org.gi.tests.users_tests import CONFIG_DATA_DIRECTORY as USER_CONFIG_DATA_DIRECTORY
@@ -411,7 +411,7 @@ class TestGIServerCaseTestCase(unittest.TestCase):
     # fetching user notifications is related to cases/tasks
     def test_fetch_users_to_notify(self):
         self._get_inserted_case()
-        petitioner_list, volunteer_list = fetch_users_with_x_hours_until_task(DUE_DATE_HOURS + 1)
+        petitioner_list, volunteer_list = fetch_users_with_upto_x_hours_until_task(DUE_DATE_HOURS + 1)
         self.assertTrue(len(petitioner_list) == 1)
         petitioner = petitioner_list[0]
         self.assertTrue(petitioner.get('case_title'))
@@ -427,7 +427,7 @@ class TestGIServerCaseTestCase(unittest.TestCase):
 
     def test_fetch_users_return_none(self):
         self._get_inserted_case()
-        petitioner_list, volunteer_list = fetch_users_with_x_hours_until_task(DUE_DATE_HOURS - 1)
+        petitioner_list, volunteer_list = fetch_users_with_upto_x_hours_until_task(DUE_DATE_HOURS - 1)
         self.assertTrue(len(petitioner_list) == 0)
         self.assertTrue(len(volunteer_list) == 0)
 
