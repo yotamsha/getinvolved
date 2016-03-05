@@ -21,7 +21,7 @@
             <div class="case-title">{{ case.title }}</div>
             <div>
 				<span class="email-share-icon disp-ib va-mid"></span>
-				<span class="fb-share-icon disp-ib va-mid"></span>
+				<span class="fb-share-icon disp-ib va-mid" ng-click="vm.facebookShare(case)"></span>
 				<a class="disp-ib va-mid" ui-sref="caseDetail({caseId: case.id})">
 					<button class="btn-secondary case-register-btn">{{"views.casesSearch.case.showDetails" | translate}} </button>
 				</a>
