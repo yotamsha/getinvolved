@@ -234,11 +234,12 @@ def validate_tasks(tasks, faults, current_tasks=None):
         else:
             if not current_task:
                 validate_mandatory_and_present_fields(task, TASK_META, faults)
-                # post_validate(task, TASK_META, faults, mandatory=True)
             else:
-                _validate_status_transition(current_task['state'], task['state'], VALID_TASK_STATES, TASK_TRANSITIONS,
-                                            faults)
-                validate_mandatory_and_present_fields(task, TASK_META, faults, mandatory=True)
+                if current_task.get('state') and task.get('state'):
+                    _validate_status_transition(current_task['state'], task['state'], VALID_TASK_STATES,
+                                                TASK_TRANSITIONS,
+                                                faults)
+                validate_mandatory_and_present_fields(task, TASK_META, faults, mandatory=False)
 
     if not tasks:
         faults.append('A Case must have at least one task')
