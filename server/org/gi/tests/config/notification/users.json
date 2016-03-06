@@ -1,0 +1,41 @@
+{
+  "users": [
+    {
+      "first_name": "משה",
+      "last_name": "דץ",
+      "user_name": "user_one",
+      "password": "qwerty123",
+      "email": "barwachtel@gmail.com",
+      "phone_number": {
+        "number": "036497317",
+        "country_code": "IL"
+      }
+    },
+    {
+      "first_name": "הארי",
+      "last_name": "פוטר",
+      "user_name": "user_two",
+      "password": "qwerty123",
+      "email": "harry@potter.co.uk",
+      "phone_number": {
+        "number": "0527588594",
+        "country_code": "IL"
+      },
+      "notifications": {
+        "sms": true,
+        "email": true
+      }
+    },
+    {
+      "first_name": "Three",
+      "last_name": "User",
+      "user_name": "user_three",
+      "password": "qwerty123",
+      "email": "random2@gingi.co.il",
+      "phone_number": {
+        "number": "0526676667",
+        "country_code": "IL"
+      }
+    }
+  ]
+}

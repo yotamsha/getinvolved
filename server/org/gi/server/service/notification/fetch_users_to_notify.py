@@ -32,7 +32,7 @@ def _get_volunteer_from_case_and_task(case, task):
         'case_title': case.get('title'),
         'user_id': task.get('volunteer_id'),
         'details': _get_user_from_db(task.get('volunteer_id')),
-        'tasks': [_get_task_details(task)]
+        'tasks': [_get_task_details(task)],
     }
     return volunteer
 
@@ -41,6 +41,7 @@ def _get_task_details(_task):
     task = {
         'title': _task.get('title'),
         'id': _task.get('id'),
+        'volunteer_id': _task.get('volunteer_id'),
         'due_date':  date_util.from_seconds_to_locale_date(_task.get('due_date'), locale=DEFAULT_LOCALE)
     }
     optional_data = ['location', 'destination']

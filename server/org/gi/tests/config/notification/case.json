@@ -1,0 +1,24 @@
+{
+  "state": "assigned",
+  "tasks": [
+    {
+      "location": {
+        "address": {
+          "street_name": "מזא\"ה",
+          "city": "תל-אביב",
+          "street_number": "23",
+          "country": "IL"
+        }
+      },
+      "state": "assigned",
+      "type": "GENERAL",
+      "title": "t1ffffffff1",
+      "volunteer_id": "__REPLACE__",
+      "due_date": "__REPLACE__",
+      "description": "A general case"
+    }
+  ],
+  "petitioner_id": "__REPLACE__",
+  "description": "desc goes here",
+  "title": "title goes here"
+}

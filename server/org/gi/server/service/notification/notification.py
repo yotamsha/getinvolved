@@ -1,3 +1,4 @@
+# coding=utf-8
 import time
 import logging
 
@@ -21,6 +22,8 @@ FIRST_REMINDER_TEMPLATE = 'first_reminder'
 SECOND_REMINDER_TEMPLATE = 'second_reminder'
 VOLUNTEER = 'volunteer'
 PETITIONER = 'petitioner'
+FIRST_REMINDER_SUBJECT = u"GetInvolved - התראה"
+SECOND_REMINDER_SUBJECT = u"GetInvolved - התראה"
 
 
 def send_sms_to(recipient, sms, sender=GI_PHONE_NUMBER):
@@ -33,7 +36,7 @@ def send_sms_to(recipient, sms, sender=GI_PHONE_NUMBER):
     else:
         logging.error('Cannot send SMS to user with no phonenumber: {}'.format(recipient))
         return
-    if not (sms and len(sms) > 0 and isinstance(sms, str)):
+    if not (sms and len(sms) > 0 and isinstance(sms, basestring)):
         logging.error('Cannot send SMS with no message')
         return
     try:
@@ -60,31 +63,31 @@ def add_gi_email_and_phone_to_data(user_data):
     user_data['gi_phone'] = GI_PHONE_NUMBER
 
 
-def _send_email_and_sms(user_data, template, user_type, sms=True, email=True, lang=HEBREW):
+def _send_email_and_sms(user_data, subject, template, user_type, sms=True, email=True, lang=HEBREW):
     add_gi_email_and_phone_to_data(user_data)
-    notification_settings = NotificationSettings(user_data.get('notifications'))
+    notification_settings = NotificationSettings(user_data.get('details').get('notifications'))
     if notification_settings.sms_enabled and sms:
         sms_notfication = load_and_merge('/{}/sms/{}'.format(user_type, template), user_data, lang)
-        send_sms_to(user_data, sms_notfication)
+        send_sms_to(user_data.get('details'), sms_notfication)
     if notification_settings.email_enabled and email:
         email_notification = load_and_merge('/{}/email/{}'.format(user_type, template), user_data, lang)
-        send_email_to(user_data, email_notification)
+        send_email_to(user_data.get('details'), subject, email_notification)
 
 
 def _do_first_notifications():
     petitioner_list, volunteer_list = _get_users_with_tasks_in_x_hours(FIRST_REMINDER_HOURS)
     for petitioner in petitioner_list:
-        _send_email_and_sms(petitioner, 'first_reminder', 'petitioner')
+        _send_email_and_sms(petitioner, FIRST_REMINDER_SUBJECT, 'first_reminder', 'petitioner')
     for volunteer in volunteer_list:
-        _send_email_and_sms(volunteer, 'first_reminder', 'volunteer')
+        _send_email_and_sms(volunteer, FIRST_REMINDER_SUBJECT, 'first_reminder', 'volunteer')
 
 
 def _do_second_notifications():
     petitioner_list, volunteer_list = _get_users_with_tasks_in_x_hours(SECOND_REMINDER_HOURS)
     for petitioner in petitioner_list:
-        _send_email_and_sms(petitioner, 'second_reminder', 'petitioner')
+        _send_email_and_sms(petitioner, SECOND_REMINDER_SUBJECT, 'second_reminder', 'petitioner')
     for volunteer in volunteer_list:
-        _send_email_and_sms(volunteer, 'second_reminder', 'volunteer')
+        _send_email_and_sms(volunteer, SECOND_REMINDER_SUBJECT, 'second_reminder', 'volunteer')
 
 
 def notify():
