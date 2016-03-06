@@ -28,7 +28,8 @@ class Task:
         task_states = set()
         for task in updated_tasks:
             task_state = Task.get_logical_state(task.get('state'))
-            task_states.add(task_state)
+            if task_state:
+                task_states.add(task_state)
         if db_tasks:
             for db_task in db_tasks:
                 db_task_is_updated = False
@@ -54,7 +55,7 @@ class Task:
             if {TASK_ASSIGNED, TASK_ATTENDANCE_CONFIRMED, TASK_COMPLETED}.issubset(task_states):
                 updated_case_state = CASE_PARTIALLY_COMPLETED
 
-        if not updated_case_state:
+        if not updated_case_state and task_states:
             raise BadTaskStateException('Cannot have the following TASK states together {}'.format(task_states))
 
         return updated_case_state
