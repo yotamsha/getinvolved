@@ -9,6 +9,9 @@
             </a>
             <md-menu-content width="1">
               <md-menu-item>
+                <md-button md-menu-align-target ng-click="ctrl.changeRoute('profile')">
+                  {{"views.main.header.profile" | translate}}
+                </md-button>
                 <md-button md-menu-align-target ng-click="ctrl.authSrv.logout()">
                   {{"views.main.header.logout" | translate}}
                 </md-button>

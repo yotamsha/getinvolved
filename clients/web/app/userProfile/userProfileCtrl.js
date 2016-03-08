@@ -32,6 +32,7 @@ angular.module('app.userProfile', [])
             }
 
             // --- SCOPE FUNCTIONS --- //
+
             $scope.createPhoneNumberObjectIfNotExists = function(){
                 if (!$scope.vm.user.phone_number){
                     $scope.vm.user.phone_number = {
@@ -42,6 +43,7 @@ angular.module('app.userProfile', [])
             $scope.updateUser = function(){
                 UserDao.customPUT($scope.vm.user, $scope.vm.user.id);
             };
+
             // --- INIT --- //
 
             _init();

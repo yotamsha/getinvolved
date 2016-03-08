@@ -11,21 +11,20 @@ angular.module('app.caseDetail', [])
             templateUrl: 'caseDetail/caseDetail.html',
             controller: 'caseDetailCtrl',
             resolve: { // complete the following requests before page is loaded.
-                caseData: ['CaseDao', '$stateParams', function (CaseDao, $stateParams) {
-                    return CaseDao.get($stateParams.caseId); // load the case data.
+                caseData: ['CaseDao', '$stateParams','Restangular', function (CaseDao, $stateParams, Restangular) {
+                    //return CaseDao.one("",$stateParams.caseId).get({add_volunteer_attributes : "yes"});
+                    return Restangular.one('cases', $stateParams.caseId).get({add_volunteer_attributes : "yes"});
+                    //return CaseDao.one("",$stateParams.caseId).customGET("", {add_volunteer_attributes : "yes"}); // load the case data.
                 }],
                 userSession: ['AuthService', function (AuthService) { // verify that session retrieval is completed.
                     return AuthService.authRetrievalCompleted();
-                }],
-                users : ['UserDao', function (UserDao) {
-                    return UserDao.getList(); // load the case data.
-                }],
+                }]
             }
         });
     }])
 
-    .controller('caseDetailCtrl', ['$scope', 'Restangular', '$stateParams', 'DialogsService', 'moment', 'CaseDao', 'caseData', 'AuthService', 'TASK_STATES', 'users',
-        function ($scope, Restangular, $stateParams, DialogsService, moment, CaseDao, caseData, AuthService, TASK_STATES, users) {
+    .controller('caseDetailCtrl', ['$scope', 'Restangular', '$stateParams', 'DialogsService', 'moment', 'CaseDao', 'caseData', 'AuthService', 'TASK_STATES',
+        function ($scope, Restangular, $stateParams, DialogsService, moment, CaseDao, caseData, AuthService, TASK_STATES) {
             // --- INNER VARIABLES --- //
 
             var _authModel = AuthService.model();
@@ -39,34 +38,9 @@ angular.module('app.caseDetail', [])
 
             function _init() {
                 $scope.TASK_STATES = TASK_STATES;
-                $scope.vm = {
-                    /*    case: {
-                     title: "כותרת של המקרה..",
-                     description: "טקסט מגניב בעברית שמתאר משהו",
-                     imgUrl : "assets/img/face1.jpg",
-                     tasks : [
-                     {
-                     title : "הסעה לבת ים",
-                     date : moment().format('LLLL'),
-                     location : "תל אביב"
-                     },
-                     {
-                     title : "עזרה בקניות",
-                     date : moment().format('LLLL'),
-                     location : "תל אביב"
-                     },
-                     {
-                     title : "ניקיון דירה",
-                     date : moment().format('LLLL'),
-                     location : "תל אביב"
-                     }
-                     ]
-                     }*/
-
-                };
+                $scope.vm = {};
                 $scope.vm.case = caseData;
                 $scope.vm.case.transformToClient();
-                $scope.vm.case.populateWithUsersData(users);
             }
 
             function _taskAssignedCb(task) {

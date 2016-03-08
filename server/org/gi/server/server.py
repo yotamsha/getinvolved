@@ -67,8 +67,8 @@ if __name__ == '__main__':
     mode, sys.version_info[0], sys.version_info[1], sys.version_info[2]))
     print('------------------------------------------------------------------------------------')
     start_notification_loop()
-    # app.run(debug=False, threaded=True)
-    app.run(debug=False)
+    app.run(debug=False, threaded=True)
+    # app.run(debug=False)
     if not app.debug:
         import logging
         from logging.handlers import RotatingFileHandler

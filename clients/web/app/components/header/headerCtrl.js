@@ -4,8 +4,8 @@
 
 angular.module('app.header.header-ctrl', [])
 
-    .controller('headerCtrl', ['$location', '$rootScope', 'AuthService', 'DialogsService',
-        function ($location, $rootScope, AuthService, DialogsService) {
+    .controller('headerCtrl', ['$location', '$rootScope', 'AuthService', 'DialogsService','$state',
+        function ($location, $rootScope, AuthService, DialogsService, $state) {
             var ctrl = this;
             var _headerDefaults = {
                 title: "",
@@ -88,6 +88,9 @@ angular.module('app.header.header-ctrl', [])
 
             ctrl.openLoginDialog = function (ev) {
                 DialogsService.openDialog({dialog: 'login'});
+            };
+            ctrl.changeRoute = function(route){
+                $location.path(route)
             };
 
             ctrl.isSideNavOpen = false;
