@@ -47,6 +47,7 @@ module.exports = function(grunt) {
 	},
 	concurrent: {
         all: ['http-server:dev', 'shell:startApiServer', 'watch'],
+		withoutApi: ['http-server:dev', 'watch'],
 		options: {
 			logConcurrentOutput: true
 		}
@@ -54,7 +55,6 @@ module.exports = function(grunt) {
   });
 
   // Default task(s).
-  grunt.registerTask('default', ['sass', 'concurrent:all']);
-  grunt.registerTask('compile-sass', ['sass']);
-  grunt.registerTask('web-server', ['http-server:dev']);
+  grunt.registerTask('default', ['sass', 'concurrent:withoutApi']);
+  grunt.registerTask('with-server', ['sass','concurrent:all']);
 };
