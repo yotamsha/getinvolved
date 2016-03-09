@@ -15,5 +15,6 @@ setup(
                       'phonenumbers',
                       'requests',
                       'pycountry',
-                      'flask-cors']
+                      'flask-cors',
+                      'babel', 'mock']
 )

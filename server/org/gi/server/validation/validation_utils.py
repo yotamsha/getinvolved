@@ -10,7 +10,7 @@ def validate_number_in_range(number, _min, _max):
 
 
 def is_a_number(number):
-    return isinstance(number, (int, long, float))
+    return number and isinstance(number, (int, long, float))
 
 
 def is_a_list(_list):

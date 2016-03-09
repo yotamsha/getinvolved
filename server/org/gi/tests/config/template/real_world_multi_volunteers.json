@@ -1,0 +1,28 @@
+{
+  "data": {
+    "details": {
+      "first_name": "משה"
+    },
+    "volunteers": [
+      {
+        "last_name": "זילבר",
+        "first_name": "אריאל",
+        "phone_number": {
+          "number": "050-4657879"
+        },
+        "email": "arizi@gmail.com"
+      },
+      {
+        "last_name": "הרברט",
+        "first_name": "סמואל",
+        "phone_number": {
+          "number": "666-23232323"
+        },
+        "email": "herbert@samson.uk"
+      }
+    ],
+    "gi_phone": "054-5420450",
+    "gi_email": "info@getinvolved.org.co.il"
+  },
+  "response": "משה שלום,\nאנחנו רוצים להזכיר לך שמחר יגיעו אליך -\nאריאל זילבר\n תוכלו ליצור עמם קשר במס' הטלפון 050-4657879\n או בכתובת מייל arizi@gmail.com\n\nסמואל הרברט\n תוכלו ליצור עמם קשר במס' הטלפון 666-23232323\n או בכתובת מייל herbert@samson.uk\n\nאם יש בעיה אנא צרו איתנו קשר במייל -\ninfo@getinvolved.org.co.il\nאנחנו כאן לכל שאלה"
+}

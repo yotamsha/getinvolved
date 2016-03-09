@@ -19,8 +19,8 @@ class GISMSTestCase(unittest.TestCase):
 
     @unittest.skip("Skipping... Try sending yourself an SMS ;]")
     def test_send_test_mode_false(self):
-        sms_source = '+9725454utils.HTTP_NO_CONTENT50'
-        sms_dest = 'Put your phone number here'
-        status, resp = send_sms(sms_source, sms_dest, 'A msg from GI server')
+        sms_to = '+972527588594'
+        sms_from = '+972545450'
+        status, resp = send_sms(sms_to, sms_from, 'A msg from GI server')
         self.assertTrue(status)
         self.assertIsNotNone(resp)

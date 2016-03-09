@@ -2,6 +2,7 @@
   "db_uri": "mongodb://localhost:27017/getinvolved",
   "secret_key": "VZPppYGUhfuTV5DfHC2vZMkCZNHZCxbertwTnHcL3nhwcxaPma72j35bvwZkLJV3",
   "fb_app_id": "836437249818535",
-  "fb_app_secret": "d13455404dacdc8bd778ace9e4526cfc"
+  "fb_app_secret": "d13455404dacdc8bd778ace9e4526cfc",
+  "notification_interval": 100
 }
 
