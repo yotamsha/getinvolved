@@ -1,32 +1,24 @@
 <div class="header" layout="column">
   <div class="nav-bar" layout="row" hide show-gt-sm>
     <div class="logo"></div>
-    <div class="user-profile-link route-link" flex-offset="5">
-      <div ng-show="ctrl.authModel.isAuthenticated">
-          <md-menu md-position-mode="target-right target" md-offset="0 35">
-            <a md-menu-origin ng-click="$mdOpenMenu($event)">
-              {{"views.main.header.hello" | translate}}  {{ctrl.authModel.userSession.first_name}}
-            </a>
-            <md-menu-content width="1">
-              <md-menu-item>
-                <md-button md-menu-align-target ng-click="ctrl.changeRoute('profile')">
-                  {{"views.main.header.profile" | translate}}
-                </md-button>
-                <md-button md-menu-align-target ng-click="ctrl.authSrv.logout()">
-                  {{"views.main.header.logout" | translate}}
-                </md-button>
-              </md-menu-item>
-            </md-menu-content>
-          </md-menu>
-      </div>
-
-      <div ng-show="!ctrl.authModel.isAuthenticated && !ctrl.authModel.isLoading" ng-click="ctrl.openLoginDialog()">
-          {{"views.main.header.login_or_signup" | translate}}
-      </div>
-    </div>
-    <div ng-repeat="route in ctrl.headerLinks" >
-      <div class="route-link" ng-class="ctrl.navClass(route)" >
-        <a href="#{{route.link}}"> {{route.textKey | translate}}</a>
+    <div ng-repeat="route in ctrl.headerLinks" ng-hide="(route.hide && route.hide()) || route.showAsPrimaryLinkInMobileOnly ">
+      <div class="route-link" ng-class="ctrl.navClass(route)">
+        <!-- Regular link -->
+        <a ng-click="ctrl.handleMenuClick(route)" ng-hide="route.isMenu"> {{route.routeText | translate}}</a>
+        <!-- Link with sub-menu -->
+        <md-menu md-position-mode="target-right target" md-offset="0 35" ng-hide="(route.hide &&route.hide()) || !route.isMenu">
+          <a md-menu-origin ng-click="$mdOpenMenu($event)">
+            {{ctrl.getRouteText(route)}}
+          </a>
+          <md-menu-content width="1">
+            <md-menu-item ng-repeat="menuItem in route.menuItems">
+              <md-button  md-menu-align-target
+                         ng-click="menuItem.clickHandler()">
+                {{ctrl.getRouteText(menuItem)}}
+              </md-button>
+            </md-menu-item>
+          </md-menu-content>
+        </md-menu>
       </div>
     </div>
   </div>
@@ -37,8 +29,8 @@
   <div class="backdrop" ng-show="ctrl.isSideNavOpen" hide show-sm show-xs></div>
   <div class="side-nav-menu" ng-show="ctrl.isSideNavOpen" hide show-sm show-xs>
       <ul>
-        <li ng-repeat="route in ctrl.headerLinks" ng-class="ctrl.navClass(route)" class="side-nav-option route-link ">
-            <a href="#{{route.link}}"> {{route.textKey | translate}}</a>
+        <li ng-repeat="route in ctrl.headerLinks" ng-hide="route.hide && route.hide()" ng-class="ctrl.navClass(route)" class="side-nav-option route-link ">
+            <a ng-click="ctrl.handleMenuClick(route)"> {{ctrl.getRouteText(route)}}</a>
         </li>
       </ul>
   </div>

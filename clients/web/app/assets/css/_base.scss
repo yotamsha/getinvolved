@@ -165,3 +165,9 @@ button {
   left: 0;
   right: 0;
 }
+.md-dialog-container {
+  /* This handles the case where the page has long scroll, which caused the dialog to appear on the bottom
+  of the screen.
+  */
+  max-height: 800px;
+}
