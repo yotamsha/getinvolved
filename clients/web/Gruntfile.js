@@ -34,11 +34,27 @@ module.exports = function(grunt) {
            ext: "html",
            openBrowser : true
        }
+    },
+	shell:{
+		startApiServer:{
+			command: 'python -m org.gi.server.server --mode dev',
+			options: {
+                execOptions: {
+                    cwd: '../../server'
+                }
+            }
+		}
+	},
+	concurrent: {
+        all: ['http-server:dev', 'shell:startApiServer', 'watch'],
+		withoutApi: ['http-server:dev', 'watch'],
+		options: {
+			logConcurrentOutput: true
+		}
     }
   });
 
   // Default task(s).
-  grunt.registerTask('default', ['sass']);
-  grunt.registerTask('watch', ['watch']);
-  grunt.registerTask('start', ['http-server:dev']);
+  grunt.registerTask('default', ['sass', 'concurrent:withoutApi']);
+  grunt.registerTask('with-server', ['sass','concurrent:all']);
 };

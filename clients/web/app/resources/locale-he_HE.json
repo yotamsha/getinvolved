@@ -30,5 +30,8 @@
   "views.login.title": "הרשמה",
   "views.login.signup": "הירשם",
   "views.login.already_signed": "כבר נרשמת?",
-  "dynamic.text": "טקסט דינמי"
+  "case_share": {
+	"title" : "אולי את/ה יכולים לעזור?",
+	"description": "GetInvolved - פלטפורמה אינטרנטית המחברת בין בקשות עזרה למתנדבים היכולים לסייע ע\"י התנדבויות חד פעמיות" 
+  }
 }

@@ -3,10 +3,11 @@
   "tasks": [
     {
       "state": "pending",
-      "title": "t11",
+      "title": "t11eeeeeeeeeee",
       "volunteer_id": "__REPLACE__",
       "due_date": "__REPLACE__",
-      "description": "d11"
+      "description": "d1eeeeeeeeee1",
+      "type": "GENERAL"
     }
   ],
   "petitioner_id": "__REPLACE__",

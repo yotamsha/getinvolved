@@ -7,6 +7,7 @@ from flask_restful import Api
 
 from org.gi.config import config
 from org.gi.server import utils as u
+from org.gi.server.service.notification.notification import notify
 from org.gi.server.service.scheduler import get_scheduler
 from org.gi.server.api.case_api import CaseApi, CaseListApi
 from org.gi.server.api.user_api import UserApi, UserListApi
@@ -31,14 +32,14 @@ def start_notification_loop():
     :return:
     """
     from datetime import datetime
+
     def _notify(_data):
         if mode == 'dev':
             print('%s  > Notifier runs under dev mode...' % str(datetime.now()))
         elif mode == 'prod':
-            #TODO implement the real notification logic see #194
-            pass
-    interval = 100 #TODO read from config
-    scheduler, stop = get_scheduler(interval, _notify, None)
+            notify()
+    interval_in_seconds = config.get('notification_interval')
+    scheduler, stop = get_scheduler(interval_in_seconds, _notify, None)
     scheduler.start()
     return scheduler, stop
 

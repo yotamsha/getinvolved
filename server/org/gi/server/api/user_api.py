@@ -101,7 +101,7 @@ class UserApi(Resource):
             if faults:
                 return {'errors': faults}, u.HTTP_BAD_INPUT
             try:
-                db.users.update_one({'_id': u.to_object_id(user_id)}, request.json)
+                db.users.update_one({'_id': u.to_object_id(user_id)}, {'$set': payload})
             except Exception as e:
                 abort(u.HTTP_BAD_INPUT, str(e))
             return self.get(user_id)

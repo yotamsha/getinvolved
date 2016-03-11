@@ -1,0 +1,26 @@
+{
+  "data": {
+    "case_title": "אבד לי החתול",
+    "details": {
+      "first_name": "משה"
+    },
+    "tasks": [
+      {
+        "title": "מצאו את החתול",
+        "location": {
+          "address": {
+            "city": "תל-אביב",
+            "street_name": "אלנבי",
+            "street_number": "9",
+            "entrance": "א",
+            "floor": "ראשונה",
+            "apartment_number": 8
+          }
+        },
+        "due_date": "(02/26) יום ו׳ 12:08 אחה״צ"
+      }
+    ],
+    "gi_phone": "054-5420450",
+    "gi_email": "info@getinvolved.org.co.il"
+  }
+}
