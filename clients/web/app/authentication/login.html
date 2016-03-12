@@ -1,5 +1,4 @@
 <md-dialog class="login-dialog" aria-label="{{" views.login.title" | translate}}"  ng-cloak>
-<form>
     <md-toolbar>
         <div class="md-toolbar-tools dialog-header">
             <h2>{{"views.login.title" | translate}}</h2>
@@ -11,17 +10,41 @@
     </md-toolbar>
     <md-dialog-content>
         <div class="md-dialog-content" style="overflow: hidden">
-            <div class="col">
+            <div layout="column" layout-align="center center">
                 <div class="row fb-button" ng-click="fbLogin()">
-
                 </div>
+                <div class="separator">{{"views.login.or" | translate}}</div>
+                <form  name="regularLoginForm" class="regular-login-form">
+                    <md-input-container class="form-input-container">
+                        <label>{{"views.login.email" | translate}}</label>
+                        <input name="email" required type="email" ng-model="vm.user.email">
+
+                        <div ng-messages="regularLoginForm.email.$error" role="alert" multiple>
+
+                            <div ng-message="required" class="my-message">You must supply an email.</div>
+                            <div ng-message="email" class="my-message">Email is not valid.</div>
+
+                        </div>
+                    </md-input-container>
+                    <md-input-container class="form-input-container">
+                        <label>{{"views.login.password" | translate}}</label>
+                        <input name="password" required type="password" ng-model="vm.user.password">
+
+                        <div ng-messages="regularLoginForm.password.$error" role="alert" multiple>
+                            <div ng-message="required" class="my-message">You must supply a valid password.</div>
+                        </div>
+                    </md-input-container>
+
+                    <button  class="btn-primary" ng-disabled="!regularLoginForm.$valid" ng-click="login()">
+                        {{"views.login.connect" | translate}}
+                    </button>
+
+                    <div class="note">
+                        * {{"views.login.first_time_login" | translate}}
+                    </div>
+                </form>
             </div>
 
-            <!--            <div class="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="false" data-auto-logout-link="false"></div>
-
-            &lt;!&ndash;
-                        <fb:login-button show-faces="true" max-rows="1" size="large">Login</fb:login-button>
-            &ndash;&gt;-->
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">
@@ -34,5 +57,4 @@
                     Useful
                 </md-button>-->
     </md-dialog-actions>
-</form>
 </md-dialog>

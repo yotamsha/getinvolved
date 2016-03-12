@@ -31,6 +31,12 @@
   "views.login.title": "הרשמה",
   "views.login.signup": "הירשם",
   "views.login.already_signed": "כבר נרשמת?",
+  "views.login.or" : "או",
+  "views.login.email" : "מייל",
+  "views.login.password" : "סיסמא",
+  "views.login.connect" : "התחבר",
+  "views.login.first_time_login" : "זו הפעם הראשונה שלך פה? הרשמה לאתר מתבצעת רק בעת הרשמה להתנדבות או בקשת עזרה.",
+
   "case_share": {
 	"title" : "אולי את/ה יכולים לעזור?",
 	"description": "GetInvolved - פלטפורמה אינטרנטית המחברת בין בקשות עזרה למתנדבים היכולים לסייע ע\"י התנדבויות חד פעמיות" 

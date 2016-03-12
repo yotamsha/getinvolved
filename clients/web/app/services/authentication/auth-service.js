@@ -85,7 +85,26 @@ angular.module('app.services.authentication.auth-service', [])
                     });
                 }
             };
+            var standardAuthenticator = {
+                login : function(userData){
+                    return $http.post("http://localhost:5000/login/", userData)
+                        .success(function (token) {
+                            console.log(token);
+                            setToken(token);
+                            return $http.get("http://localhost:5000/api/users/me")
+                                .success(function (user) {
+                                    storeUserCredentials(token, user);
+                                    $rootScope.$broadcast(AUTH_EVENTS.authenticationCompleted,authModel.userSession);
+                                    return user;
+                                }).error(function () {
+                                    return null;
+                                });
 
+                        }).error(function (error) {
+                            console.log(error);
+                        })
+                }
+            };
             function loadUserCredentials() {
                 console.log("loadUserCredentials");
                 var deferred = $q.defer();
@@ -203,9 +222,14 @@ angular.module('app.services.authentication.auth-service', [])
                 logout: function () {
                     destroyUserCredentials();
                 },
-                login: function (type) {
-                    if (type === "FACEBOOK"){
-                        facebookAuthenticator.login();
+                login: function (type, userData) {
+                    switch(type){
+                        case "FACEBOOK" :
+                            facebookAuthenticator.login();
+                            break;
+                        case "REGULAR" :
+                            standardAuthenticator.login(userData);
+                            break;
                     }
                 }
             };

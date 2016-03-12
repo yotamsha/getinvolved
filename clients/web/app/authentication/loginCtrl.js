@@ -11,8 +11,11 @@ angular.module('app.login', [])
             // --- INNER FUNCTIONS --- //
 
             function _init() {
-                $scope.username = "admin";
-                $scope.password = "admin";
+                $scope.vm = {
+                    user : {
+
+                    }
+                };
                 $timeout(function(){
                     FB.XFBML.parse();
                 },0);
@@ -34,6 +37,9 @@ angular.module('app.login', [])
             };
             $scope.fbLogin = function(){
                 AuthService.login("FACEBOOK");
+            };
+            $scope.login = function(){
+                AuthService.login("REGULAR", $scope.vm.user);
             };
             // --- INIT --- //
 

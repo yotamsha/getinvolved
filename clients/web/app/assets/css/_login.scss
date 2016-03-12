@@ -2,14 +2,28 @@
   .dialog-header {
     color: #ffffff;
   }
+  .separator {
+    margin: 8px;
+    font-size: 20px;
+  }
   .fb-button {
+    width: 170px;
     height: 50px;
     cursor: pointer;
-    background-image: url("../img/fb-login-button.png");
+    background-image: url("../img/fb-login-button-he.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
   }
+  .regular-login-form {
+    text-align: center;
+    button {
+      width:160px;
+    }
+    .note {
+      margin-top: 15px;
+    }
+  }
   width: 320px;
-  height: 400px;
+  height: 525px;
 }
