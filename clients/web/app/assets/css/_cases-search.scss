@@ -21,7 +21,12 @@
   }
 
   .case-register-btn {
-    width: 150px;
+	width: 140px;
+	margin-right: 3px;
+  }
+
+  .email-share-icon {
+	  margin-right: -5px;
   }
 
   .case-img {
@@ -45,7 +50,6 @@
       display: inline-block;
       font-size: 16px;
       text-decoration: none;
-      border: 1px solid #D9D9D9;
       color: #22A5B9;
 
       &:hover {

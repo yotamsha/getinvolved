@@ -3,7 +3,7 @@
  */
 'use strict';
 
-angular.module('app.casesSearch', [])
+angular.module('app.casesSearch', ['app.services.share'])
 
     .config(['$stateProvider', function ($stateProvider) {
         $stateProvider.state('casesSearch', {
@@ -19,8 +19,8 @@ angular.module('app.casesSearch', [])
             }
         });
     }])
-    .controller('casesSearchCtrl', ['$scope', 'Restangular', '$stateParams', 'DialogsService', 'moment', '$rootScope',
-        function ($scope, Restangular, $stateParams, DialogsService, moment, $rootScope) {
+    .controller('casesSearchCtrl', ['$scope', 'Restangular', '$stateParams', 'DialogsService', 'moment', '$rootScope','FbShare',
+        function ($scope, Restangular, $stateParams, DialogsService, moment, $rootScope, FbShare) {
 
             // --- INNER FUNCTIONS --- //
             // function createCasesArr(){
@@ -52,6 +52,10 @@ angular.module('app.casesSearch', [])
                 }
                 $scope.vm.onPageChange = function(){
                   // We want to scroll to top of the list here
+                }
+				
+				$scope.vm.facebookShare = function(_case) {
+				   FbShare.shareCase(_case);
                 }
             }
 
