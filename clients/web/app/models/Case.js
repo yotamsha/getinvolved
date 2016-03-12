@@ -64,7 +64,6 @@ angular.module('app.models.case', [])
                     var toServerObj = this.transformForServer();
                     var updatedTask = {};
                     updatedTask.id = task.id;
-                    updatedTask.state = state;
                     updatedTask.volunteer_id = userId;
                     updatedTask.type = task.type;
 

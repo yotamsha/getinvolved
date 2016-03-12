@@ -6,9 +6,9 @@
 angular.module('app.login', [])
 
     .controller('loginCtrl', ['$scope', '$mdDialog','AuthService','$timeout','AUTH_EVENTS',
-        'data','AUTH_CONTEXTS','userSession','UserDao','$rootScope',
+        'data','AUTH_CONTEXTS','UserDao','$rootScope',
         function ($scope, $mdDialog, AuthService, $timeout, AUTH_EVENTS,
-                  data, AUTH_CONTEXTS, userSession, UserDao, $rootScope) {
+                  data, AUTH_CONTEXTS, UserDao, $rootScope) {
 
             // --- INNER FUNCTIONS --- //
 
@@ -16,7 +16,7 @@ angular.module('app.login', [])
                 console.log("auth popup context: " ,data.context);
 
                 $scope.vm = {
-                    user : userSession,
+                    user : data.userSession,
                     context : data.context,
                     missingFields : data.missingFields,
                     popupTitle : "views.login.title"

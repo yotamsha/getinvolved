@@ -3,8 +3,8 @@
  */
 angular.module('app.userDetails')
 
-    .controller('userDetailsCtrl', ['$scope', 'AuthService', 'DialogsService','$filter','AUTH_CONTEXTS',
-        function ($scope, AuthService, DialogsService, $filter, AUTH_CONTEXTS) {
+    .controller('userDetailsCtrl', ['$scope',
+        function ($scope) {
             var ctrl = this;
             function _init() {
                 $scope.vm = {

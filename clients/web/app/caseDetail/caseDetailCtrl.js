@@ -65,9 +65,9 @@ angular.module('app.caseDetail', [])
                     locals: {
                         data: {
                             context : context,
-                            missingFields : missingFields
-                        },
-                        userSession : _authModel.userSession
+                            missingFields : missingFields,
+                            userSession : _authModel.userSession
+                        }
                     }
                 });
             };

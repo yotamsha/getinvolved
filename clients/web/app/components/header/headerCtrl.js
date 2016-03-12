@@ -65,7 +65,7 @@ angular.module('app.header.header-ctrl', [])
                     },
                     {
                         routeText: "views.main.header.nav-menu.about_us",
-                        link: "/cases",
+                        link: "/about",
                         classes: "about-us"
                     },
                     {
@@ -133,7 +133,9 @@ angular.module('app.header.header-ctrl', [])
 
             ctrl.openLoginDialog = function () {
                 DialogsService.openDialog({dialog: 'login',locals : {
-                    context : AUTH_CONTEXTS.HEADER_LOGIN
+                    data : {
+                        context : AUTH_CONTEXTS.HEADER_LOGIN
+                    }
                 }});
             };
             ctrl.changeRoute = function(route){
