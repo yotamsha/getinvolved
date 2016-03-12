@@ -30,6 +30,8 @@ angular.module('app.common.constants', [])
         HEADER_LOGIN: 'header_login',
         TASK_ASSIGNMENT: 'task_assignment',
         TASK_ASSIGNMENT_WITH_SESSION: 'task_assignment_with_session',
+        TASK_ASSIGNMENT_COMPLETED_AND_PENDING: 'task_assignment_completed_and_pending',
+        TASK_ASSIGNMENT_COMPLETED: 'task_assignment_completed',
         CASE_CREATION: 'case_creation'
     })
 

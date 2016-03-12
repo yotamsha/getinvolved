@@ -85,6 +85,7 @@ angular.module('app.services.authentication.auth-service', [])
                     });
                 }
             };
+
             var standardAuthenticator = {
                 login : function(userData){
                     return $http.post("http://localhost:5000/login/", userData)
@@ -105,6 +106,7 @@ angular.module('app.services.authentication.auth-service', [])
                         })
                 }
             };
+
             function loadUserCredentials() {
                 console.log("loadUserCredentials");
                 var deferred = $q.defer();
@@ -193,6 +195,22 @@ angular.module('app.services.authentication.auth-service', [])
                 return deferred.promise;
             };
 
+            function verifyPropertyExist(obj, propertyLocation){
+                var curObj = angular.copy(obj);
+                var properyTreePath = propertyLocation.split(".");
+                for (var i = 0; i < properyTreePath.length; i++){
+                    if (!curObj[properyTreePath[i]] || curObj[properyTreePath[i]] === ""){
+                        return false;
+                    } else {
+                        if (_.isObject(curObj[properyTreePath[i]])){
+                            curObj = curObj[properyTreePath[i]];
+                        } else {
+                            return true;
+                        }
+                    }
+                }
+            }
+
             var initialLoadPromise = loadUserCredentials().then(function (user) {
                 // success
                 authModel.isLoading = false;
@@ -223,21 +241,7 @@ angular.module('app.services.authentication.auth-service', [])
                  * returns an array with all the missing user fields for a given action.
                  */
                 checkForMissingDetails : function(action){
-                    function verifyPropertyExist(obj, propertyLocation){
-                        var curObj = angular.copy(obj);
-                        var properyTreePath = propertyLocation.split(".");
-                        for (var i = 0; i < properyTreePath.length; i++){
-                            if (!curObj[properyTreePath[i]] || curObj[properyTreePath[i]] === ""){
-                                return false;
-                            } else {
-                                if (_.isObject(curObj[properyTreePath[i]])){
-                                    curObj = curObj[properyTreePath[i]];
-                                } else {
-                                    return true;
-                                }
-                            }
-                        }
-                    }
+
                     if (!authModel.userSession){
                         return '*'; // no session - all fields are missing
                     }

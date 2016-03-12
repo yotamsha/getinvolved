@@ -6,12 +6,12 @@
 angular.module('app.login', [])
 
     .controller('loginCtrl', ['$scope', '$mdDialog','AuthService','$timeout','AUTH_EVENTS',
-        'data','AUTH_CONTEXTS','UserDao','$rootScope',
+        'data','AUTH_CONTEXTS','UserDao','$rootScope', 'USER_ACTIONS',
         function ($scope, $mdDialog, AuthService, $timeout, AUTH_EVENTS,
-                  data, AUTH_CONTEXTS, UserDao, $rootScope) {
+                  data, AUTH_CONTEXTS, UserDao, $rootScope, USER_ACTIONS) {
 
             // --- INNER FUNCTIONS --- //
-
+            var _authenticationInProgress = false;
             function _init() {
                 console.log("auth popup context: " ,data.context);
 
@@ -20,7 +20,6 @@ angular.module('app.login', [])
                     context : data.context,
                     missingFields : data.missingFields,
                     popupTitle : "views.login.title"
-
             };
                 $scope.AUTH_CONTEXTS = AUTH_CONTEXTS;
                 switch (data.context){
@@ -40,8 +39,27 @@ angular.module('app.login', [])
                 $timeout(function(){
                     FB.XFBML.parse();
                 },0);
-                $scope.$on(AUTH_EVENTS.authenticationCompleted,function(){
-                    $scope.hide();
+                $scope.$on(AUTH_EVENTS.authenticationCompleted,function(event, user){
+                    // update the dialog to show the form for completing the user details.
+                    if (_authenticationInProgress && $scope.vm.context !== AUTH_CONTEXTS.HEADER_LOGIN){
+                        $scope.vm.popupTitle = "views.login.completeDetails";
+                        $scope.vm.user = user;
+                        switch($scope.vm.context){
+                            case AUTH_CONTEXTS.TASK_ASSIGNMENT:
+                                $scope.vm.context = AUTH_CONTEXTS.TASK_ASSIGNMENT_WITH_SESSION;
+                                $scope.vm.missingFields = AuthService.checkForMissingDetails(USER_ACTIONS.TASK_ASSIGNMENT);
+                                break;
+                            case AUTH_CONTEXTS.TASK_ASSIGNMENT_WITH_SESSION:
+                                $scope.vm.missingFields = AuthService.checkForMissingDetails(USER_ACTIONS.TASK_ASSIGNMENT);
+                                break;
+                            case AUTH_CONTEXTS.TASK_ASSIGNMENT_WITH_SESSION:
+                                $scope.vm.missingFields = AuthService.checkForMissingDetails(USER_ACTIONS.CASE_CREATION);
+                                break;
+                        }
+                        _authenticationInProgress = false;
+                    } else {
+                        $scope.hide();
+                    }
                 })
             }
 
@@ -57,10 +75,12 @@ angular.module('app.login', [])
                 $mdDialog.hide(answer);
             };
             $scope.fbLogin = function(){
+                _authenticationInProgress = true;
                 AuthService.login("FACEBOOK");
             };
             $scope.login = function(){
                 AuthService.login("REGULAR", $scope.vm.user);
+                _authenticationInProgress = true;
             };
             $scope.updateUser = function(user){
                 // if update was successful, then according to the context, requested action should take place.
@@ -69,14 +89,24 @@ angular.module('app.login', [])
                     switch ($scope.vm.context){
                         case AUTH_CONTEXTS.TASK_ASSIGNMENT_WITH_SESSION:
                             $rootScope.$broadcast(AUTH_EVENTS.volunteerDetailsCompleted);
+                            $scope.showCompleteMessage();
+/*
                             $mdDialog.hide();
+*/
                             break;
                         case AUTH_CONTEXTS.CASE_CREATION: break;
                     }
                 }, function(){
                     // error
                 });
-                console.log("updating user.." , user);
+            };
+            $scope.showCompleteMessage = function(){
+                switch($scope.vm.context){
+                    case AUTH_CONTEXTS.TASK_ASSIGNMENT_WITH_SESSION:
+                        $scope.vm.popupTitle = "views.login.task_assigned_title";
+                        $scope.vm.context =  AUTH_CONTEXTS.TASK_ASSIGNMENT_COMPLETED_AND_PENDING;
+                        break;
+                }
             };
             // --- INIT --- //
 

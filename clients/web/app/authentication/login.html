@@ -17,7 +17,9 @@
                     <a href="/termsAndConditions">{{"views.login.volunteer_terms_and_privacy_note2" | translate}}</a>
                     <a href="/privacy">{{"views.login.volunteer_terms_and_privacy_note3" | translate}}</a>.
                 </div>
-                <div ng-hide="vm.context === AUTH_CONTEXTS.TASK_ASSIGNMENT_WITH_SESSION" class="row fb-button" ng-click="fbLogin()">
+                <div ng-show="vm.context === AUTH_CONTEXTS.CASE_CREATION ||
+                vm.context === AUTH_CONTEXTS.HEADER_LOGIN ||
+                vm.context === AUTH_CONTEXTS.TASK_ASSIGNMENT" class="row fb-button" ng-click="fbLogin()">
                 </div>
                 <div ng-show="vm.context === AUTH_CONTEXTS.HEADER_LOGIN" class="separator">{{"views.login.or" | translate}}</div>
                 <form  ng-show="vm.context === AUTH_CONTEXTS.HEADER_LOGIN" name="regularLoginForm" class="regular-login-form">
@@ -26,10 +28,8 @@
                         <input name="email" required type="email" ng-model="vm.user.email">
 
                         <div ng-messages="regularLoginForm.email.$error" role="alert" multiple>
-
-                            <div ng-message="required" class="my-message">You must supply an email.</div>
-                            <div ng-message="email" class="my-message">Email is not valid.</div>
-
+                            <div ng-message="required" class="my-message">{{'views.userDetails.field_required' | translate}}</div>
+                            <div ng-message="email" class="my-message">{{'views.userDetails.invalid_email' | translate}}</div>
                         </div>
                     </md-input-container>
                     <md-input-container class="form-input-container">
@@ -37,7 +37,7 @@
                         <input name="password" required type="password" ng-model="vm.user.password">
 
                         <div ng-messages="regularLoginForm.password.$error" role="alert" multiple>
-                            <div ng-message="required" class="my-message">You must supply a valid password.</div>
+                            <div ng-message="required" class="my-message">{{'views.userDetails.field_required' | translate}}</div>
                         </div>
                     </md-input-container>
 
@@ -59,6 +59,9 @@
 
                 <div class="volunteer-signup-foot-note" ng-show="vm.context === AUTH_CONTEXTS.TASK_ASSIGNMENT">
                     * {{"views.login.volunteer_signup_foot_note" | translate}}
+                </div>
+                <div class="success-msg" ng-show="vm.context === AUTH_CONTEXTS.TASK_ASSIGNMENT_COMPLETED_AND_PENDING">
+                    {{"views.login.task_assignment_moved_to_pending" | translate}}
                 </div>
             </div>
 
