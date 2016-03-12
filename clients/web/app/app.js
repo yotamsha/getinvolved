@@ -10,6 +10,7 @@ angular.module('app', [
         'ngMaterial',
         'ngCookies',
         'ngSanitize',
+        'ngMessages',
         'pascalprecht.translate',// angular-translate
         'restangular',
         'ui.router',
@@ -23,10 +24,12 @@ angular.module('app', [
         'app.caseDetail',
         'app.casesSearch',
         'app.login',
+        'app.userProfile',
 
         // Components
         'app.version',
         'app.header',
+        'app.userDetails',
 
         // Models
         'app.models.case',

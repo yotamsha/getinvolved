@@ -48,7 +48,7 @@ angular.module('app.models.case', [])
                 //TODO some of this functionality should be in a Base class.
                 // TODO use a helper function that filters only requested properties to the put request.
                 transformForServer : function(){
-                    return angular.copy(this);
+                    return Restangular.copy(this);
                 },
                 // Perform all transformations before data is viewed in consumed by the client.
                 transformToClient : function(){
@@ -60,10 +60,14 @@ angular.module('app.models.case', [])
                     return this;
                 },
 
-                assignTaskState: function (task, state) {
+                assignTaskState: function (task, state, userId) {
                     var toServerObj = this.transformForServer();
-                    task.state = state;
-                    toServerObj.tasks = [task];
+                    var updatedTask = {};
+                    updatedTask.id = task.id;
+                    updatedTask.volunteer_id = userId;
+                    updatedTask.type = task.type;
+
+                    toServerObj.tasks = [updatedTask];
                     return toServerObj.put();
                 }
             });

@@ -35,7 +35,7 @@ angular.module('app.models.user', [])
             return angular.extend(obj, User, {
                 // Perform all transformations before data is saved to server.
                 transformForServer : function(){
-                    return angular.copy(this);
+                    return Restangular.copy(this);
                 }
             });
         });

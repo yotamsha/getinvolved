@@ -22,10 +22,12 @@ angular.module('app.services.dialogs-service', [])
                     parent: angular.element(document.body),
                     //targetEvent: ev,
                     clickOutsideToClose: true,
+                    bindToController : true,
                     fullscreen: $mdMedia('xs')
                 };
                 // extend defaults with the specific dialog defaults and then extend it with execution specific options.
                 angular.extend(dialogOptions,dialogsMapping[extendWithOptions.dialog],extendWithOptions);
+                window.scrollTo(0, 0);
                 return $mdDialog.show(dialogOptions)// call the defined callbacks or predefined ones , or do nothing :
                     .then(extendWithOptions.actionCb || dialogsMapping[extendWithOptions.dialog].actionCb || function() {},
                         extendWithOptions.cancelCb || dialogsMapping[extendWithOptions.dialog].cancelCb || function() {});

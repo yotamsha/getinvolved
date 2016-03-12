@@ -4,8 +4,8 @@
 'use strict';
 
 angular.module('app.services.authentication.auth-service', [])
-    .service('AuthService', ['Restangular', '$rootScope', '$cookieStore', '$http', 'USER_ROLES', '$q', 'AUTH_EVENTS',
-        function (Restangular, $rootScope, $cookieStore, $http, USER_ROLES, $q, AUTH_EVENTS) {
+    .service('AuthService', ['Restangular', '$rootScope', '$cookieStore', '$http', 'USER_ROLES', '$q', 'AUTH_EVENTS','USER_ACTIONS',
+        function (Restangular, $rootScope, $cookieStore, $http, USER_ROLES, $q, AUTH_EVENTS, USER_ACTIONS) {
             var LOCAL_TOKEN_KEY = "AUTH-TOKEN";
             var authModel = {
                 isAuthenticated: false,
@@ -83,6 +83,27 @@ angular.module('app.services.authentication.auth-service', [])
                             destroyUserCredentials();
                         });
                     });
+                }
+            };
+
+            var standardAuthenticator = {
+                login : function(userData){
+                    return $http.post("http://localhost:5000/login/", userData)
+                        .success(function (token) {
+                            console.log(token);
+                            setToken(token);
+                            return $http.get("http://localhost:5000/api/users/me")
+                                .success(function (user) {
+                                    storeUserCredentials(token, user);
+                                    $rootScope.$broadcast(AUTH_EVENTS.authenticationCompleted,authModel.userSession);
+                                    return user;
+                                }).error(function () {
+                                    return null;
+                                });
+
+                        }).error(function (error) {
+                            console.log(error);
+                        })
                 }
             };
 
@@ -174,6 +195,22 @@ angular.module('app.services.authentication.auth-service', [])
                 return deferred.promise;
             };
 
+            function verifyPropertyExist(obj, propertyLocation){
+                var curObj = angular.copy(obj);
+                var properyTreePath = propertyLocation.split(".");
+                for (var i = 0; i < properyTreePath.length; i++){
+                    if (!curObj[properyTreePath[i]] || curObj[properyTreePath[i]] === ""){
+                        return false;
+                    } else {
+                        if (_.isObject(curObj[properyTreePath[i]])){
+                            curObj = curObj[properyTreePath[i]];
+                        } else {
+                            return true;
+                        }
+                    }
+                }
+            }
+
             var initialLoadPromise = loadUserCredentials().then(function (user) {
                 // success
                 authModel.isLoading = false;
@@ -200,12 +237,38 @@ angular.module('app.services.authentication.auth-service', [])
                 model: function () {
                     return authModel;
                 },
+                /**
+                 * returns an array with all the missing user fields for a given action.
+                 */
+                checkForMissingDetails : function(action){
+
+                    if (!authModel.userSession){
+                        return '*'; // no session - all fields are missing
+                    }
+                    var mandatory_fields_map = {};
+                    mandatory_fields_map[USER_ACTIONS.TASK_ASSIGNMENT] = ["first_name","last_name","email","phone_number.number"];
+                    mandatory_fields_map[USER_ACTIONS.CASE_CREATION] = [];
+                    var missing_fields = [];
+                    var mandatory_fields = mandatory_fields_map[action];
+                    for (var i = 0; i < mandatory_fields.length; i++){
+                        if (!verifyPropertyExist(authModel.userSession, mandatory_fields[i])){
+                            missing_fields.push(mandatory_fields[i]);
+                        }
+                    }
+                    return missing_fields;
+
+                },
                 logout: function () {
                     destroyUserCredentials();
                 },
-                login: function (type) {
-                    if (type === "FACEBOOK"){
-                        facebookAuthenticator.login();
+                login: function (type, userData) {
+                    switch(type){
+                        case "FACEBOOK" :
+                            facebookAuthenticator.login();
+                            break;
+                        case "REGULAR" :
+                            standardAuthenticator.login(userData);
+                            break;
                     }
                 }
             };

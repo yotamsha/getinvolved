@@ -43,7 +43,7 @@ module.exports = function(grunt) {
                     cwd: '../../server'
                 }
             }
-		}	
+		}
 	},
 	concurrent: {
         all: ['http-server:dev', 'shell:startApiServer', 'watch'],

@@ -1,3 +1,4 @@
+$primary-color : #22A5B9;
 @font-face {
   font-family: 'Yed';
   src: url('../fonts/Yed SemiComebackReg.otf'); /* IE9 Compat Modes */
@@ -64,7 +65,7 @@ a {
 }
 
 button {
-  background-color: #22A5B9;
+  background-color: $primary-color;
   color: #ffffff;
   font-family: "Yed";
   font-weight: lighter;
@@ -81,6 +82,9 @@ button {
     height: 24px;
     font-size: 14px;
     min-width: 130px;
+  }
+  &[disabled="disabled"] {
+    opacity: 0.5;
   }
 }
 
@@ -161,4 +165,16 @@ button {
   bottom: 0;
   left: 0;
   right: 0;
+}
+.md-dialog-container {
+  /* This handles the case where the page has long scroll, which caused the dialog to appear on the bottom
+  of the screen.
+  */
+  max-height: 800px;
+}
+md-dialog .md-dialog-content {
+  padding: 15px;
+  a {
+    color: $primary-color;
+  }
 }
