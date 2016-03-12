@@ -79,8 +79,8 @@ angular.module('app.login', [])
                 AuthService.login("FACEBOOK");
             };
             $scope.login = function(){
-                AuthService.login("REGULAR", $scope.vm.user);
                 _authenticationInProgress = true;
+                AuthService.login("REGULAR", $scope.vm.user);
             };
             $scope.updateUser = function(user){
                 // if update was successful, then according to the context, requested action should take place.
