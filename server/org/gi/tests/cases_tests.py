@@ -505,7 +505,6 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         self.assertEqual(r.status_code, utils.HTTP_OK)
 
 
-
 def _get_case_from_db(case_id):
     r = requests.get('%s/cases/%s' % (SERVER_URL_API, case_id), auth=ACCESS_TOKEN_AUTH)
     inserted_case = json.loads(r.content)

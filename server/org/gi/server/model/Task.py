@@ -1,3 +1,5 @@
+import sys
+
 from org.gi.server.validation.case_state_machine import CASE_ASSIGNED, \
     CASE_PENDING_INVOLVEMENT, CASE_COMPLETED, CASE_PARTIALLY_ASSIGNED, CASE_PARTIALLY_COMPLETED
 from org.gi.server.validation.task.task_state_machine import TASK_PENDING, TASK_ASSIGNED, TASK_COMPLETED, \
@@ -61,7 +63,7 @@ class Task:
         return updated_case_state
 
     @staticmethod
-    def merge_non_updated_tasks(updated_tasks, existing_tasks):
+    def get_unique_tasks_by_id(updated_tasks, existing_tasks):
         merged_tasks = []
         for existing_task in existing_tasks:
             if not Task.does_task_exist_in_task_list(existing_task, updated_tasks):
@@ -75,6 +77,16 @@ class Task:
             if task.get('id') and db_task.get('id') and task.get('id') == db_task.get('id'):
                 return True
         return False
+
+    @classmethod
+    def get_nearest_due_date(cls, tasks):
+        nearest_due_date = sys.maxint
+        if len(tasks) > 1:
+            nearest_due_date = tasks[0]['due_date']
+        for task in tasks:
+            if task.get('due_date') < nearest_due_date:
+                nearest_due_date = task.get('due_date')
+        return nearest_due_date
 
 
 class BadTaskStateException(Exception):

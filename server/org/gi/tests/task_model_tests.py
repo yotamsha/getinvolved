@@ -53,6 +53,14 @@ class TestTaskModel(unittest.TestCase):
                                                          {'state': TASK_CANCELLED, 'id': 0}
                                                      ]))
 
+    def test_get_nearest_due_date(self):
+        tasks = [
+            {'due_date': 700},
+            {'due_date': 300},
+            {'due_date': 200}
+        ]
+        nearest_due_date = Task.get_nearest_due_date(tasks)
+        self.assertEqual(200, nearest_due_date)
     # negatives
 
     def test_bad_state_exception(self):
@@ -75,7 +83,7 @@ class TestTaskModel(unittest.TestCase):
         partial_list = [{'id': 2}, {'id': 3}]
         orig_list = [{'id': 1}, {'id': 2}]
 
-        merged_list = Task.merge_non_updated_tasks(partial_list, orig_list)
+        merged_list = Task.get_unique_tasks_by_id(partial_list, orig_list)
         self.assertEqual(3, len(merged_list))
 
     def test_due_date_1(self):
