@@ -42,7 +42,7 @@
                         <span class="text-emphasized"> {{"views.caseDetail.tasks_list_item.assigned_to" | translate}} </span>
                         {{task.volunteer.first_name + " " + task.volunteer.last_name}}
                     </div>
-                    <button ng-show="task.state === TASK_STATES.TASK_PENDING" class="btn-primary" ng-click="assignTaskToUser(task)">{{"views.caseDetail.tasks_list_item.apply" | translate}} </button>
+                    <button ng-show="task.state === TASK_STATES.TASK_PENDING" class="btn-primary" ng-click="assignTaskToUserProcess(task)">{{"views.caseDetail.tasks_list_item.apply" | translate}} </button>
                 </div>
 
             </div>

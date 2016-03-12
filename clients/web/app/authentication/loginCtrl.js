@@ -6,16 +6,37 @@
 angular.module('app.login', [])
 
     .controller('loginCtrl', ['$scope', '$mdDialog','AuthService','$timeout','AUTH_EVENTS',
-        function ($scope, $mdDialog, AuthService, $timeout, AUTH_EVENTS) {
+        'data','AUTH_CONTEXTS','userSession','UserDao','$rootScope',
+        function ($scope, $mdDialog, AuthService, $timeout, AUTH_EVENTS,
+                  data, AUTH_CONTEXTS, userSession, UserDao, $rootScope) {
 
             // --- INNER FUNCTIONS --- //
 
             function _init() {
-                $scope.vm = {
-                    user : {
+                console.log("auth popup context: " ,data.context);
 
-                    }
-                };
+                $scope.vm = {
+                    user : userSession,
+                    context : data.context,
+                    missingFields : data.missingFields,
+                    popupTitle : "views.login.title"
+
+            };
+                $scope.AUTH_CONTEXTS = AUTH_CONTEXTS;
+                switch (data.context){
+                    case AUTH_CONTEXTS.HEADER_LOGIN:
+                        break;
+                    case AUTH_CONTEXTS.CASE_CREATION:break;
+                    case AUTH_CONTEXTS.TASK_ASSIGNMENT:
+                        break;
+                    case AUTH_CONTEXTS.TASK_ASSIGNMENT_WITH_SESSION:
+                        if ($scope.vm.missingFields){
+                            $scope.vm.popupTitle = "views.login.completeDetails";
+                        } else {
+                            $scope.vm.popupTitle = "views.login.verifyDetails";
+                        }
+                        break;
+                }
                 $timeout(function(){
                     FB.XFBML.parse();
                 },0);
@@ -40,6 +61,22 @@ angular.module('app.login', [])
             };
             $scope.login = function(){
                 AuthService.login("REGULAR", $scope.vm.user);
+            };
+            $scope.updateUser = function(user){
+                // if update was successful, then according to the context, requested action should take place.
+                UserDao.customPUT(user, user.id).then(function(){
+                    // success
+                    switch ($scope.vm.context){
+                        case AUTH_CONTEXTS.TASK_ASSIGNMENT_WITH_SESSION:
+                            $rootScope.$broadcast(AUTH_EVENTS.volunteerDetailsCompleted);
+                            $mdDialog.hide();
+                            break;
+                        case AUTH_CONTEXTS.CASE_CREATION: break;
+                    }
+                }, function(){
+                    // error
+                });
+                console.log("updating user.." , user);
             };
             // --- INIT --- //
 

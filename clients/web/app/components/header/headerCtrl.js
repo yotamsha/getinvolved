@@ -4,8 +4,8 @@
 
 angular.module('app.header.header-ctrl', [])
 
-    .controller('headerCtrl', ['$location', '$rootScope', 'AuthService', 'DialogsService','$filter',
-        function ($location, $rootScope, AuthService, DialogsService, $filter) {
+    .controller('headerCtrl', ['$location', '$rootScope', 'AuthService', 'DialogsService','$filter','AUTH_CONTEXTS',
+        function ($location, $rootScope, AuthService, DialogsService, $filter, AUTH_CONTEXTS) {
             var ctrl = this;
             var _headerDefaults = {
                 title: "",
@@ -65,7 +65,7 @@ angular.module('app.header.header-ctrl', [])
                     },
                     {
                         routeText: "views.main.header.nav-menu.about_us",
-                        link: "/view1",
+                        link: "/cases",
                         classes: "about-us"
                     },
                     {
@@ -132,7 +132,9 @@ angular.module('app.header.header-ctrl', [])
             };
 
             ctrl.openLoginDialog = function () {
-                DialogsService.openDialog({dialog: 'login'});
+                DialogsService.openDialog({dialog: 'login',locals : {
+                    context : AUTH_CONTEXTS.HEADER_LOGIN
+                }});
             };
             ctrl.changeRoute = function(route){
                 $location.path(route)

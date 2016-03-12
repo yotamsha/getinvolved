@@ -7,6 +7,7 @@ angular.module('app.common.constants', [])
         notAuthenticated: 'auth-not-authenticated',
         notAuthorized: 'auth-not-authorized',
         authenticationCompleted: 'auth-completed',
+        volunteerDetailsCompleted: 'volunteerDetailsCompleted',
     })
 
     .constant('USER_ROLES', {
@@ -14,6 +15,7 @@ angular.module('app.common.constants', [])
         user: 'user_role',
         public: 'public_role'
     })
+
     .constant('TASK_STATES', {
         TASK_UNDEFINED: '__undefined__',
         TASK_PENDING: 'pending',
@@ -22,4 +24,16 @@ angular.module('app.common.constants', [])
         TASK_ASSIGNED: 'assigned',
         TASK_CANCELLED: 'cancelled',
         TASK_COMPLETED: 'completed'
-    });
+    })
+
+    .constant('AUTH_CONTEXTS', {
+        HEADER_LOGIN: 'header_login',
+        TASK_ASSIGNMENT: 'task_assignment',
+        TASK_ASSIGNMENT_WITH_SESSION: 'task_assignment_with_session',
+        CASE_CREATION: 'case_creation'
+    })
+
+    .constant('USER_ACTIONS', {
+        TASK_ASSIGNMENT: 'task_assignment',
+        CASE_CREATION: 'case_creation'
+    })

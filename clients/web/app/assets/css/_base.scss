@@ -1,3 +1,4 @@
+$primary-color : #22A5B9;
 @font-face {
   font-family: 'Yed';
   src: url('../fonts/Yed SemiComebackReg.otf'); /* IE9 Compat Modes */
@@ -64,7 +65,7 @@ a {
 }
 
 button {
-  background-color: #22A5B9;
+  background-color: $primary-color;
   color: #ffffff;
   font-family: "Yed";
   font-weight: lighter;
@@ -170,4 +171,10 @@ button {
   of the screen.
   */
   max-height: 800px;
+}
+md-dialog .md-dialog-content {
+  padding: 15px;
+  a {
+    color: $primary-color;
+  }
 }

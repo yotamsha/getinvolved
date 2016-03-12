@@ -29,6 +29,7 @@ angular.module('app', [
         // Components
         'app.version',
         'app.header',
+        'app.userDetails',
 
         // Models
         'app.models.case',

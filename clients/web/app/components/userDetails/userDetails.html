@@ -1,0 +1,38 @@
+<form name="userProfileForm" layout="column" class="user-profile-form" flex="50">
+    <div layout="row" >
+        <div layout="column">
+            <md-input-container  class="form-input-container">
+                <label>{{'views.userDetails.firstName' | translate}}</label>
+                <input name="firstName" required type="text"  ng-model="userData.first_name">
+                <div ng-messages="userProfileForm.firstName.$error" role="alert" multiple>
+                    <div ng-message="required" class="my-message">You must supply a first name.</div>
+                </div>
+            </md-input-container>
+            <md-input-container class="form-input-container">
+                <label>{{'views.userDetails.lastName' | translate}}</label>
+                <input name="lastName" required type="text" ng-model="userData.last_name">
+                <div ng-messages="userProfileForm.lastName.$error" role="alert" multiple>
+                    <div ng-message="required" class="my-message">You must supply a last name.</div>
+                </div>
+            </md-input-container>
+            <md-input-container class="form-input-container">
+                <label>{{'views.userDetails.email' | translate}}</label>
+                <input name="email" required type="text" ng-model="userData.email">
+                <div ng-messages="userProfileForm.email.$error" role="alert" multiple>
+                    <div ng-message="required" class="my-message">You must supply an email.</div>
+                </div>
+            </md-input-container>
+            <md-input-container class="form-input-container">
+                <label>{{'views.userDetails.phone' | translate}}</label>
+                <input name="phoneNumber" ng-init="createPhoneNumberObjectIfNotExists"  type="text" ng-model="userData.phone_number.number">
+                <div ng-messages="userProfileForm.phoneNumber.$error" role="alert" multiple>
+                    <div ng-message="required" class="my-message">You must supply a phone number.</div>
+                </div>
+            </md-input-container>
+
+            <button ng-disabled="!userProfileForm.$valid" class="btn-primary" ng-click="updateUser()">{{"views.general.save" | translate}} </button>
+
+        </div>
+    </div>
+
+</form>
