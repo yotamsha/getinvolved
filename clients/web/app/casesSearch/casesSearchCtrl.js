@@ -39,25 +39,42 @@ angular.module('app.casesSearch', ['app.services.share'])
             function _init() {
                 $scope.vm = {
                     cases: [],
+					totalCasesCount: 0,
+					currentCasesPage: 1,
+					casesPerPage: 5,
                     reverse: false
                 };
+				
+				var vm = $scope.vm;
 
                 var baseCases = Restangular.all('cases');
-                baseCases.getList().then(function (cases) {
-                    $scope.vm.cases = cases;
+                updateCasesListByCurrentPage();
+				
+				baseCases.customGET("", {'count':'yes'}).then(function (result) {
+                    vm.totalCasesCount = result.count;
                 });
 
-                $scope.vm.changeSort = function (isReversed) {
-                    $scope.vm.reverse = isReversed;
+                vm.changeSort = function (isReversed) {
+                    vm.reverse = isReversed;
                 }
-                $scope.vm.onPageChange = function(){
+                vm.onPageChange = function(newPageNumber) {
+					updateCasesListByCurrentPage();
+					
                   // We want to scroll to top of the list here
                 }
 				
-				$scope.vm.facebookShare = function(_case) {
+				vm.facebookShare = function(_case) {
 				   FbShare.shareCase(_case);
                 }
+				
+				function updateCasesListByCurrentPage(){
+					baseCases.getList({'page_size': vm.casesPerPage, 'page_number': vm.currentCasesPage - 1 }).then(function (cases) {
+						vm.cases = cases;
+					});
+				}
             }
+
+			
 
             // --- INIT --- //
 
