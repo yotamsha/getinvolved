@@ -35,6 +35,24 @@ angular.module('app.casesSearch', ['app.services.share'])
             //
             //   return arr;
             // }
+			var sortTypes = [{
+				'type': 'newerFirst',
+				'title': 'חדש ביותר',
+				'sortField': 'due_date', // change to creation_date
+				'sortOrder': 'ASCENDING'
+			},
+			{
+				'type': 'olderFirst',
+				'title': 'ישן ביותר',
+				'sortField': 'due_date', // change to creation_date
+				'sortOrder': 'DESCENDING'
+			},
+			{
+				'type': 'urgentFirst',
+				'title': 'דחוף ביותר',
+				'sortField': 'due_date',
+				'sortOrder': 'DESCENDING'
+			}];
 
             function _init() {
                 $scope.vm = {
@@ -42,7 +60,9 @@ angular.module('app.casesSearch', ['app.services.share'])
 					totalCasesCount: 0,
 					currentCasesPage: 1,
 					casesPerPage: 5,
-                    reverse: false
+                    reverse: false,
+					sortTypes: sortTypes,
+					currentSortType: sortTypes[0]
                 };
 				
 				var vm = $scope.vm;
@@ -63,22 +83,30 @@ angular.module('app.casesSearch', ['app.services.share'])
                   // We want to scroll to top of the list here
                 }
 				
+				vm.onSortChange = function(newSortType){
+					if (newSortType == vm.currentSortType)
+						return;
+					
+					vm.currentSortType = newSortType;
+					updateCasesListByCurrentPage();
+				} 
+				
 				vm.facebookShare = function(_case) {
 				   FbShare.shareCase(_case);
                 }
 				
 				function updateCasesListByCurrentPage(){
-					baseCases.getList({'page_size': vm.casesPerPage, 'page_number': vm.currentCasesPage - 1 }).then(function (cases) {
+					baseCases.getList({
+						'sort' : "[('" + vm.currentSortType.sortField + "','" +  vm.currentSortType.sortOrder + "')]",
+						'page_size': vm.casesPerPage, 
+						'page_number': vm.currentCasesPage - 1 
+					}).then(function (cases) {
 						vm.cases = cases;
 					});
 				}
             }
 
-			
-
             // --- INIT --- //
-
             _init();
         }
-
     ]);
