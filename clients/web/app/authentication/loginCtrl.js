@@ -19,7 +19,8 @@ angular.module('app.login', [])
                     user : data.userSession,
                     context : data.context,
                     missingFields : data.missingFields,
-                    popupTitle : "views.login.title"
+                    popupTitle : "views.login.title",
+                    callback : data.callback
             };
                 $scope.AUTH_CONTEXTS = AUTH_CONTEXTS;
                 switch (data.context){
@@ -88,11 +89,11 @@ angular.module('app.login', [])
                     // success
                     switch ($scope.vm.context){
                         case AUTH_CONTEXTS.TASK_ASSIGNMENT_WITH_SESSION:
-                            $rootScope.$broadcast(AUTH_EVENTS.volunteerDetailsCompleted);
-                            $scope.showCompleteMessage();
-/*
-                            $mdDialog.hide();
-*/
+                            $scope.vm.callback().then(function(){
+                                $scope.showCompleteMessage();
+                            }, function(){
+                                // error
+                            });
                             break;
                         case AUTH_CONTEXTS.CASE_CREATION: break;
                     }

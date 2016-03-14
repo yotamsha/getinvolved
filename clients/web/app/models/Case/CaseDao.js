@@ -1,30 +1,13 @@
 /**
- * Created by yotam on 20/2/2016.
+ * Created by yotam on 14/3/2016.
  */
+
 /**
  * Model structure inspired by:
  * http://blog.shinetech.com/2014/02/04/rich-object-models-and-angular-js/
  */
-angular.module('app.models.case', [])
-    /**
-     * This is a model wrapper that includes the business logic for a Case.
-     */
-    .factory('Case', [function () {
-        return {
-            populateWithUsersData : function(users){
-                _.each(this.tasks, function(task){
-                    var volunteer = _.findWhere(users,{id : task.volunteer_id});
-                    if (volunteer){
-                        task.volunteer_name = volunteer.first_name + " " + volunteer.last_name;
-                    }
-                });
-            },
-            chooseDefaultImage : function(){
-                var DEFAULT_TASKS_IMAGES_NUM = 9;
-                return "assets/img/tasks_defaults/task" + (Math.floor(Math.random() * DEFAULT_TASKS_IMAGES_NUM) + 1) + ".jpg";
-            }
-        };
-    }])
+angular.module('app.models.case')
+
     /**
      * This factory exposes a data access object for a Case:
      * expose REST methods of Restangular: (https://github.com/mgonto/restangular)
@@ -40,9 +23,57 @@ angular.module('app.models.case', [])
      * Caching - if will be needed.
      * Define validations before save.
      */
-    .factory('CaseDao', ['Restangular','Case','moment', function (Restangular, Case, moment) {
+    .factory('CaseDao', ['Restangular','CaseMapper','TaskMapper', function (Restangular, CaseMapper, TaskMapper ) {
+        var modelName = 'cases';
+        var collectionDAO = Restangular.all(modelName);
+        function _buildQueryParams(config){
+            var params = {};
+            if (config.populateVolunteer){
+                params.add_volunteer_attributes = "yes"
+            }
+            return params;
+        }
+        function _getById(caseId, config){
+            var queryParams = _buildQueryParams(config);
+            return Restangular.one(modelName, caseId).get(queryParams).then(
+                function(response){
+                // success
+                return CaseMapper.mapToVM(response);
+            },function(){
+                //error
+            });
 
-        Restangular.extendModel('cases', function (obj) { // extend the Restangular functionality with the model.
+
+        }
+
+        function _save(caseVM){
+
+        }
+/*        assignTaskState: function (task, state, userId) {
+            var toServerObj = this.transformForServer();
+            var updatedTask = {};
+            updatedTask.id = task.id;
+            updatedTask.volunteer_id = userId;
+            updatedTask.type = task.type;
+
+            toServerObj.tasks = [updatedTask];
+            return toServerObj.put();
+        }*/
+        function _assignTaskToVolunteer(caseVM, taskVM, userId){
+            var caseDto = CaseMapper.mapToDto(caseVM);
+            var taskDto = {};
+            taskDto.id = taskVM.id;
+            taskDto.type = taskVM.type;
+            taskDto.volunteer_id = userId;
+            caseDto.tasks = [taskDto];
+            return Restangular.one(modelName, caseDto.id).customPUT(caseDto);
+        }
+        return {
+            getById : _getById,
+            save: _save,
+            assignTaskToVolunteer : _assignTaskToVolunteer
+        };
+ /*       Restangular.extendModel('cases', function (obj) { // extend the Restangular functionality with the model.
             return angular.extend(obj, Case, {
                 // Perform all transformations before data is saved to server.
                 //TODO some of this functionality should be in a Base class.
@@ -74,5 +105,5 @@ angular.module('app.models.case', [])
         });
 
         // It's also possible to extend the collection methods using Restangular.extendCollection().
-        return Restangular.all('cases');
+        return Restangular.all('cases');*/
     }]);

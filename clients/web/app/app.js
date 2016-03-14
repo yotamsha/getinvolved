@@ -33,6 +33,7 @@ angular.module('app', [
 
         // Models
         'app.models.case',
+        'app.models.task',
         'app.models.user',
 
         // Services
