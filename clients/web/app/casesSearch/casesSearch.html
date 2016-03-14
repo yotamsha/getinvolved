@@ -6,7 +6,14 @@
   </div>
   <div class="top-strip">
     <span> {{"views.casesSearch.sortBy" | translate}}: </span>
-	<span ng-repeat="sortType in vm.sortTypes" ng-click="vm.onSortChange(sortType)"> {{sortType.title}} {{!$last ? "|" : ""}}</span>
+	<span ng-repeat="sortType in vm.sortTypes"> 
+		<span class="sort-option" ng-class="{selected: vm.selectedSortIndex == $index}" ng-click="vm.onSortChange(sortType, $index)">
+			{{sortType.title}} 
+		</span>
+		<span>
+			{{!$last ? "|" : ""}}
+		</span>
+	</span>
   </div>
   <div layout="row" layout-wrap layout-align="start center" class="cases-container clearfix">
     <div flex-gt-sm="33" flex-sm="50" flex-xs="100" dir-paginate="case in vm.cases | itemsPerPage: vm.casesPerPage" total-items="vm.totalCasesCount" current-page="vm.currentCasesPage">

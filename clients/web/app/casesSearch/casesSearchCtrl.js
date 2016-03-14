@@ -62,7 +62,8 @@ angular.module('app.casesSearch', ['app.services.share'])
 					casesPerPage: 5,
                     reverse: false,
 					sortTypes: sortTypes,
-					currentSortType: sortTypes[0]
+					currentSortType: sortTypes[0],
+					selectedSortIndex: 0
                 };
 				
 				var vm = $scope.vm;
@@ -83,10 +84,11 @@ angular.module('app.casesSearch', ['app.services.share'])
                   // We want to scroll to top of the list here
                 }
 				
-				vm.onSortChange = function(newSortType){
+				vm.onSortChange = function(newSortType, sortIndex){
 					if (newSortType == vm.currentSortType)
 						return;
 					
+					vm.selectedSortIndex = sortIndex;
 					vm.currentSortType = newSortType;
 					updateCasesListByCurrentPage();
 				} 

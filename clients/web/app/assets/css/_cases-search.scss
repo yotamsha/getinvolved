@@ -6,6 +6,12 @@
     font-size: 14px;
   }
 
+	.sort-option {
+		&.selected {
+			color: #22A5B9;
+		}		
+	}
+	
   .case {
     border: 1px solid #D9D9D9;
     width: 230px;
