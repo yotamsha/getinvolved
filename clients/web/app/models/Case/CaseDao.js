@@ -49,16 +49,7 @@ angular.module('app.models.case')
         function _save(caseVM){
 
         }
-/*        assignTaskState: function (task, state, userId) {
-            var toServerObj = this.transformForServer();
-            var updatedTask = {};
-            updatedTask.id = task.id;
-            updatedTask.volunteer_id = userId;
-            updatedTask.type = task.type;
 
-            toServerObj.tasks = [updatedTask];
-            return toServerObj.put();
-        }*/
         function _assignTaskToVolunteer(caseVM, taskVM, userId){
             var caseDto = CaseMapper.mapToDto(caseVM);
             var taskDto = {};
@@ -73,37 +64,4 @@ angular.module('app.models.case')
             save: _save,
             assignTaskToVolunteer : _assignTaskToVolunteer
         };
- /*       Restangular.extendModel('cases', function (obj) { // extend the Restangular functionality with the model.
-            return angular.extend(obj, Case, {
-                // Perform all transformations before data is saved to server.
-                //TODO some of this functionality should be in a Base class.
-                // TODO use a helper function that filters only requested properties to the put request.
-                transformForServer : function(){
-                    return Restangular.copy(this);
-                },
-                // Perform all transformations before data is viewed in consumed by the client.
-                transformToClient : function(){
-                    this.imgUrl = this.imgUrl ? this.imgUrl : this.chooseDefaultImage();
-                    _.each(this.tasks,function(task){
-                        task.due_date_string_format = moment(task.due_date).format('LLLL');
-
-                    });
-                    return this;
-                },
-
-                assignTaskState: function (task, state, userId) {
-                    var toServerObj = this.transformForServer();
-                    var updatedTask = {};
-                    updatedTask.id = task.id;
-                    updatedTask.volunteer_id = userId;
-                    updatedTask.type = task.type;
-
-                    toServerObj.tasks = [updatedTask];
-                    return toServerObj.put();
-                }
-            });
-        });
-
-        // It's also possible to extend the collection methods using Restangular.extendCollection().
-        return Restangular.all('cases');*/
     }]);
