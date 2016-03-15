@@ -1,12 +1,4 @@
-import os
 from setuptools import setup
-
-
-for dirName, subdirList, fileList in os.walk('org/gi/server/service/templates/data'):
-    print('Found directory: %s' % dirName)
-    for fname in fileList:
-        print('\t%s' % fname)
-
 
 
 setup(
@@ -33,5 +25,6 @@ setup(
                       'requests',
                       'pycountry',
                       'flask-cors',
-                      'babel', 'mock']
+                      'babel',
+                      'mock']
 )
