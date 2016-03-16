@@ -22,30 +22,17 @@ angular.module('app.casesSearch', ['app.services.share'])
     .controller('casesSearchCtrl', ['$scope', 'Restangular', '$stateParams', 'DialogsService', 'moment', '$rootScope','FbShare',
         function ($scope, Restangular, $stateParams, DialogsService, moment, $rootScope, FbShare) {
 
-            // --- INNER FUNCTIONS --- //
-            // function createCasesArr(){
-            //   var arr = [];
-            //   for (var i = 1; i < 24; i++) {
-            //       arr.push({
-            //         title: ' עזרה בהסעה ' + i,
-            //         imgSrc: 'assets/img/face1.jpg',
-            //         order: i,
-            //       });
-            //   }
-            //
-            //   return arr;
-            // }
 			var sortTypes = [{
 				'type': 'newerFirst',
 				'title': 'חדש ביותר',
-				'sortField': 'due_date', // change to creation_date
-				'sortOrder': 'ASCENDING'
+				'sortField': 'creation_date',
+				'sortOrder': 'DESCENDING'
 			},
 			{
 				'type': 'olderFirst',
 				'title': 'ישן ביותר',
-				'sortField': 'due_date', // change to creation_date
-				'sortOrder': 'DESCENDING'
+				'sortField': 'creation_date',
+				'sortOrder': 'ASCENDING'
 			},
 			{
 				'type': 'urgentFirst',
