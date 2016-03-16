@@ -35,7 +35,7 @@ angular.module('app.casesSearch', ['app.services.share'])
 			{
 				'type': 'urgentFirst',
 				'title': 'דחוף ביותר',
-				'sortMethod': "[('due_date','DESCENDING'),('creation_date','DESCENDING')]",
+				'sortMethod': "[('due_date','ASCENDING'),('creation_date','DESCENDING')]",
 			}];
 
             function _init() {
@@ -43,7 +43,7 @@ angular.module('app.casesSearch', ['app.services.share'])
                     cases: [],
 					totalCasesCount: 0,
 					currentCasesPage: 1,
-					casesPerPage: 5,
+					casesPerPage: 12,
                     reverse: false,
 					sortTypes: sortTypes,
 					currentSortType: sortTypes[0],
