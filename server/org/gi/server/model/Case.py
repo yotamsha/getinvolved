@@ -1,4 +1,5 @@
 import uuid
+import time
 
 from org.gi.server.model.Location import Location
 from org.gi.server.model.Task import Task
@@ -22,6 +23,7 @@ class Case:
             task['id'] = str(uuid.uuid4())
             task['state'] = TASK_PENDING
         case['due_date'] = Task.get_nearest_due_date(case.get('tasks'))
+        case['creation_date'] = int(time.time())
         Case.handle_geo_location(case)
         return case
 
