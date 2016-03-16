@@ -25,20 +25,17 @@ angular.module('app.casesSearch', ['app.services.share'])
 			var sortTypes = [{
 				'type': 'newerFirst',
 				'title': 'חדש ביותר',
-				'sortField': 'creation_date',
-				'sortOrder': 'DESCENDING'
+				'sortMethod': "[('creation_date','DESCENDING')]"
 			},
 			{
 				'type': 'olderFirst',
 				'title': 'ישן ביותר',
-				'sortField': 'creation_date',
-				'sortOrder': 'ASCENDING'
+				'sortMethod': "[('creation_date','ASCENDING')]"
 			},
 			{
 				'type': 'urgentFirst',
 				'title': 'דחוף ביותר',
-				'sortField': 'due_date',
-				'sortOrder': 'DESCENDING'
+				'sortMethod': "[('due_date','DESCENDING'),('creation_date','DESCENDING')]",
 			}];
 
             function _init() {
@@ -85,8 +82,9 @@ angular.module('app.casesSearch', ['app.services.share'])
                 }
 				
 				function updateCasesListByCurrentPage(){
+					
 					baseCases.getList({
-						'sort' : "[('" + vm.currentSortType.sortField + "','" +  vm.currentSortType.sortOrder + "')]",
+						'sort' : vm.currentSortType.sortMethod,
 						'page_size': vm.casesPerPage, 
 						'page_number': vm.currentCasesPage - 1 
 					}).then(function (cases) {
