@@ -19,8 +19,9 @@ angular.module('app.casesSearch', ['app.services.share'])
             }
         });
     }])
-    .controller('casesSearchCtrl', ['$scope', 'Restangular', '$stateParams', 'DialogsService', 'moment', '$rootScope','FbShare',
-        function ($scope, Restangular, $stateParams, DialogsService, moment, $rootScope, FbShare) {
+    .controller('casesSearchCtrl', ['$scope', 'Restangular', '$stateParams', 
+	'DialogsService', 'moment', '$rootScope','FbShare','$anchorScroll','$location',
+        function ($scope, Restangular, $stateParams, DialogsService, moment, $rootScope, FbShare, $anchorScroll, $location) {
 
 			var sortTypes = [{
 				'type': 'newerFirst',
@@ -66,6 +67,8 @@ angular.module('app.casesSearch', ['app.services.share'])
 					updateCasesListByCurrentPage();
 					
                   // We want to scroll to top of the list here
+				  $location.hash('your-oppurtunities-title');
+				  $anchorScroll();
                 }
 				
 				vm.onSortChange = function(newSortType, sortIndex){
