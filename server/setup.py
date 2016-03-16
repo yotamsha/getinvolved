@@ -1,10 +1,19 @@
 from setuptools import setup
 
+
 setup(
-    name='GI Server',
+    name='get_involved_server',
     version='1.0',
     long_description=__doc__,
-    packages=['org.gi.config','org.gi.server'],
+    packages=['org.gi.config',
+              'org.gi.server',
+              'org.gi.server.api',
+              'org.gi.server.model',
+              'org.gi.server.service.notification',
+              'org.gi.server.service.templates',
+              'org.gi.server.validation',
+              'org.gi.server.validation.task',
+              'org.gi.server.model'],
     include_package_data=True,
     zip_safe=False,
     install_requires=['flask',
@@ -16,5 +25,6 @@ setup(
                       'requests',
                       'pycountry',
                       'flask-cors',
-                      'babel', 'mock']
+                      'babel',
+                      'mock']
 )
