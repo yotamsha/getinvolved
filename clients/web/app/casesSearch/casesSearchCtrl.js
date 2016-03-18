@@ -20,24 +20,9 @@ angular.module('app.casesSearch', ['app.services.share'])
         });
     }])
     .controller('casesSearchCtrl', ['$scope', 'Restangular', '$stateParams', 
-	'DialogsService', 'moment', '$rootScope','FbShare','$anchorScroll','$location','$timeout',
-        function ($scope, Restangular, $stateParams, DialogsService, moment, $rootScope, FbShare, $anchorScroll, $location, $timeout) {
-
-			var sortTypes = [{
-				'type': 'newerFirst',
-				'title': 'חדש ביותר',
-				'sortMethod': "[('creation_date','DESCENDING')]"
-			},
-			{
-				'type': 'olderFirst',
-				'title': 'ישן ביותר',
-				'sortMethod': "[('creation_date','ASCENDING')]"
-			},
-			{
-				'type': 'urgentFirst',
-				'title': 'דחוף ביותר',
-				'sortMethod': "[('due_date','ASCENDING'),('creation_date','DESCENDING')]",
-			}];
+	'DialogsService', 'moment', '$rootScope','FbShare','$anchorScroll','$location','$timeout','$translate',
+        function ($scope, Restangular, $stateParams,
+		 DialogsService, moment, $rootScope, FbShare, $anchorScroll, $location, $timeout, $translate) {
 
             function _init() {
                 $scope.vm = {
@@ -46,16 +31,18 @@ angular.module('app.casesSearch', ['app.services.share'])
 					currentCasesPage: 1,
 					casesPerPage: 12,
 					reverse: false,
-					sortTypes: sortTypes,
-					currentSortType: sortTypes[0],
+					sortTypes: [],
 					selectedSortIndex: 0
                 };
 				
 				var vm = $scope.vm;
 
                 var baseCases = Restangular.all('cases');
-                updateCasesListByCurrentPage();
 				
+				var currentSortType;
+				var sortTypes = [];
+				initCasesGrid(currentSortType, sortTypes);
+                
 				baseCases.customGET("", {'count':'yes'}).then(function (result) {
                     vm.totalCasesCount = result.count;
                 });
@@ -73,11 +60,11 @@ angular.module('app.casesSearch', ['app.services.share'])
                 }
 				
 				vm.onSortChange = function(newSortType, sortIndex){
-					if (newSortType == vm.currentSortType)
+					if (newSortType == currentSortType)
 						return;
 					
 					vm.selectedSortIndex = sortIndex;
-					vm.currentSortType = newSortType;
+					currentSortType = newSortType;
 					updateCasesListByCurrentPage();
 				} 
 				
@@ -85,10 +72,35 @@ angular.module('app.casesSearch', ['app.services.share'])
 				   FbShare.shareCase(_case);
                 }
 				
+				function initCasesGrid(currentSortType, sortTypes){
+					$translate(['views.casesSearch.sortTypes.newest','views.casesSearch.sortTypes.oldest', 
+					'views.casesSearch.sortTypes.mostUrgent']).then(function (translations) {
+						sortTypes = [{
+							'type': 'newerFirst',
+							'title': translations["views.casesSearch.sortTypes.newest"],
+							'sortMethod': "[('creation_date','DESCENDING')]"
+						},
+						{
+							'type': 'olderFirst',
+							'title': translations["views.casesSearch.sortTypes.oldest"],
+							'sortMethod': "[('creation_date','ASCENDING')]"
+						},
+						{
+							'type': 'urgentFirst',
+							'title': translations["views.casesSearch.sortTypes.mostUrgent"],
+							'sortMethod': "[('due_date','ASCENDING'),('creation_date','DESCENDING')]",
+						}];
+						
+						vm.sortTypes = sortTypes;
+						currentSortType = sortTypes[0];
+						updateCasesListByCurrentPage();
+					});
+				}
+				
 				function updateCasesListByCurrentPage(){
 					
 					baseCases.getList({
-						'sort' : vm.currentSortType.sortMethod,
+						'sort' : currentSortType.sortMethod,
 						'page_size': vm.casesPerPage, 
 						'page_number': vm.currentCasesPage - 1 
 					}).then(function (cases) {
