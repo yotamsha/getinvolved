@@ -72,7 +72,7 @@ angular.module('app.casesSearch', ['app.services.share'])
 				   FbShare.shareCase(_case);
                 }
 				
-				function initCasesGrid(currentSortType, sortTypes){
+				function initCasesGrid(){
 					$translate(['views.casesSearch.sortTypes.newest','views.casesSearch.sortTypes.oldest', 
 					'views.casesSearch.sortTypes.mostUrgent']).then(function (translations) {
 						sortTypes = [{
