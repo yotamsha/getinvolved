@@ -30,6 +30,11 @@
   "views.casesSearch.case.showDetails": "הצג פרטים",
   "views.casesSearch.case.header_title": "בואו נתערב",
   "views.casesSearch.case.header_subtitle": "מגוון אפשרויות להתנדבות חד פעמית שיהפכו רגע פנוי לרגע של שינוי",
+  "views.casesSearch.sortTypes": {
+	"newest": "חדש ביותר",
+	"oldest": "ישן ביותר",
+	"mostUrgent": "דחוף ביותר"  
+  },
   "views.login.title": "כניסה לחשבונך",
   "views.login.signup": "הירשם",
   "views.login.already_signed": "כבר נרשמת?",

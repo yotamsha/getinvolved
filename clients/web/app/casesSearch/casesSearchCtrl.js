@@ -19,49 +19,97 @@ angular.module('app.casesSearch', ['app.services.share'])
             }
         });
     }])
-    .controller('casesSearchCtrl', ['$scope', 'Restangular', '$stateParams', 'DialogsService', 'moment', '$rootScope','FbShare',
-        function ($scope, Restangular, $stateParams, DialogsService, moment, $rootScope, FbShare) {
-
-            // --- INNER FUNCTIONS --- //
-            // function createCasesArr(){
-            //   var arr = [];
-            //   for (var i = 1; i < 24; i++) {
-            //       arr.push({
-            //         title: ' עזרה בהסעה ' + i,
-            //         imgSrc: 'assets/img/face1.jpg',
-            //         order: i,
-            //       });
-            //   }
-            //
-            //   return arr;
-            // }
+    .controller('casesSearchCtrl', ['$scope', 'Restangular', '$stateParams', 
+	'DialogsService', 'moment', '$rootScope','FbShare','$anchorScroll','$location','$timeout','$translate',
+        function ($scope, Restangular, $stateParams,
+		 DialogsService, moment, $rootScope, FbShare, $anchorScroll, $location, $timeout, $translate) {
 
             function _init() {
                 $scope.vm = {
                     cases: [],
-                    reverse: false
+					totalCasesCount: 0,
+					currentCasesPage: 1,
+					casesPerPage: 12,
+					reverse: false,
+					sortTypes: [],
+					selectedSortIndex: 0
                 };
+				
+				var vm = $scope.vm;
 
                 var baseCases = Restangular.all('cases');
-                baseCases.getList().then(function (cases) {
-                    $scope.vm.cases = cases;
+				
+				var currentSortType;
+				var sortTypes = [];
+				initCasesGrid(currentSortType, sortTypes);
+                
+				baseCases.customGET("", {'count':'yes'}).then(function (result) {
+                    vm.totalCasesCount = result.count;
                 });
 
-                $scope.vm.changeSort = function (isReversed) {
-                    $scope.vm.reverse = isReversed;
+                vm.changeSort = function (isReversed) {
+                    vm.reverse = isReversed;
                 }
-                $scope.vm.onPageChange = function(){
-                  // We want to scroll to top of the list here
+                vm.onPageChange = function(newPageNumber) {
+					updateCasesListByCurrentPage();
+					
+                  	$timeout(function() {
+						$location.hash('your-oppurtunities-title');
+						$anchorScroll();
+            		});
                 }
 				
-				$scope.vm.facebookShare = function(_case) {
+				vm.onSortChange = function(newSortType, sortIndex){
+					if (newSortType == currentSortType)
+						return;
+					
+					vm.selectedSortIndex = sortIndex;
+					currentSortType = newSortType;
+					updateCasesListByCurrentPage();
+				} 
+				
+				vm.facebookShare = function(_case) {
 				   FbShare.shareCase(_case);
                 }
+				
+				function initCasesGrid(){
+					$translate(['views.casesSearch.sortTypes.newest','views.casesSearch.sortTypes.oldest', 
+					'views.casesSearch.sortTypes.mostUrgent']).then(function (translations) {
+						sortTypes = [{
+							'type': 'newerFirst',
+							'title': translations["views.casesSearch.sortTypes.newest"],
+							'sortMethod': "[('creation_date','DESCENDING')]"
+						},
+						{
+							'type': 'olderFirst',
+							'title': translations["views.casesSearch.sortTypes.oldest"],
+							'sortMethod': "[('creation_date','ASCENDING')]"
+						},
+						{
+							'type': 'urgentFirst',
+							'title': translations["views.casesSearch.sortTypes.mostUrgent"],
+							'sortMethod': "[('due_date','ASCENDING'),('creation_date','DESCENDING')]",
+						}];
+						
+						vm.sortTypes = sortTypes;
+						currentSortType = sortTypes[0];
+						updateCasesListByCurrentPage();
+					});
+				}
+				
+				function updateCasesListByCurrentPage(){
+					
+					baseCases.getList({
+						'sort' : currentSortType.sortMethod,
+						'page_size': vm.casesPerPage, 
+						'page_number': vm.currentCasesPage - 1 
+					}).then(function (cases) {
+						vm.cases = cases;
+					});
+				}
             }
 
             // --- INIT --- //
-
             _init();
         }
-
     ]);

@@ -2,6 +2,7 @@ import json
 import re
 import time
 
+import bson
 import phonenumbers
 
 import org.gi.server.authorization as auth
@@ -470,28 +471,47 @@ def validate_fields(fields, payload, meta, dummy_faults=None):
     return True
 
 
-def case_put_validate(current_case, updated_case, faults):
-    if 'state' in updated_case:
-        _validate_status_transition(current_case['state'], updated_case['state'], VALID_CASE_STATES, CASE_TRANSITIONS,
+def validate_ids_different(tasks, petitioner_id, faults):
+    for task in tasks:
+        if task['volunteer_id'] == petitioner_id:
+            faults.append('Volunteer ID cannot be the same as Petitioner ID.')
+
+
+def case_put_validate(db_case, case_updates, faults):
+    if 'state' in case_updates:
+        _validate_status_transition(db_case['state'], case_updates['state'], VALID_CASE_STATES, CASE_TRANSITIONS,
                                     faults)
         if faults:
             return
-        if updated_case.get('tasks'):
-            validate_tasks(updated_case['tasks'], faults, current_tasks=current_case['tasks'])
-        if updated_case['state'] == CASE_COMPLETED and len(updated_case['tasks']) != sum(
-                1 for task in updated_case['tasks'] if task['state'] == TASK_COMPLETED):
+        if case_updates.get('tasks'):
+            validate_tasks(case_updates['tasks'], faults, current_tasks=db_case['tasks'])
+            validate_ids_different(case_updates['tasks'], db_case['petitioner_id'], faults)
+        if case_updates['state'] == CASE_COMPLETED and len(case_updates['tasks']) != sum(
+                1 for task in case_updates['tasks'] if task['state'] == TASK_COMPLETED):
             faults.append(
                 'A case cant be marked as %s until all tasks are marked as %s' % (CASE_COMPLETED, TASK_COMPLETED))
 
-    elif 'tasks' in updated_case:
-        validate_tasks(updated_case['tasks'], faults, current_case['tasks'])
+    elif 'tasks' in case_updates:
+        validate_tasks(case_updates['tasks'], faults, db_case['tasks'])
 
 
-def case_post_validate(payload, faults):
-    validate_mandatory_and_present_fields(payload, CASE_META, faults)
+def is_user_id(object_id):
+    return bson.objectid.ObjectId.is_valid(object_id)
+
+
+def validate_no_volunteer_ids_on_insert(tasks, faults):
+    for task in tasks:
+        if is_user_id(task.get('volunteer_id')):
+            faults.append('Tasks cannot have volunteer ID on creation, try updating tasks')
+
+
+def case_post_validate(case, faults):
+    validate_mandatory_and_present_fields(case, CASE_META, faults)
+    # validate_no_volunteer_ids_on_insert(case.get('tasks'), faults)
+    # this validation fails a lot of unit tests, but we will probably want this in the future
     if faults:
         return
-    validate_petitioner_id(payload['petitioner_id'], faults)
+    validate_petitioner_id(case['petitioner_id'], faults)
 
 
 def put_validate(payload, meta, faults):
