@@ -251,6 +251,13 @@ class TestGIServerCaseTestCase(unittest.TestCase):
 
     # negatives
 
+    def test_cannot_insert_case_with_due_date(self):
+        case = _load('case_undefined.json', self.config_folder)
+        self._replace(case)
+        case['due_date'] = int(time.time()) + DUE_DATE_HOURS * 60 * 60
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
+
     def test_cannot_case_assign_user_with_same_id(self):
         # SETUP
         case = self._get_inserted_case()
