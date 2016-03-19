@@ -54,6 +54,7 @@
     <script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script type="text/javascript" src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
     <script type="text/javascript" src="bower_components/angularUtils-pagination/dirPagination.js"></script>
+	<script type="text/javascript" src="bower_components\angular-mailto\angular-mailto.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min.js"></script>
 
     <!-- App files -->
@@ -94,6 +95,9 @@
     <script src="models/Task/TaskMapper.js"></script>
     <script src="models/User.js"></script>
 
+	<!-- /// View Model Expanders /// -->
+	<script src="models\Case\ViewModelExpanders\case-email-share-expander.js"></script>
+
     <!-- /// SERVICES /// -->
 
     <script src="services/data-access/data-access.js"></script>
@@ -104,8 +108,7 @@
     <script src="services/interceptors/interceptors.js"></script>
     <script src="services/interceptors/auth-interceptor.js"></script>
 	<script src="services/share/fb-share-service.js"></script>
-
-
+	
     <!-- /// VENDORS /// -->
 
     <script src="vendors/moment-wrapper.js"></script>

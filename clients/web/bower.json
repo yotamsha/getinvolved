@@ -21,12 +21,13 @@
     "restangular": "~1.5.1",
     "angular-ui-router": "~0.2.15",
     "angularUtils-pagination": "angular-utils-pagination#^0.10.0",
-    "angular-sanitize": "~1.5.0"
+    "angular-sanitize": "~1.5.0",
+    "angular-mailto": "^0.1.0"
   },
   "devDependencies": {
     "moment": "~2.11.1"
   },
   "resolutions": {
-    "angular": "1.5.0"
+    "angular": "~1.4.0"
   }
 }

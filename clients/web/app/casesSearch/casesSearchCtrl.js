@@ -3,7 +3,7 @@
  */
 'use strict';
 
-angular.module('app.casesSearch', ['app.services.share'])
+angular.module('app.casesSearch', ['app.services.share','app.models.case.viewModelExpanders'])
 
     .config(['$stateProvider', function ($stateProvider) {
         $stateProvider.state('casesSearch', {
@@ -20,9 +20,9 @@ angular.module('app.casesSearch', ['app.services.share'])
         });
     }])
     .controller('casesSearchCtrl', ['$scope', 'Restangular', '$stateParams', 
-	'DialogsService', 'moment', '$rootScope','FbShare','$anchorScroll','$location','$timeout','$translate',
+	'DialogsService', 'moment', '$rootScope','FbShare','$anchorScroll','$location','$timeout','$translate','CaseEmailShareExpander',
         function ($scope, Restangular, $stateParams,
-		 DialogsService, moment, $rootScope, FbShare, $anchorScroll, $location, $timeout, $translate) {
+		 DialogsService, moment, $rootScope, FbShare, $anchorScroll, $location, $timeout, $translate, CaseEmailShareExpander) {
 
             function _init() {
                 $scope.vm = {
@@ -105,6 +105,8 @@ angular.module('app.casesSearch', ['app.services.share'])
 						'page_number': vm.currentCasesPage - 1 
 					}).then(function (cases) {
 						vm.cases = cases;
+						
+						CaseEmailShareExpander.expandCases(cases);
 					});
 				}
             }
