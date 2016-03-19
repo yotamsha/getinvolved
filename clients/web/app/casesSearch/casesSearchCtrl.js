@@ -3,7 +3,7 @@
  */
 'use strict';
 
-angular.module('app.casesSearch', ['app.services.share', 'uz.mailto'])
+angular.module('app.casesSearch', ['app.services.share','app.models.case.viewModelExpanders'])
 
     .config(['$stateProvider', function ($stateProvider) {
         $stateProvider.state('casesSearch', {
@@ -20,9 +20,9 @@ angular.module('app.casesSearch', ['app.services.share', 'uz.mailto'])
         });
     }])
     .controller('casesSearchCtrl', ['$scope', 'Restangular', '$stateParams', 
-	'DialogsService', 'moment', '$rootScope','FbShare','$anchorScroll','$location','$timeout','$translate','Mailto',
+	'DialogsService', 'moment', '$rootScope','FbShare','$anchorScroll','$location','$timeout','$translate','CaseEmailShareExpander',
         function ($scope, Restangular, $stateParams,
-		 DialogsService, moment, $rootScope, FbShare, $anchorScroll, $location, $timeout, $translate, Mailto) {
+		 DialogsService, moment, $rootScope, FbShare, $anchorScroll, $location, $timeout, $translate, CaseEmailShareExpander) {
 
             function _init() {
                 $scope.vm = {
@@ -106,19 +106,7 @@ angular.module('app.casesSearch', ['app.services.share', 'uz.mailto'])
 					}).then(function (cases) {
 						vm.cases = cases;
 						
-						$translate(['case_share.email.subject','case_share.email.body']).then(function(translataions){
-							var recepient = "sheker-kolsheu@getinvolved.co.il";
-							var options = {
-								subject: translataions["case_share.email.subject"],
-								body: translataions["case_share.email.body"]
-							};
-							
-							var href = Mailto.url(recepient, options);
-						
-							_.each(vm.cases, function(_case){
-								_case.mailtoLink = href;
-							});
-						});
+						CaseEmailShareExpander.expandCases(cases);
 					});
 				}
             }
