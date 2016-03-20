@@ -1,0 +1,210 @@
+
+<style>
+
+.volImg {
+	width: 100%;
+	height: auto;
+}
+
+</style>
+
+<!--<script type="text/ng-template" id="error-msgs">-->
+
+	<!--<div ng-message="required">{{vm.errorMsg.required}}</div>-->
+	<!--<div ng-message="minlength">This field is too short</div>-->
+	<!--<div ng-message="email">This is not a valid email address</div>-->
+
+<!--//</script>-->
+
+<!--<body ng-app="myApp" ng-cloak>-->
+
+<!--<div id="container" ng-controller="appCtrl as vm">-->
+    <div id="container">
+		<center>
+				<!--<label style="color: red;">Todo: User Login Form.</label>-->
+
+			<br>
+
+			<!-- Images -->
+			<div style='width: 80%;'>
+				<div layout="row" layout-margin >
+					<div flex><img class='volImg' src='{{vm.imgurl}}'/></div>
+					<div flex><img class='volImg' src='{{vm.imgurl}}'/></div>
+					<div flex><img class='volImg' src='{{vm.imgurl}}'/></div>
+					<div flex><img class='volImg' src='{{vm.imgurl}}'/></div>
+					<div flex><img class='volImg' src='{{vm.imgurl}}'/></div>
+					<div flex><img class='volImg' src='{{vm.imgurl}}'/></div>
+				</div>
+				<!--<div layout="row" layout-margin>-->
+					<!--<div flex><img class='volImg' src='{{vm.imgurl}}'/></div>-->
+					<!--<div flex><img class='volImg' src='{{vm.imgurl}}'/></div>-->
+					<!--<div flex><img class='volImg' src='{{vm.imgurl}}'/></div>-->
+					<!--<div flex><img class='volImg' src='{{vm.imgurl}}'/></div>-->
+				<!--</div>-->
+
+			</div>
+
+			<br><br>
+
+			<!--<h1 style="color: gray;">{{ 'views.askHelp.title' | translate }}</h1> <br><br>-->
+			<h5>{{ 'views.askHelp.provideDetails' | translate }}</h5><br><br>
+
+			<!-- Form -->
+			<form name="requestForm">
+				<div layout='column' style='width: 50%;'>
+<!-- 					<md-input-container>
+						<label>Favorite Color</label>
+						<input name="favoriteColor" ng-model="favoriteColor" required>
+						<div ng-messages="userForm.lastName.$error">
+							<div ng-message="required"> Required </div>
+						</div>
+					</md-input-container> -->
+
+					<!--<label><b>{{ 'views.askHelp.requestInformation' | translate }}</b></label> <br><br>-->
+
+					<!--<gi-input -->
+						<!--form="requestForm"-->
+						<!--type="textarea"-->
+						<!--name="test"-->
+						<!--model="testModel"-->
+						<!--label="Test Field"-->
+						<!--required="">-->
+					<!--</gi-input>-->
+
+					<!-- <div flex-gt-sm="40" flex-xs="100"> -->
+					<label>{{ 'views.askHelp.description' | translate }}</label>
+					<md-input-container flex>
+						<label>{{ 'views.askHelp.description.sub' | translate }} </label>
+
+						<textarea name='requestDescription' ng-model='requestDescription' required></textarea>
+						<div ng-messages="requestForm.requestDescription.$error" role="alert">
+							<div ng-message="required">{{vm.errorMsg.required}}</div>
+						</div>
+					</md-input-container>
+					<!-- </div> -->
+					<!--<label>{{ 'views.askHelp.requestDescription.sub' | translate }}</label>-->
+
+					 <!--
+{{ 'views.askHelp.' | translate }}
+					 -->
+
+					<label>{{ 'views.askHelp.provideRoute' | translate }}</label>
+					<md-input-container flex>
+						<label>{{ 'views.askHelp.provideRoute.sub' | translate }}</label>
+						<textarea name='courseDescription' ng-model='courseDescription' required></textarea>
+						<div ng-messages="requestForm.courseDescription.$error" role="alert">
+							<div ng-message="required">{{vm.errorMsg.required}}</div>
+						</div>
+					</md-input-container>
+
+					<label>{{ 'views.askHelp.reason' | translate }}</label>
+					<md-input-container flex>
+						<label>{{ 'views.askHelp.reason.sub' | translate }}</label>
+						<textarea name='requestReason' ng-model='requestReason' required></textarea>
+						<div ng-messages="requestForm.requestReason.$error" role="alert">
+							<div ng-message="required">{{vm.errorMsg.required}}</div>
+						</div>
+					</md-input-container>
+
+					<div layout-gt-sm="row" layout="column">
+
+						<div>
+							<label>{{ 'views.askHelp.time' | translate }}</label><br>
+							<md-input-container>
+								<md-select ng-model="time" placeholder="{{ 'views.askHelp.time.sub' | translate }}">
+									<md-option ng-value="i" ng-repeat="i in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]"> {{ i }} Hours</md-option>
+									<md-option ng-value="i" ng-repeat="i in [1,2,3,4,5]"> {{ i }} Days</md-option>
+								</md-select>
+							</md-input-container>
+						</div>
+
+						<div flex></div>
+
+						<div>
+							<label>{{ 'views.askHelp.date' | translate }}</label><br>
+							<md-datepicker name="date" ng-model="date"></md-datepicker>
+						</div>
+						<!--<md-input-container>-->
+
+						<!--</md-input-container>-->
+					</div> <br>
+
+
+					<label>{{ 'views.askHelp.place' | translate }}</label><br>
+
+					<div layout="row" layout-xs="column">
+						<md-input-container flex>
+							<label>{{ 'views.askHelp.city' | translate }}</label>
+							<input name='city' ng-model='city' required>
+							<div ng-messages="requestForm.city.$error" role="alert">
+								<div ng-message="required">{{vm.errorMsg.required}}</div>
+							</div>
+						</md-input-container>
+
+						<md-input-container flex>
+							<label>{{ 'views.askHelp.address' | translate }}</label>
+							<input name='address' ng-model='address'>
+						</md-input-container>
+					</div>
+
+					<label><b>{{ 'views.askHelp.organization.title' | translate }}</b></label>
+					<label>{{ 'views.askHelp.organization.title.sub' | translate }}</label><br>
+
+					<md-input-container flex>
+						<label>{{ 'views.askHelp.organization.name' | translate }}</label><br>
+						<input name='orgName' ng-model='orgName'>
+					</md-input-container>
+					<md-input-container flex>
+						<label>{{ 'views.askHelp.organization.email' | translate }}</label><br>
+						<input name='orgMail' ng-model='orgMail'>
+						<div ng-messages="requestForm.orgMail.$error" role="alert">
+							<div ng-message="email">This is not a valid Email address</div>
+						</div>
+					</md-input-container>
+
+					<label><b>{{ 'views.askHelp.requester' | translate }}</b></label>
+					<div layout="row" layout-xs="column">
+						<md-input-container flex>
+							<label> {{ 'views.askHelp.requester.firstName' | translate }} </label>
+							<input name='requesterFirstName' ng-model='requesterFirstName'>
+						</md-input-container>
+						<md-input-container flex>
+							<label> {{ 'views.askHelp.requester.lastName' | translate }} </label>
+							<input name='requesterLastName' ng-model='requesterLastName'>
+						</md-input-container>
+					</div>
+					<md-input-container flex>
+						<label> {{ 'views.askHelp.requester.phone' | translate }} </label>
+						<input name='requesterPhone' ng-model='requesterPhone'>
+					</md-input-container>
+					<md-input-container flex>
+						<label> {{ 'views.askHelp.requester.email' | translate }} </label>
+						<input name='requesterEmail' ng-model='requesterEmail'>
+					</md-input-container>
+				</div>
+
+				<md-button class="md-raised"> {{ 'views.askHelp.send' | translate }} </md-button>
+			</form>
+
+		</center>
+
+	</div>
+
+
+<!-- 		<h1>{{ vm.title }}</h1>
+		<input ng-model="newName" style="font-size: 24px;"/> <button ng-click="vm.add(newName)">Add</button>
+		<div ng-repeat="d in vm.user.arr">
+			{{ d }}  <button ng-model="d" ng-click="vm.del('{{d}}')">Remove</button>
+		</div> -->
+
+
+	<!-- <script src="angular.min.js"></script> -->
+
+	  <!-- Angular Material requires Angular.js Libraries -->
+	<!--<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>-->
+	<!--<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>-->
+	<!--<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>-->
+	<!--<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>-->
+
+<!--</body>-->
+

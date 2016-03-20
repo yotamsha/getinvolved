@@ -4,14 +4,18 @@ angular.module('app.views.helpRequestForm', [])
 
     .config(['$stateProvider', function($stateProvider) {
         $stateProvider.state('helpRequestForm', {
-            url : "/help-request",
+            url : "/ask-help",
             templateUrl: 'views/ask-help/askHelp.html',
-            controller: 'helpRequestFormCtrl'
+            controller: 'askHelpCtrl as vm'
         });
     }])
 
-    .controller('helpRequestFormCtrl', ['$scope',
+    .controller('askHelpCtrl', ['$scope',
         function ($scope) {
+            var vm = this;
 
+            vm.imgurl = "http://s9.postimg.org/47m1pb81b/vol.png";
+
+            vm.translatePath = 'views.askHelp';
         }
     ]);
