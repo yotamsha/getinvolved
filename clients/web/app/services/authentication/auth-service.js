@@ -88,7 +88,7 @@ angular.module('app.services.authentication.auth-service', [])
 
             var standardAuthenticator = {
                 login : function(userData){
-                    return $http.post("http://localhost:5000/login/", userData)
+                    return $http.post("http://localhost:5000/login", userData)
                         .success(function (token) {
                             console.log(token);
                             setToken(token);

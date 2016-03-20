@@ -98,7 +98,7 @@ angular.module('app.header.header-ctrl', [])
                         title: "views.main.header.how-it-works.variety_of_cases",
                         subtitle: "views.main.header.how-it-works.variety_of_cases_subtitle",
                         url: "/cases",
-                        imageUrl: "\\assets\\img\\how-it-works\\variety-Of-cases-banner.png"
+                        imageUrl: "\\assets\\img\\how-it-works\\variety-of-cases-banner.png"
                     },
                     {
                         title: "views.main.header.how-it-works.your_way",

@@ -44,6 +44,7 @@
   "views.login.task_assigned_title": "תודה!",
   "views.login.task_assignment_moved_to_pending": "נודיע לך בקרוב  שהתנדבותך התקבלה, וכן נשלח מייל עם כל הפרטים.",
   "views.userDetails.email" : "מייל",
+  "views.userDetails.username" : "שם משתמש",
   "views.userDetails.password" : "סיסמא",
   "views.userDetails.firstName" : "שם פרטי",
   "views.userDetails.lastName" : "שם משפחה",
