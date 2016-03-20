@@ -38,6 +38,9 @@ class GIAccessTokenAuthentication(unittest.TestCase):
         self.assertEqual(r.status_code, utils.HTTP_OK)
         r = requests.post('%s/login' % SERVER_URL, params=self.user_and_password)
         self.assertEqual(r.status_code, utils.HTTP_OK)
+        r = requests.post('%s/login' % SERVER_URL, json=self.user_and_password)
+        self.assertEqual(r.status_code, utils.HTTP_OK)
+
 
     def test_password_all_caps(self):
         details = self.user_and_password.copy()
