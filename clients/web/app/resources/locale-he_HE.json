@@ -75,6 +75,14 @@
   "views.askHelp.requester.phone" : "טלפון",
   "views.askHelp.requester.email" : "כתובת מייל",
   "views.askHelp.send" : "שלח/י בקשה",
+  "views.askHelp.hours" : "שעות",
+  "views.askHelp.days" : "ימים",
+  "views.askHelp.hr1" : "שעה",
+  "views.askHelp.hr2" : "שעתיים",
+  "views.askHelp.hr3" : "3 שעות",
+  "views.askHelp.hr4-8" : "4-8 שעות",
+  "views.askHelp.dy0.5" : "חצי יום",
+  "views.askHelp.dy1" : "יום",
 
   "case_share": {
 	"title" : "אולי את/ה יכולים לעזור?",
