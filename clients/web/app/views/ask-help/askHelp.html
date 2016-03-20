@@ -47,7 +47,7 @@
 						<label>{{ 'views.askHelp.description.sub' | translate }} </label>
 						<textarea name='requestDescription' ng-model='requestDescription' required></textarea>
 						<div ng-messages="requestForm.requestDescription.$error" role="alert">
-							<div ng-message="required">{{vm.errorMsg.required}}</div>
+							<div ng-message="required"> {{ 'views.askHelp.errmsg.required' | translate }} </div>
 						</div>
 					</md-input-container>
 
@@ -56,7 +56,7 @@
 						<label>{{ 'views.askHelp.provideRoute.sub' | translate }}</label>
 						<textarea name='courseDescription' ng-model='courseDescription' required></textarea>
 						<div ng-messages="requestForm.courseDescription.$error" role="alert">
-							<div ng-message="required">{{vm.errorMsg.required}}</div>
+							<div ng-message="required"> {{ 'views.askHelp.errmsg.required' | translate }} </div>
 						</div>
 					</md-input-container>
 
@@ -65,7 +65,7 @@
 						<label>{{ 'views.askHelp.reason.sub' | translate }}</label>
 						<textarea name='requestReason' ng-model='requestReason' required></textarea>
 						<div ng-messages="requestForm.requestReason.$error" role="alert">
-							<div ng-message="required">{{vm.errorMsg.required}}</div>
+							<div ng-message="required">{{ 'views.askHelp.errmsg.required' | translate }}</div>
 						</div>
 					</md-input-container>
 
@@ -78,22 +78,16 @@
 									<md-option ng-value="period" ng-repeat="period in vm.periods">
 										{{ period | translate }}
 									</md-option>
-									<!--<md-option ng-value="i" ng-repeat="i in [1,2,3,4,5]">-->
-										<!--{{ i }} {{ 'views.askHelp.days' | translate }}-->
-									<!--</md-option>-->
 								</md-select>
 							</md-input-container>
 						</div>
 
-						<div flex></div>
+						<div flex></div> <!-- This div is here to make space between Date and Period -->
 
 						<div>
 							<label>{{ 'views.askHelp.date' | translate }}</label><br>
 							<md-datepicker name="date" ng-model="date"></md-datepicker>
 						</div>
-						<!--<md-input-container>-->
-
-						<!--</md-input-container>-->
 					</div> <br>
 
 
@@ -104,7 +98,7 @@
 							<label>{{ 'views.askHelp.city' | translate }}</label>
 							<input name='city' ng-model='city' required>
 							<div ng-messages="requestForm.city.$error" role="alert">
-								<div ng-message="required">{{vm.errorMsg.required}}</div>
+								<div ng-message="required">{{ 'views.askHelp.errmsg.required' | translate }}</div>
 							</div>
 						</md-input-container>
 

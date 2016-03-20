@@ -83,6 +83,8 @@
   "views.askHelp.hr4-8" : "4-8 שעות",
   "views.askHelp.dy0.5" : "חצי יום",
   "views.askHelp.dy1" : "יום",
+  "views.askHelp.errmsg.required" : "עליך למלא שדה זה בכדי לשלוח את הבקשה",
+  "views.askHelp.errmsg.email" : "כתובת המייל איננה תקינה",
 
   "case_share": {
 	"title" : "אולי את/ה יכולים לעזור?",
