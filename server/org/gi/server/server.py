@@ -46,7 +46,8 @@ def start_notification_loop():
 
 @app.route('/api/ping')
 def ping():
-    return 'Pong', u.HTTP_OK
+    import time
+    return 'Pong: ' + time.strftime("%c"), u.HTTP_OK
 
 
 api = Api(app)
