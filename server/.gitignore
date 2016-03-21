@@ -1,0 +1,5 @@
+*.pyc
+.idea/
+org/gi/config/local_config.json
+org/test.py
+gi_server.log

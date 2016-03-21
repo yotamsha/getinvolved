@@ -1,0 +1,442 @@
+/* app css stylesheet */
+@font-face {
+  font-family: 'Yed';
+  src: url("../fonts/Yed SemiComebackReg.otf");
+  /* IE9 Compat Modes */
+  src: url("../fonts/Yed SemiComebackReg.otf?#iefix") format("truetype"), url("../fonts/Yed SemiComebackReg.ttf") format("truetype"); }
+
+html, body {
+  height: auto; }
+
+body {
+  min-width: 320px;
+  font-family: 'Yed', 'arial';
+  font-weight: normal;
+  color: #666666;
+  font-size: 12px; }
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none; }
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0px;
+  -webkit-margin-before: 0px;
+  -webkit-margin-after: 0px;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+  font-weight: normal; }
+
+h1 {
+  font-size: 30px; }
+
+h2 {
+  font-size: 26px; }
+
+h3 {
+  font-size: 22px; }
+
+h4 {
+  font-size: 18px; }
+
+h5 {
+  font-size: 16px; }
+
+h6 {
+  font-size: 14px; }
+
+a {
+  color: inherit;
+  text-decoration: none; }
+
+.float {
+  float: left; }
+
+.float-right {
+  float: right; }
+
+button {
+  background-color: #22A5B9;
+  color: #ffffff;
+  font-family: "Yed";
+  font-weight: lighter;
+  border-radius: 2px;
+  border: 0px; }
+  button.btn-primary {
+    height: 30px;
+    font-size: 17px;
+    min-width: 130px; }
+  button.btn-secondary {
+    height: 24px;
+    font-size: 14px;
+    min-width: 130px; }
+  button[disabled="disabled"] {
+    opacity: 0.5; }
+
+.view-container {
+  min-height: 500px;
+  max-width: 1000px;
+  margin: auto;
+  padding: 20px 0; }
+
+.main-panel {
+  background-color: #E6E6E6;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding: 10px; }
+  .main-panel .panel-section:last-child {
+    border-bottom: 2px solid white; }
+
+.panel-section {
+  border-top: 2px solid white;
+  min-height: 70px; }
+
+.panel-section-inner {
+  padding: 8px; }
+
+.content-box-img {
+  height: 350px;
+  margin: 3px; }
+  .content-box-img img {
+    height: 100%;
+    width: 100%;
+    background-size: cover; }
+
+.content-box-text {
+  margin: 3px;
+  border: 2px solid #ffffff;
+  height: 350px; }
+
+.orange-bubble {
+  height: 38px;
+  width: 38px;
+  border-radius: 50%;
+  background-color: #F58220;
+  background-color: rgba(245, 130, 32, 0.8); }
+  .orange-bubble.small {
+    height: 28px;
+    width: 28px; }
+
+.section-seperator {
+  width: 100%;
+  border-bottom: 1px solid #A9DCE3;
+  height: 20px;
+  text-align: center; }
+  .section-seperator .seperator-text {
+    padding: 0px 30px;
+    font-size: 30px;
+    background-color: #ffffff; }
+
+.backdrop {
+  background-color: #212121;
+  opacity: 0.48;
+  z-index: 1;
+  position: absolute;
+  top: 40px;
+  bottom: 0;
+  left: 0;
+  right: 0; }
+
+.md-dialog-container {
+  /* This handles the case where the page has long scroll, which caused the dialog to appear on the bottom
+  of the screen.
+  */
+  max-height: 800px; }
+
+md-dialog .md-dialog-content {
+  padding: 15px; }
+  md-dialog .md-dialog-content a {
+    color: #22A5B9; }
+
+.header {
+  background-image: url("/assets/img/header-bg-wide.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 270px;
+  width: 100%; }
+  .header .logo {
+    background-image: url("/assets/img/logo.png");
+    background-size: contain;
+    background-repeat: no-repeat; }
+  .header .header-title {
+    color: #ffffff;
+    font-size: 40px; }
+  .header .header-subtitle {
+    color: #ffffff;
+    font-size: 28px;
+    width: 470px;
+    text-align: center; }
+  .header .header-btn {
+    margin-top: 15px;
+    padding: 3px 12px;
+    background-color: #54585B;
+    background-color: rgba(84, 88, 91, 0.6);
+    color: #B5B8BF;
+    font-size: 18px; }
+
+.nav-bar {
+  margin-right: 40px;
+  min-width: 600px;
+  color: #ffffff;
+  font-size: 13px; }
+  .nav-bar .logo {
+    position: absolute;
+    top: 20px;
+    left: 30px;
+    height: 100px;
+    width: 270px; }
+  .nav-bar .route-link {
+    padding-top: 45px;
+    padding-bottom: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-left: 30px;
+    min-width: 60px;
+    text-align: center;
+    cursor: pointer; }
+  .nav-bar a {
+    color: #ffffff; }
+    .nav-bar a:visited {
+      color: #ffffff; }
+    .nav-bar a:hover {
+      color: #F4EEEE; }
+
+.route-link.ask-help {
+  margin-top: -4px; }
+  .route-link.ask-help a {
+    padding: 5px 20px;
+    font-size: 16px;
+    background-color: #54585B;
+    background-color: rgba(84, 88, 91, 0.6); }
+
+.route-link.active {
+  background-color: rgba(88, 145, 161, 0.71);
+  color: #ffffff; }
+
+.small-nav-bar {
+  height: 40px;
+  background-color: #ffffff;
+  padding: 0px 10px;
+  margin-bottom: 33px; }
+  .small-nav-bar .logo {
+    background-position: center center;
+    width: 110px;
+    height: 100%; }
+  .small-nav-bar .hamburger-icon {
+    background-image: url("/assets/img/icons/hamburger-icon.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 22px;
+    height: 22px;
+    cursor: pointer; }
+
+.side-nav-menu {
+  background-color: #ffffff;
+  position: absolute;
+  top: 40px;
+  right: 0;
+  bottom: 0;
+  width: 60%;
+  z-index: 10; }
+  .side-nav-menu .route-link.ask-help {
+    margin-top: 0px; }
+    .side-nav-menu .route-link.ask-help a {
+      background-color: rgba(200, 206, 210, 0.6); }
+
+.side-nav-option {
+  border-bottom: 1px solid #D9D9D9;
+  width: 100%;
+  font-size: 16px; }
+  .side-nav-option a {
+    display: block;
+    padding: 10px 10px; }
+
+.how-it-works-section {
+  padding-top: 30px;
+  max-width: 1000px;
+  margin: auto; }
+  .how-it-works-section img {
+    width: 230px; }
+  .how-it-works-section.ng-enter, .how-it-works-section.ng-leave {
+    -webkit-transition: 0.5s linear all;
+    -moz-transition: 0.5s linear all;
+    -ms-transition: 0.5s linear all;
+    -o-transition: 0.5s linear all;
+    transition: 0.5s linear all; }
+  .how-it-works-section.ng-leave.ng-leave-active, .how-it-works-section.ng-enter {
+    max-height: 0;
+    opacity: 0; }
+  .how-it-works-section.ng-enter.ng-enter-active, .how-it-works-section.ng-leave {
+    max-height: 600px;
+    opacity: 1; }
+  .how-it-works-section.ng-leave, .how-it-works-section.ng-enter {
+    transition: all 350ms linear; }
+
+.how-it-works-link {
+  text-align: center;
+  margin-bottom: 15px; }
+  .how-it-works-link .orange-bubble {
+    margin: 10px auto; }
+  .how-it-works-link .subtitle {
+    margin: auto;
+    width: 230px; }
+
+@media (max-width: 959px) {
+  .header .header-title {
+    font-size: 28px; }
+  .header .header-subtitle {
+    font-size: 16px;
+    width: 270px; } }
+
+@media (min-width: 960px) and (max-width: 1279px) {
+  .nav-bar .route-link {
+    margin-left: 22px; }
+  .nav-bar .logo {
+    top: 33px;
+    width: 165px; } }
+
+.disp-ib {
+  display: inline-block; }
+
+.va-mid {
+  vertical-align: middle; }
+
+footer {
+  background-color: #565656;
+  height: 250px; }
+
+.fb-share-icon {
+  background-image: url("/assets/img/icons/fb-share-icon.png");
+  width: 30px;
+  height: 32px; }
+
+.email-share-icon {
+  background-image: url("/assets/img/icons/email-share-icon.png");
+  width: 30px;
+  height: 32px; }
+
+.case-detail-view .case-header-panel {
+  margin-bottom: 30px;
+  position: relative; }
+
+.case-detail-view .centered-bubble {
+  /* PLEASE NOTE - container must be position:relative */
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  height: 50px;
+  width: 50px;
+  opacity: 0.8; }
+
+.case-detail-view .tasks-list-title {
+  margin-bottom: 15px; }
+
+.case-detail-view .task-item {
+  font-size: 14px;
+  margin-bottom: 30px; }
+  .case-detail-view .task-item h5 {
+    font-size: 17px; }
+  .case-detail-view .task-item .task-title-row {
+    margin-bottom: 7px; }
+  .case-detail-view .task-item .task-title {
+    padding-left: 60px; }
+  .case-detail-view .task-item .text-emphasized {
+    color: #F58220; }
+  .case-detail-view .task-item .task-detail:last-of-type {
+    margin-bottom: 15px; }
+
+.cases-search-view {
+  margin-top: 20px; }
+  .cases-search-view .top-strip {
+    margin: 20px 0px;
+    font-size: 16px; }
+  .cases-search-view .case {
+    border: 1px solid #D9D9D9;
+    width: 230px;
+    margin: auto;
+    margin-bottom: 30px; }
+  .cases-search-view .orange-bubble {
+    position: absolute;
+    top: -19px;
+    left: 50%;
+    margin-left: -19px; }
+  .cases-search-view .case-register-btn {
+    width: 140px;
+    margin-right: 3px; }
+  .cases-search-view .email-share-icon {
+    margin-right: -5px; }
+  .cases-search-view .case-img {
+    width: 100%;
+    height: 150px; }
+  .cases-search-view .case-details {
+    padding: 15px 10px 10px 10px;
+    position: relative; }
+  .cases-search-view .case-title {
+    margin-bottom: 10px; }
+  .cases-search-view .paging-controls-container {
+    text-align: center; }
+    .cases-search-view .paging-controls-container li {
+      display: inline-block;
+      font-size: 16px;
+      text-decoration: none;
+      color: #22A5B9; }
+      .cases-search-view .paging-controls-container li:hover {
+        background-color: #e7e7e7; }
+      .cases-search-view .paging-controls-container li.active {
+        background-color: #22A5B9;
+        color: #ffffff; }
+      .cases-search-view .paging-controls-container li.disabled {
+        color: #999; }
+        .cases-search-view .paging-controls-container li.disabled:hover {
+          background-color: #ffffff; }
+        .cases-search-view .paging-controls-container li.disabled a {
+          cursor: default; }
+      .cases-search-view .paging-controls-container li a {
+        display: block;
+        padding: 6px 12px; }
+    .cases-search-view .paging-controls-container a {
+      text-decoration: none; }
+
+.login-dialog {
+  width: 320px;
+  height: 445px; }
+  .login-dialog .dialog-header {
+    color: #ffffff; }
+  .login-dialog .terms-and-privacy-note {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center; }
+  .login-dialog .volunteer-signup-foot-note {
+    margin-top: 20px;
+    font-weight: bold; }
+  .login-dialog .separator {
+    margin: 8px;
+    font-size: 20px; }
+  .login-dialog .fb-button {
+    width: 170px;
+    height: 50px;
+    cursor: pointer;
+    background-image: url("../img/fb-login-button-he.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center; }
+  .login-dialog .success-msg {
+    font-weight: bold;
+    margin: 20px; }
+  .login-dialog .regular-login-form {
+    text-align: center; }
+    .login-dialog .regular-login-form button {
+      width: 160px; }
+    .login-dialog .regular-login-form .note {
+      margin-top: 15px; }
+
+.user-profile-form .form-input-container {
+  /*    min-width: 200px;
+    max-width: 300px;*/ }
+
+/*# sourceMappingURL=app.css.map */
