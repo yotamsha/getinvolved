@@ -57,16 +57,35 @@ angular.module('app', [
         'preferredLocale': 'he_HE'
     })
     .constant('APP_CONFIG', {
-        'homeRoute': '/cases'
+        homeRoute: '/cases',
+        serverPort : 5000,
+        productionServerHost : '104.155.49.192'
     })
     .config(['$urlRouterProvider', '$translateProvider', '$mdThemingProvider', 'RestangularProvider', 'APP_CONFIG',
         function ($urlRouterProvider, $translateProvider, $mdThemingProvider, RestangularProvider, APP_CONFIG) {
 
-            RestangularProvider.setBaseUrl('http://127.0.0.1:5000/api');
-            /*            RestangularProvider.setDefaultHeaders({
-             "Authorization": "Basic YWRtaW46YWRtaW4="
-             });*/
+            function getEnvFromHost(){
+                //TODO change this to be taken out of some parameter set in the grunt release package command.
+                if (location.url === APP_CONFIG.productionServerHost){
+                    return "production";
+                } else {
+                    return "dev";
+                }
+            }
 
+            function getServerHost(env){
+                if (env === "production"){
+                    return "http://" + APP_CONFIG.productionServerHost + ":" + APP_CONFIG.serverPort;
+                } else {
+                    return "http://localhost:" + APP_CONFIG.serverPort;
+                }
+            }
+
+            var env = getEnvFromHost();
+            var serverHost = getServerHost(env);
+            console.log("using server host: " + serverHost)
+            RestangularProvider.setBaseUrl(serverHost + '/api');
+            APP_CONFIG.serverHost = serverHost;
             $mdThemingProvider.theme('default')
                 .primaryPalette('cyan')
                 .accentPalette('orange');
