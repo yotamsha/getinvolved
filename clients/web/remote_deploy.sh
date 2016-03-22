@@ -1,4 +1,0 @@
-#
-# run on remote box
-#
-
