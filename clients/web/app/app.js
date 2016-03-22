@@ -66,7 +66,7 @@ angular.module('app', [
 
             function getEnvFromHost(){
                 //TODO change this to be taken out of some parameter set in the grunt release package command.
-                if (location.url === APP_CONFIG.productionServerHost){
+                if (location.host === APP_CONFIG.productionServerHost){
                     return "production";
                 } else {
                     return "dev";
