@@ -9,9 +9,9 @@ angular.module('app.models.case')
     /**
      * This is a model wrapper that includes the business logic for a Case.
      */
-    .factory('CaseModel', [function () {
+    .factory('CaseDefaultImageProvider', [function () {
         return {
-            chooseDefaultImage: function () {
+            getImage: function () {
                 var DEFAULT_TASKS_IMAGES_NUM = 9;
                 return "assets/img/tasks_defaults/task" + (Math.floor(Math.random() * DEFAULT_TASKS_IMAGES_NUM) + 1) + ".jpg";
             }

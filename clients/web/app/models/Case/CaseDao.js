@@ -33,7 +33,8 @@ angular.module('app.models.case')
             }
             return params;
         }
-        function _getById(caseId, config){
+        
+		function _getById(caseId, config){
             var queryParams = _buildQueryParams(config);
             return Restangular.one(modelName, caseId).get(queryParams).then(
                 function(response){
@@ -42,9 +43,17 @@ angular.module('app.models.case')
             },function(){
                 //error
             });
-
-
         }
+
+		function _getPage(pageNum, pageSize, sortMethod){
+			return collectionDAO.getList({
+						'sort' : sortMethod,
+						'page_size': pageSize, 
+						'page_number': pageNum 
+					}).then(function (cases) {
+						return _.map(cases, CaseMapper.mapToVM);
+					});
+		}
 
         function _save(caseVM){
 
@@ -59,8 +68,10 @@ angular.module('app.models.case')
             caseDto.tasks = [taskDto];
             return Restangular.one(modelName, caseDto.id).customPUT(caseDto);
         }
-        return {
+        
+		return {
             getById : _getById,
+			getPage: _getPage,
             save: _save,
             assignTaskToVolunteer : _assignTaskToVolunteer
         };

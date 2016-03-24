@@ -19,9 +19,9 @@ angular.module('app.casesSearch', ['app.services.share','app.models.case.viewMod
             }
         });
     }])
-    .controller('casesSearchCtrl', ['$scope', 'Restangular', '$stateParams', 
+    .controller('casesSearchCtrl', ['$scope', 'Restangular', '$stateParams','CaseDao', 
 	'DialogsService', 'moment', '$rootScope','FbShare','$anchorScroll','$location','$timeout','$translate','CaseEmailShareExpander',
-        function ($scope, Restangular, $stateParams,
+        function ($scope, Restangular, $stateParams, CaseDao,
 		 DialogsService, moment, $rootScope, FbShare, $anchorScroll, $location, $timeout, $translate, CaseEmailShareExpander) {
 
             function _init() {
@@ -75,7 +75,27 @@ angular.module('app.casesSearch', ['app.services.share','app.models.case.viewMod
 				function initCasesGrid(){
 					$translate(['views.casesSearch.sortTypes.newest','views.casesSearch.sortTypes.oldest', 
 					'views.casesSearch.sortTypes.mostUrgent']).then(function (translations) {
-						sortTypes = [{
+						sortTypes = getSortTypes(translations);
+						
+						vm.sortTypes = sortTypes;
+						currentSortType = sortTypes[0];
+						updateCasesListByCurrentPage();
+					});
+				}
+				
+				function updateCasesListByCurrentPage(){
+					
+					CaseDao
+						.getPage(vm.currentCasesPage - 1, vm.casesPerPage, currentSortType.sortMethod)
+						.then(function (cases) {
+							vm.cases = cases;
+							
+							CaseEmailShareExpander.expandCases(cases);
+						});
+				}
+				
+				function getSortTypes(translations){
+					return [{
 							'type': 'newerFirst',
 							'title': translations["views.casesSearch.sortTypes.newest"],
 							'sortMethod': "[('creation_date','DESCENDING')]"
@@ -90,25 +110,8 @@ angular.module('app.casesSearch', ['app.services.share','app.models.case.viewMod
 							'title': translations["views.casesSearch.sortTypes.mostUrgent"],
 							'sortMethod': "[('due_date','ASCENDING'),('creation_date','DESCENDING')]",
 						}];
-						
-						vm.sortTypes = sortTypes;
-						currentSortType = sortTypes[0];
-						updateCasesListByCurrentPage();
-					});
 				}
 				
-				function updateCasesListByCurrentPage(){
-					
-					baseCases.getList({
-						'sort' : currentSortType.sortMethod,
-						'page_size': vm.casesPerPage, 
-						'page_number': vm.currentCasesPage - 1 
-					}).then(function (cases) {
-						vm.cases = cases;
-						
-						CaseEmailShareExpander.expandCases(cases);
-					});
-				}
             }
 
             // --- INIT --- //
