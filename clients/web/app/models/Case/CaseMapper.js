@@ -7,6 +7,7 @@ angular.module('app.models.case')
 		
         function _mapToVM(caseDto){
             var caseVM = {
+				id: caseDto.id, 
 				title: caseDto.title,
 				description: caseDto.description,
 				state: caseDto.state, // should be mapped to CaseState?
