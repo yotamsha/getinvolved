@@ -4,7 +4,7 @@
 			{{"views.casesSearch.yourOpportunities" | translate}}
     	</span>
 	</div>
-	<div class="sort-options">
+	<div class="sort-options" layout="row" layout-align-xs="center center">
 		<div>
 			<span> {{"views.casesSearch.sortBy" | translate}}: </span>
 			<span ng-repeat="sortType in vm.sortTypes"> 
@@ -17,7 +17,7 @@
 			</span>
 		</div>
 	</div>
-	<div class="cases-paging-title">
+	<div class="cases-paging-title" layout="row" layout-align-xs="center center">
 		{{"views.casesSearch.paging_title" | translate: vm}}
 	</div>
 	<div layout="row" layout-wrap layout-align="start center" class="cases-container clearfix">
