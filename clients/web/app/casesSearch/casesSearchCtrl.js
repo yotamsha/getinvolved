@@ -19,10 +19,10 @@ angular.module('app.casesSearch', ['app.services.share','app.models.case.viewMod
             }
         });
     }])
-    .controller('casesSearchCtrl', ['$scope', 'Restangular', '$stateParams','CaseDao', 
-	'DialogsService', 'moment', '$rootScope','FbShare','$anchorScroll','$location','$timeout','$translate','CaseEmailShareExpander',
-        function ($scope, Restangular, $stateParams, CaseDao,
-		 DialogsService, moment, $rootScope, FbShare, $anchorScroll, $location, $timeout, $translate, CaseEmailShareExpander) {
+    .controller('casesSearchCtrl', ['$scope', 'Restangular','CaseDao','FbShare',
+	'$anchorScroll','$location','$timeout','$translate','CaseEmailShareExpander',
+        function ($scope, Restangular, CaseDao, FbShare, 
+		$anchorScroll, $location, $timeout, $translate, CaseEmailShareExpander) {
 
             function _init() {
                 $scope.vm = {
@@ -32,7 +32,9 @@ angular.module('app.casesSearch', ['app.services.share','app.models.case.viewMod
 					casesPerPage: 12,
 					reverse: false,
 					sortTypes: [],
-					selectedSortIndex: 0
+					selectedSortIndex: 0,
+					resultsShownFrom: 0,
+					resultsShownTo: 0
                 };
 				
 				var vm = $scope.vm;
@@ -47,9 +49,6 @@ angular.module('app.casesSearch', ['app.services.share','app.models.case.viewMod
                     vm.totalCasesCount = result.count;
                 });
 
-                vm.changeSort = function (isReversed) {
-                    vm.reverse = isReversed;
-                }
                 vm.onPageChange = function(newPageNumber) {
 					updateCasesListByCurrentPage();
 					
@@ -64,6 +63,7 @@ angular.module('app.casesSearch', ['app.services.share','app.models.case.viewMod
 						return;
 					
 					vm.selectedSortIndex = sortIndex;
+					vm.currentCasesPage = 1;
 					currentSortType = newSortType;
 					updateCasesListByCurrentPage();
 				} 
@@ -89,6 +89,9 @@ angular.module('app.casesSearch', ['app.services.share','app.models.case.viewMod
 						.getPage(vm.currentCasesPage - 1, vm.casesPerPage, currentSortType.sortMethod)
 						.then(function (cases) {
 							vm.cases = cases;
+							vm.resultsShownFrom = ((vm.currentCasesPage - 1) * vm.casesPerPage) + 1;
+							var resultsShownTo = vm.currentCasesPage * vm.casesPerPage; 
+							vm.resultsShownTo = resultsShownTo > vm.totalCasesCount ? vm.totalCasesCount : resultsShownTo;  
 							
 							CaseEmailShareExpander.expandCases(cases);
 						});
@@ -111,7 +114,6 @@ angular.module('app.casesSearch', ['app.services.share','app.models.case.viewMod
 							'sortMethod': "[('due_date','ASCENDING'),('creation_date','DESCENDING')]",
 						}];
 				}
-				
             }
 
             // --- INIT --- //

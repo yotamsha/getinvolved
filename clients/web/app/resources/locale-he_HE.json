@@ -27,6 +27,7 @@
   "views.caseDetail.tasks_list_item.assigned_to": "מתנדב:",
   "views.casesSearch.yourOpportunities": "ההזדמנויות שלך",
   "views.casesSearch.sortBy": "מיין לפי",
+  "views.casesSearch.paging_title": "מציג {{resultsShownFrom}} - {{resultsShownTo}} מתוך {{totalCasesCount}} תוצאות",
   "views.casesSearch.case.showDetails": "הצג פרטים",
   "views.casesSearch.case.header_title": "בואו נתערב",
   "views.casesSearch.case.header_subtitle": "מגוון אפשרויות להתנדבות חד פעמית שיהפכו רגע פנוי לרגע של שינוי",
