@@ -26,13 +26,6 @@ angular.module('app.models.case')
     .factory('CaseDao', ['Restangular','CaseMapper','TaskMapper', function (Restangular, CaseMapper, TaskMapper ) {
         var modelName = 'cases';
         var collectionDAO = Restangular.all(modelName);
-        function _buildQueryParams(config){
-            var params = {};
-            if (config.populateVolunteer){
-                params.add_volunteer_attributes = "yes"
-            }
-            return params;
-        }
         
 		function _getById(caseId, config){
             var queryParams = _buildQueryParams(config);
@@ -45,19 +38,33 @@ angular.module('app.models.case')
             });
         }
 
-		function _getPage(pageNum, pageSize, sortMethod){
-			return collectionDAO.getList({
-						'sort' : sortMethod,
-						'page_size': pageSize, 
-						'page_number': pageNum 
-					}).then(function (cases) {
-						return _.map(cases, CaseMapper.mapToVM);
-					});
+		function _getMany(config) {
+			var conf = angular.extend({
+				pageSize: null,
+				pageNum: null,
+				sort: null,
+				excludedStates: [],
+			}, config)
+			
+			var queryParams = _buildQueryParams(conf);
+			
+			return collectionDAO.getList(queryParams).then(function (cases) {
+				return _.map(cases, CaseMapper.mapToVM);
+			});
 		}
 
-        function _save(caseVM){
-
-        }
+		function _getCasesCount(config){
+			var conf = angular.extend({
+				excludedStates: [],
+			}, config)
+			
+			var queryParams = _buildQueryParams(conf);
+			queryParams["count"] = "yes";
+			
+			return collectionDAO.customGET("", queryParams).then(function (result) {
+				return result.count;
+			});
+		}
 
         function _assignTaskToVolunteer(caseVM, taskVM, userId){
             var caseDto = CaseMapper.mapToDto(caseVM);
@@ -69,10 +76,49 @@ angular.module('app.models.case')
             return Restangular.one(modelName, caseDto.id).customPUT(caseDto);
         }
         
+		function _buildQueryParams(config){
+            var params = {};
+			
+            if (config.populateVolunteer)
+                params.add_volunteer_attributes = "yes"
+            
+			if (config.pageSize)
+				params.page_size = config.pageSize;
+			
+			if (config.pageNum)
+				params.page_number = config.pageNum;
+			
+			if (config.sort)
+				params.sort = config.sort;
+			
+			var filter = _buildFilterQueryParam(config);
+			if (filter)
+				params.filter = filter;
+			
+            return params;
+        }
+		
+		function _buildFilterQueryParam(config){
+			var filters = [];
+			
+			if (config.excludedStates.length){
+				var excludedStatesArr = [];
+				var statesFilter = { "$and" : excludedStatesArr };
+				
+				_.each(config.excludedStates, function(state){
+					excludedStatesArr.push({ "state" : { "$ne" : state }})
+				});
+				
+				filters.push(statesFilter);
+			}
+			
+			return filters.length ? { "$and" : filters } : "";
+		}
+		
 		return {
             getById : _getById,
-			getPage: _getPage,
-            save: _save,
+			getMany: _getMany,
+			getCasesCount: _getCasesCount,
             assignTaskToVolunteer : _assignTaskToVolunteer
         };
     }]);
