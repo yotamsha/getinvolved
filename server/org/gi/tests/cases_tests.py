@@ -85,6 +85,7 @@ class TestGIServerCaseTestCase(unittest.TestCase):
     def test_create_general_task_with_address(self):
         case = _load('case_with_general_task_with_address.json', self.config_folder)
         self._replace(case)
+        stam=ACCESS_TOKEN_AUTH
         r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_CREATED)
 

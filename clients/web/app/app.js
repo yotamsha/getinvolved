@@ -21,6 +21,7 @@ angular.module('app', [
         // App views
         'app.view1',
         'app.view2',
+        'app.views.helpRequestForm',
         'app.caseDetail',
         'app.casesSearch',
         'app.login',
@@ -97,7 +98,7 @@ angular.module('app', [
                 prefix: 'resources/locale-',// path to translations files
                 suffix: '.json'// suffix, currently- extension of the translations
             });
-            $translateProvider.preferredLanguage('he_HE');// is applied on first load
+            $translateProvider.preferredLanguage('he_HE');// is applied on first load // yak: todo: USE CONSTANT?
             $translateProvider.useLocalStorage();// saves selected language to localStorage
             // App routing is using ui-router module - https://github.com/angular-ui/ui-router
             $urlRouterProvider.otherwise(APP_CONFIG.homeRoute);
