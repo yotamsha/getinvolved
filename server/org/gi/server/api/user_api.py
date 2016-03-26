@@ -57,17 +57,6 @@ class UserApi(Resource):
         return user, u.HTTP_OK
 
     @u.web_log
-    @requires_auth
-    def delete(self, user_id):
-        try:
-            result = db.users.delete_one({'_id': u.to_object_id(user_id)})
-            if result.deleted_count != 1:
-                raise Exception('One user should be deleted but %d users were deleted' % result.deleted_count)
-        except Exception as e:
-            return str(e), u.HTTP_NOT_FOUND
-        return '', u.HTTP_NO_CONTENT
-
-    @u.web_log
     def post(self):
         faults = []
         payload = request.json

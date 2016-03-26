@@ -100,10 +100,6 @@ class TestGIServerCaseTestCase(unittest.TestCase):
             r = requests.put('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]), json=case, auth=ACCESS_TOKEN_AUTH)
             self.assertEqual(r.status_code, utils.HTTP_OK)
 
-    def test_delete_case(self):
-        r = requests.delete('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]), auth=ACCESS_TOKEN_AUTH)
-        self.assertEqual(r.status_code, utils.HTTP_NO_CONTENT)
-
     def test_update_state_transitions(self):
         case = _load('case_state_transitions_4.json', self.config_folder)
         self._replace(case)
@@ -394,11 +390,6 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         r = requests.put('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]), json=case, auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
 
-    def test_delete_case_wrong_id(self):
-        wrong_id = self.case_ids[0].replace(self.case_ids[0][0], str(int(self.case_ids[0][0]) + 1))
-        r = requests.delete('%s/cases/%s' % (SERVER_URL_API, wrong_id), auth=ACCESS_TOKEN_AUTH)
-        self.assertEqual(r.status_code, utils.HTTP_NOT_FOUND)
-
     def test_bad_task_update(self):
         case_with_tasks = _load('case_with_tasks.json', self.config_folder)
         self._replace(case_with_tasks)
@@ -526,6 +517,9 @@ class TestGIServerCaseTestCase(unittest.TestCase):
                          auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_OK)
 
+    def test_bad_http_methods(self):
+        r = requests.delete('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]), auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_METHOD_NOT_ALLOWED)
 
 def _get_case_from_db(case_id):
     r = requests.get('%s/cases/%s' % (SERVER_URL_API, case_id), auth=ACCESS_TOKEN_AUTH)

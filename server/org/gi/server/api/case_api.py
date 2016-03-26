@@ -24,17 +24,6 @@ class CaseApi(Resource):
 
     @u.web_log
     @requires_auth
-    def delete(self, case_id):
-        try:
-            result = db.cases.delete_one({'_id': u.to_object_id(case_id)})
-            if result.deleted_count != 1:
-                raise Exception('One case should be deleted but %d cases were deleted' % result.deleted_count)
-        except Exception as e:
-            return str(e), u.HTTP_NOT_FOUND
-        return '', u.HTTP_NO_CONTENT
-
-    @u.web_log
-    @requires_auth
     def put(self, case_id):
         case = db.cases.find_one({'_id': u.to_object_id(case_id)})
         if not case:
