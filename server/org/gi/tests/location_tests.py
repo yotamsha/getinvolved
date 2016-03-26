@@ -9,8 +9,8 @@ from org.gi.server.service import location as l
 
 class GILocationTestCase(unittest.TestCase):
     def test_location_1(self):
-        LAT = 37.4224504
-        LNG = -122.0840859
+        LAT = 37.4223372
+        LNG = -122.0843304
         location = l.get_lat_lng('1600 Amphitheatre Parkway, Mountain View, CA')
         self.assertEqual(location['lat'], LAT)
         self.assertEqual(location['lng'], LNG)
