@@ -12,7 +12,14 @@ angular.module('app.caseDetail', [])
             controller: 'caseDetailCtrl',
             resolve: { // complete the following requests before page is loaded.
                 caseData: ['CaseDao', '$stateParams', function (CaseDao, $stateParams) {
-                    return CaseDao.getById($stateParams.caseId , {populateVolunteer : true});
+                    // TODO - add the populateVolunteer when server bug is fixed
+                    return CaseDao.getById($stateParams.caseId ,
+                        {
+/*
+                            populateVolunteer : true
+*/
+                        }
+                    );
                 }],
                 userSession: ['AuthService', function (AuthService) { // verify that session retrieval is completed.
                     return AuthService.authRetrievalCompleted();

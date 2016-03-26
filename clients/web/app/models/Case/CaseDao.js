@@ -104,7 +104,7 @@ angular.module('app.models.case')
 		function _buildFilterQueryParam(config){
 			var filters = [];
 			
-			if (config.excludedStates.length){
+			if (config.excludedStates && config.excludedStates.length){
 				var excludedStatesArr = [];
 				var statesFilter = { "$and" : excludedStatesArr };
 				
