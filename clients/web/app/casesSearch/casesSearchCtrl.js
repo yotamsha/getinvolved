@@ -19,9 +19,9 @@ angular.module('app.casesSearch', ['app.services.share','app.models.case.viewMod
             }
         });
     }])
-    .controller('casesSearchCtrl', ['$scope', 'Restangular','CaseDao','FbShare',
+    .controller('casesSearchCtrl', ['$scope', 'CaseDao','FbShare',
 	'$anchorScroll','$location','$timeout','$translate','CaseEmailShareExpander',
-        function ($scope, Restangular, CaseDao, FbShare, 
+        function ($scope, CaseDao, FbShare, 
 		$anchorScroll, $location, $timeout, $translate, CaseEmailShareExpander) {
 
             function _init() {
@@ -38,16 +38,10 @@ angular.module('app.casesSearch', ['app.services.share','app.models.case.viewMod
                 };
 				
 				var vm = $scope.vm;
-
-                var baseCases = Restangular.all('cases');
 				
 				var currentSortType;
 				var sortTypes = [];
 				initCasesGrid(currentSortType, sortTypes);
-                
-				baseCases.customGET("", {'count':'yes'}).then(function (result) {
-                    vm.totalCasesCount = result.count;
-                });
 
                 vm.onPageChange = function(newPageNumber) {
 					updateCasesListByCurrentPage();
@@ -84,9 +78,21 @@ angular.module('app.casesSearch', ['app.services.share','app.models.case.viewMod
 				}
 				
 				function updateCasesListByCurrentPage(){
+					CaseDao
+						.getCasesCount({
+							excludedStates: ["completed", "assigned"],
+						})
+						.then(function(count){
+							vm.totalCasesCount = count;
+						});
 					
 					CaseDao
-						.getPage(vm.currentCasesPage - 1, vm.casesPerPage, currentSortType.sortMethod)
+						.getMany({
+							excludedStates: ["completed", "assigned"],
+							pageNum: vm.currentCasesPage - 1,
+							pageSize: vm.casesPerPage,
+							sort: currentSortType.sortMethod
+						})
 						.then(function (cases) {
 							vm.cases = cases;
 							vm.resultsShownFrom = ((vm.currentCasesPage - 1) * vm.casesPerPage) + 1;
