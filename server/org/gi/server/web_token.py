@@ -1,5 +1,8 @@
 import jwt
 import time
+
+import sys
+
 from org.gi.config import config
 
 ACCESS_TOKEN_TTL = 24 * 60 * 60
@@ -41,4 +44,3 @@ class AccessTokenAuth:
     def __call__(self, r):
         r.headers['Authorization'] = self.access_token
         return r
-
