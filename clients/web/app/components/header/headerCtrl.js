@@ -70,7 +70,7 @@ angular.module('app.header.header-ctrl', [])
                     },
                     {
                         routeText: "views.main.header.nav-menu.donors",
-                        link: "/donors",
+                        link: "/partners",
                         classes: "donors"
                     },
                     {

@@ -25,6 +25,8 @@ angular.module('app', [
         'app.casesSearch',
         'app.login',
         'app.userProfile',
+        'app.partners',
+        'app.about_us',
 
         // Components
         'app.version',
