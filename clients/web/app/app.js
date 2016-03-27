@@ -49,7 +49,10 @@ angular.module('app', [
         // 3rd-Party Wrappers - We wrap 3rd party libraries that aren't angular modules in order
         // to keep the global window clean. Only these libraries are accessible through a single variable: window._thirdParty
         // more on the method: http://jameshill.io/articles/angular-third-party-injection-pattern/
-        'app.vendors.momentjs'
+        'app.vendors.momentjs',
+
+        // Environment config module
+        'config'
 
     ])
     .constant('LOCALES', {
@@ -64,8 +67,8 @@ angular.module('app', [
         serverPort : 5000,
         productionServerHost : '104.155.49.192'
     })
-    .config(['$urlRouterProvider', '$translateProvider', '$mdThemingProvider', 'RestangularProvider', 'APP_CONFIG',
-        function ($urlRouterProvider, $translateProvider, $mdThemingProvider, RestangularProvider, APP_CONFIG) {
+    .config(['$urlRouterProvider', '$translateProvider', '$mdThemingProvider', 'RestangularProvider', 'APP_CONFIG','ENV',
+        function ($urlRouterProvider, $translateProvider, $mdThemingProvider, RestangularProvider, APP_CONFIG, ENV) {
 
             function getEnvFromHost(){
                 //TODO change this to be taken out of some parameter set in the grunt release package command.
@@ -84,8 +87,8 @@ angular.module('app', [
                 }
             }
 
-            var env = getEnvFromHost();
-            var serverHost = getServerHost(env);
+            //var env = getEnvFromHost();
+            var serverHost = ENV.apiEndpoint;
             console.log("using server host: " + serverHost)
             RestangularProvider.setBaseUrl(serverHost + '/api');
             APP_CONFIG.serverHost = serverHost;
