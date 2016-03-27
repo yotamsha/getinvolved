@@ -6,7 +6,8 @@ angular.module('app.views.helpRequestForm', ['app.vendors.momentjs'])
             $stateProvider.state('helpRequestForm', {
                 url : "/ask-help",
                 templateUrl: 'views/ask-help/askHelp.html',
-                controller: 'askHelpCtrl as vm'
+                controller: 'askHelpCtrl',
+                controllerAs: "vm"
             });
     }])
 
@@ -135,7 +136,7 @@ angular.module('app.views.helpRequestForm', ['app.vendors.momentjs'])
             vm.phoneRegex = /^(\d{8})?(\d{10})?$/; // todo
 
             vm.sendRequest = function() {
-                alert('form invalid = ' + $scope.requestForm.$invalid);
+                alert('todo :) send request to server.');
             };
         }
     ]);

@@ -55,9 +55,9 @@
 					</div>
 				</md-input-container>
 
+				<label>{{ vm.translatePath + ".time" | translate }}</label>
 				<div flex layout-gt-sm="row" layout="column" layout-margin layout-fill layout-align="center center">
 					<div flex>
-						<label>{{ vm.translatePath + ".time" | translate }}</label><br>
 						<md-input-container layout-fill>
 							<md-select ng-model="time" placeholder="{{ vm.translatePath + '.time.sub' | translate }}">
 								<md-option ng-value="period" ng-repeat="period in vm.periods">
@@ -67,17 +67,18 @@
 						</md-input-container>
 					</div>
 
+					<br hide-gt-sm>
+
 					<!--<div flex></div> &lt;!&ndash; This div is here to make space between Date and Period &ndash;&gt;-->
 
-					<div flex>
-						<label>{{ vm.translatePath + ".date" | translate }}</label><br>
-						<md-datepicker name="date" ng-model="date"></md-datepicker>
+					<div flex layout-gt-sm="row" layout="column" layout-align="center center">
+						<label flex>{{ vm.translatePath + ".date" | translate }}</label>
+						<div flex="70"><md-datepicker name="date" ng-model="date"></md-datepicker></div>
 					</div>
-				</div> <br>
+				</div> <br><br>
 
 
-				<label>{{ vm.translatePath + ".place" | translate }}</label><br>
-
+				<label>{{ vm.translatePath + ".place" | translate }}</label>
 				<div flex layout="row" layout-xs="column" layout-margin layout-fill>
 					<md-input-container layout-fill flex>
 						<label>{{ vm.translatePath + ".city" | translate }}</label>
@@ -97,22 +98,22 @@
 
 				<div layout="row">
 					<div flex>
-						<input type="checkbox" name="organizationCheckBox" ng-model="organizationCheckBox">
+						<input type="checkbox" name="organizationCheck" ng-model="organizationCheck">
 						<label><b>{{ vm.translatePath + ".organization.title" | translate }}</b></label>
 					</div>
 				</div>
 
-				<div id="organizationInfo" ng-show="organizationCheckBox"
+				<div id="organizationInfo" ng-show="organizationCheck"
 				 flex layout="column" layout-fill layout-align="center center" layout-margin>
 					<label>{{ vm.translatePath + ".organization.title.sub" | translate }}</label><br>
 					<div flex layout-gt-xs="row" layout="column" layout-fill>
 						<md-input-container layout-fill flex>
 							<label>{{ vm.translatePath + ".organization.name" | translate }}</label><br>
-							<input name="orgName" ng-model="orgName">
+							<input type="text" name="orgName" ng-model="orgName" ng-required="organizationCheck">
 						</md-input-container>
 						<md-input-container layout-fill flex>
 							<label>{{ vm.translatePath + ".organization.email" | translate }}</label><br>
-							<input name="orgMail" type="email" ng-model="orgMail">
+							<input type="email" name="orgMail" type="email" ng-model="orgMail" ng-required="organizationCheck">
 							<div ng-messages="requestForm.orgMail.$error" role="alert">
 								<div ng-message="email">{{ vm.translatePath + ".errmsg.email" | translate }}</div>
 							</div>
@@ -122,11 +123,11 @@
 
 				<div layout="row">
 					<div flex>
-						<input type="checkbox" name="requesterCheckBox" ng-model="requesterCheckBox">
+						<input type="checkbox" name="requesterCheck" ng-model="requesterCheck">
 						<label><b>{{ vm.translatePath + ".requester.title" | translate }}</b></label>
 					</div>
 				</div>
-				<div id="requesterInfo" ng-show="requesterCheckBox" layout-fill flex>
+				<div id="requesterInfo" ng-show="requesterCheck" layout-fill flex>
 					<div layout="row" layout-xs="column" layout-margin>
 						<md-input-container layout-fill flex>
 							<label> {{ vm.translatePath + ".requester.firstName" | translate }} </label>
@@ -156,7 +157,8 @@
 						</md-input-container>
 					</div>
 				</div>
-				<md-button ng-click="vm.sendRequest()" ng-disabled="requestForm.$invalid" class="btn-primaty"> {{ vm.translatePath + ".send" | translate }} </md-button>
+				<br ng-hide="requesterCheck">
+				<md-button ng-click="vm.sendRequest()" ng-disabled="requestForm.$invalid" class="btn-primary"> {{ vm.translatePath + ".send" | translate }} </md-button>
 			</div>
 		</form>
 </div>
