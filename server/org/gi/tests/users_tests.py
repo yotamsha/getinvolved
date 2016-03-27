@@ -118,6 +118,12 @@ class GIServerUsersTestCase(unittest.TestCase):
         for user in r.json():
             self.assertTrue(user['email'] in emails)
 
+
+    def test_count_header(self):
+        r = requests.get('%s/users' % (SERVER_URL_API), auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_OK)
+        self.assertTrue(utils.COUNT_HEADER in r.headers)
+
     def test_filter_and(self):
         emails = ['dan@gi.net', 'jack@gi.net']
         _filter = '{"$and":[{"email":{"$eq":"%s"}},{"email":{"$eq":"%s"}}]}' % (emails[0], emails[1])

@@ -1,4 +1,4 @@
-from flask import request, abort, session
+from flask import request, abort, session, make_response
 from flask_restful import Resource, reqparse
 
 import org.gi.server.authorization as auth
@@ -7,6 +7,7 @@ from org.gi.server.authorization import requires_auth
 from org.gi.server.db import db
 from org.gi.server.log import log
 from org.gi.server.validation import validations as v
+import json
 
 
 class UserListApi(Resource):
@@ -20,19 +21,18 @@ class UserListApi(Resource):
         try:
             _filter, projection, sort, page_size_str, page_number_str,_count = u.get_fields_projection_and_filter(request)
             users = db.users.find(projection=projection, filter=_filter)
-            count = None
-            if _count:
-                count = users.count()
-            else:
-                users = u.handle_sort_and_paging(users, sort, page_size_str, page_number_str)
+            count = users.count()
+            users = u.handle_sort_and_paging(users, sort, page_size_str, page_number_str)
         except ValueError as e:
             abort(u.HTTP_BAD_INPUT, str(e))
         except Exception as e:
             abort(u.HTTP_SERVER_ERROR, str(e))
-        if count:
+        if _count:
             return {'count': count}, u.HTTP_OK
         else:
-            return u.make_list(users), u.HTTP_OK
+            resp = make_response(json.dumps(u.make_list(users)), u.HTTP_OK)
+            resp.headers.extend({u.COUNT_HEADER: count})
+            return resp
 
 
 class UserApi(Resource):

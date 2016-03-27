@@ -449,6 +449,13 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         self.assertTrue(len(petitioner_list) == 0)
         self.assertTrue(len(volunteer_list) == 0)
 
+    def test_count_header(self):
+        r = requests.get('%s/cases' % (SERVER_URL_API), auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_OK)
+        self.assertTrue(utils.COUNT_HEADER in r.headers)
+
+
+
     def test_ticket_230(self):
         case_with_tasks = _load('case_with_tasks_ticket_230.json', self.config_folder)
         self._replace(case_with_tasks)

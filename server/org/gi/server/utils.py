@@ -33,6 +33,8 @@ HTTP_SERVER_ERROR = 500
 HTTP_SERVICE_UNAVAILABLE = 503
 HTTP_GATEWAY_TIMEOUT = 504
 
+COUNT_HEADER = 'X-Total-Count'
+
 
 def web_log(func):
     @wraps(func)
