@@ -77,9 +77,8 @@ class Case:
         Location.change_geo_location_to_client_format(case.get('location'))
         for task in case.get('tasks'):
             Location.change_geo_location_to_client_format(task.get('location'))
-            if add_volunteer_attributes and task['volunteer_id']:
-                volunteer_id = task['volunteer_id']
-                user = db.users.find_one({'_id': u.to_object_id(volunteer_id)})
+            if add_volunteer_attributes and task.get('volunteer_id'):
+                user = db.users.find_one({'_id': u.to_object_id(task['volunteer_id'])})
                 u.handle_id(user)
                 task['volunteer'] = user
 
