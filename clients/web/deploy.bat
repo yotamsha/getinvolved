@@ -11,8 +11,10 @@ SET REMOTE_SCRIPT=client_remote_deploy.sh
 SET REMOTE_PATH=/var/wwww/html
 
 DEL %CLIENT_ARCHIVE%
+ECHO packaging client..
+call grunt release
 ECHO zipping file.
-python zipit.py %CLIENT_ARCHIVE% ./app
+python zipit.py %CLIENT_ARCHIVE% ./dist/
 ECHO copying archive to instance.
 call gcloud compute copy-files %CLIENT_ARCHIVE% %INSTANCE%:/home/%USERNAME% --zone %ZONE%
 
