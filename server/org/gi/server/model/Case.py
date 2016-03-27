@@ -29,7 +29,9 @@ class Case:
 
     @staticmethod
     def prep_case_before_update(updated_case, db_case):
-        if not Case._update_state_overrides_transition(updated_case.get('state')) and updated_case.get('tasks'):
+        if not Case._changeless_state(updated_case.get('state')) and updated_case.get('tasks'):
+            for task in updated_case.get('tasks'):
+                task['state'] = Task.update_task_state(task, db_case.get('tasks'))
             updated_case['state'] = Task.get_updated_case_state(updated_case.get('tasks'), db_case.get('tasks'))
 
         if updated_case.get('tasks'):
@@ -48,7 +50,7 @@ class Case:
         return updated_case
 
     @staticmethod
-    def _update_state_overrides_transition(update_state):
+    def _changeless_state(update_state):
         override = False
         if update_state in {CASE_MISSING_INFO, CASE_REJECTED, CASE_OVERDUE,
                             CASE_CANCELLED_BY_USER, CASE_CANCELLED_BY_ADMIN}:

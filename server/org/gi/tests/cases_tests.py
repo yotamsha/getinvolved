@@ -3,7 +3,6 @@ import time
 import unittest
 
 import requests
-
 from misc import _remove_from_db, _load, _push_to_db, MONGO, SERVER_URL_API, ACCESS_TOKEN_AUTH, validate_server_is_up
 from org.gi.server import utils as utils
 from org.gi.server.model.Task import ALL_TASKS_SAME_STATE_TRANSITION
@@ -512,8 +511,8 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         r = requests.put('%s/cases/%s' % (SERVER_URL_API, case_from_server['id']), json=case_from_server,
                          auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_OK)
-        self.assertEqual(r.json()['state'], 'assignment_in_process')
-
+        self.assertEqual(r.json()['state'], org.gi.server.validation.case_state_machine.CASE_ASSIGNED)
+        self.assertEqual(r.json()['tasks'][0]['state'], TASK_ASSIGNED)
 
     def test_ticket_246(self):
         """
