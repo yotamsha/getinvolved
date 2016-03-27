@@ -495,6 +495,19 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         self.assertEqual(r.status_code, utils.HTTP_OK)
         return r.json()
 
+    def test_ticket_256(self):
+        case_with_tasks = _load('case_ticket_256.json', self.config_folder)
+        self._replace(case_with_tasks)
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case_with_tasks, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_CREATED)
+        case_from_server = r.json()
+        case_from_server['tasks'][0]['volunteer_id'] = self.user_ids[1]
+        r = requests.put('%s/cases/%s' % (SERVER_URL_API, case_from_server['id']), json=case_from_server,
+                         auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_OK)
+        self.assertEqual(r.json()['state'], 'assignment_in_process')
+
+
     def test_ticket_246(self):
         """
         Make sure the server is not going to try and validate non existing fields on update operations
