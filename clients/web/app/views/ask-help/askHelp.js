@@ -79,6 +79,48 @@ angular.module('app.views.helpRequestForm', ['app.vendors.momentjs'])
         function ($scope) {
             var vm = this;
 
+            vm.oneDaySeconds = 60 * 60 * 24; // todo: find a place for this
+
+            /* this is temporary. todo: create a service that GETS validations from server */
+            vm.valids = {
+                task: {
+                    description: {
+                        length: {
+                            min: 10,
+                            max: 50
+                        }
+                    },
+                    durationMinutes: {
+                        length: {
+                            min: 60,
+                            max: 60 * 24
+                        }
+                    },
+                    dueDate: {
+                        hours: {
+                            max: 24 // conflicts with dueDate.seconds.max
+                        },
+                        seconds: {
+                            min: vm.oneDaySeconds,
+                            max: vm.oneDaySeconds * 90 // conflicts with dueDate.hours.max
+                        }
+                    }
+                },
+                facebook: {
+                    id: {
+                        length: {
+                            min: 8,
+                            max: 40
+                        }
+                    },
+                    token: {
+                        length: {
+                            min: 10
+                        }
+                    }
+                }
+            };
+
             vm.imgurl = "http://s9.postimg.org/47m1pb81b/vol.png";
             vm.translatePath = 'views.askHelp';
             vm.periods = [
@@ -87,9 +129,13 @@ angular.module('app.views.helpRequestForm', ['app.vendors.momentjs'])
                 'views.askHelp.hr3',
                 'views.askHelp.hr4-8',
                 'views.askHelp.dy0.5',
-                'views.askHelp.dy1',
+                'views.askHelp.dy1'
             ];
 
-            vm.phoneRegex = /^([\d]{8})?([\d]{10})?$/; // todo
+            vm.phoneRegex = /^(\d{8})?(\d{10})?$/; // todo
+
+            vm.sendRequest = function() {
+                alert('form invalid = ' + $scope.requestForm.$invalid);
+            };
         }
     ]);

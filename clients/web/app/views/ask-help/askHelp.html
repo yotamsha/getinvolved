@@ -1,3 +1,5 @@
+<!-- todo: (temporary solution) Adjust the datePicker directive in angular-material. (Comment out the triangle button) -->
+
 <div id="container" layout-margin layout-align="space-around center">
 		<br>
 		<!-- Images -->
@@ -12,18 +14,25 @@
 
 		<br><br>
 
-		<h5>{{ vm.translatePath + ".provideDetails" | translate }}</h5><br><br>
-
 		<!-- Form -->
 		<form name="requestForm">
 			<div layout="column" layout-align="space-around center" layout-margin>
+				<h5>{{ vm.translatePath + ".provideDetails" | translate }}</h5> <!-- todo: align to center -->
+				<br><br>
 				<label>{{ vm.translatePath + ".description" | translate }}</label>
 				<br hide-gt-sm> <br hide-gt-sm> <!-- This br prevents overlapping of lables -->
 				<md-input-container layout-fill flex>
 					<label>{{ vm.translatePath + ".description.sub" | translate }} </label>
-					<textarea type="text" name="requestDescription" ng-model="requestDescription" required></textarea>
+					<textarea type="text"
+							  name="requestDescription"
+							  ng-model="requestDescription"
+							  minlength="{{vm.valids.task.description.length.min}}"
+							  maxlength="{{vm.valids.task.description.length.max}}"
+							  required>
+					</textarea>
 					<div ng-messages="requestForm.requestDescription.$error" role="alert">
 						<div ng-message="required"> {{ vm.translatePath + ".errmsg.required" | translate }} </div>
+						<div ng-message="minlength">{{ vm.translatePath + ".errmsg.length.min" | translate }}</div>
 					</div>
 				</md-input-container>
 
@@ -147,7 +156,7 @@
 						</md-input-container>
 					</div>
 				</div>
-				<md-button class="btn-primaty"> {{ vm.translatePath + ".send" | translate }} </md-button>
+				<md-button ng-click="vm.sendRequest()" ng-disabled="requestForm.$invalid" class="btn-primaty"> {{ vm.translatePath + ".send" | translate }} </md-button>
 			</div>
 		</form>
 </div>
