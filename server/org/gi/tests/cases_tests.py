@@ -71,7 +71,10 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         if case.get('tasks'):
             for count, task in enumerate(case['tasks']):
                 if 'volunteer_id' in task and task['volunteer_id'] == '__REPLACE__':
-                    task['volunteer_id'] = self.user_ids[count]
+                    if count < len(self.user_ids):
+                        task['volunteer_id'] = self.user_ids[count + 1]
+                    else:
+                        task['volunteer_id'] = self.user_ids[0]
                 task['due_date'] = int(time.time()) + DUE_DATE_HOURS * 60 * 60 + count
 
     # positives
@@ -96,10 +99,6 @@ class TestGIServerCaseTestCase(unittest.TestCase):
             case = {"state": state}
             r = requests.put('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]), json=case, auth=ACCESS_TOKEN_AUTH)
             self.assertEqual(r.status_code, utils.HTTP_OK)
-
-    def test_delete_case(self):
-        r = requests.delete('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]), auth=ACCESS_TOKEN_AUTH)
-        self.assertEqual(r.status_code, utils.HTTP_NO_CONTENT)
 
     def test_update_state_transitions(self):
         case = _load('case_state_transitions_4.json', self.config_folder)
@@ -161,14 +160,14 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         case = self._get_inserted_case()
         task = case['tasks'][0]
         task['state'] = TASK_ASSIGNED
-        task['volunteer_id'] = self.user_ids[0]
+        task['volunteer_id'] = self.user_ids[3]
 
         # TEST
         r = requests.put('%s/cases/%s' % (SERVER_URL_API, case['id']), json=case, auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(utils.HTTP_OK, r.status_code)
         case = _get_case_from_db(case['id'])
         task = case['tasks'][0]
-        self.assertEqual(self.user_ids[0], task['volunteer_id'])
+        self.assertEqual(self.user_ids[3], task['volunteer_id'])
         self.assertEqual(TASK_ASSIGNED, task['state'])
         self.assertEqual(CASE_PARTIALLY_ASSIGNED, case['state'])
 
@@ -248,6 +247,24 @@ class TestGIServerCaseTestCase(unittest.TestCase):
             self.assertEqual(base_lat + (i * increment_latitude), cases[i]['location']['geo_location']['lat'])
 
     # negatives
+
+    def test_cannot_insert_case_with_due_date(self):
+        case = _load('case_undefined.json', self.config_folder)
+        self._replace(case)
+        case['due_date'] = int(time.time()) + DUE_DATE_HOURS * 60 * 60
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
+
+    def test_cannot_case_assign_user_with_same_id(self):
+        # SETUP
+        case = self._get_inserted_case()
+        task = case['tasks'][0]
+        task['state'] = TASK_ASSIGNED
+        task['volunteer_id'] = self.user_ids[0]
+
+        # TEST
+        r = requests.put('%s/cases/%s' % (SERVER_URL_API, case['id']), json=case, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(utils.HTTP_BAD_INPUT, r.status_code)
 
     def test_case_too_far(self):
         case = self._get_case()
@@ -373,11 +390,6 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         r = requests.put('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]), json=case, auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
 
-    def test_delete_case_wrong_id(self):
-        wrong_id = self.case_ids[0].replace(self.case_ids[0][0], str(int(self.case_ids[0][0]) + 1))
-        r = requests.delete('%s/cases/%s' % (SERVER_URL_API, wrong_id), auth=ACCESS_TOKEN_AUTH)
-        self.assertEqual(r.status_code, utils.HTTP_NOT_FOUND)
-
     def test_bad_task_update(self):
         case_with_tasks = _load('case_with_tasks.json', self.config_folder)
         self._replace(case_with_tasks)
@@ -437,6 +449,13 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         self.assertTrue(len(petitioner_list) == 0)
         self.assertTrue(len(volunteer_list) == 0)
 
+    def test_count_header(self):
+        r = requests.get('%s/cases' % (SERVER_URL_API), auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_OK)
+        self.assertTrue(utils.COUNT_HEADER in r.headers)
+
+
+
     def test_ticket_230(self):
         case_with_tasks = _load('case_with_tasks_ticket_230.json', self.config_folder)
         self._replace(case_with_tasks)
@@ -483,6 +502,19 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         self.assertEqual(r.status_code, utils.HTTP_OK)
         return r.json()
 
+    def test_ticket_256(self):
+        case_with_tasks = _load('case_ticket_256.json', self.config_folder)
+        self._replace(case_with_tasks)
+        r = requests.post('%s/cases' % SERVER_URL_API, json=case_with_tasks, auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_CREATED)
+        case_from_server = r.json()
+        case_from_server['tasks'][0]['volunteer_id'] = self.user_ids[1]
+        r = requests.put('%s/cases/%s' % (SERVER_URL_API, case_from_server['id']), json=case_from_server,
+                         auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_OK)
+        self.assertEqual(r.json()['state'], 'assignment_in_process')
+
+
     def test_ticket_246(self):
         """
         Make sure the server is not going to try and validate non existing fields on update operations
@@ -505,6 +537,9 @@ class TestGIServerCaseTestCase(unittest.TestCase):
                          auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_OK)
 
+    def test_bad_http_methods(self):
+        r = requests.delete('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]), auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_METHOD_NOT_ALLOWED)
 
 def _get_case_from_db(case_id):
     r = requests.get('%s/cases/%s' % (SERVER_URL_API, case_id), auth=ACCESS_TOKEN_AUTH)

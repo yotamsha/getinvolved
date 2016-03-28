@@ -32,7 +32,7 @@
                         <h5 class="task-title">{{task.title}}</h5>
                     </div>
                     <div class="task-detail">
-                       <span class="text-emphasized">{{"views.caseDetail.tasks_list_item.when" | translate}}</span>  {{task.due_date_string_format}}
+                       <span class="text-emphasized">{{"views.caseDetail.tasks_list_item.when" | translate}}</span>  {{task.due_date}}
                     </div>
                     <div ng-if="task.location" class="task-detail">
                         <span class="text-emphasized"> {{"views.caseDetail.tasks_list_item.where" | translate}} </span>

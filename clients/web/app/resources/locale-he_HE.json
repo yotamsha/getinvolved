@@ -25,9 +25,17 @@
   "views.caseDetail.tasks_list_item.where": "איפה?",
   "views.caseDetail.tasks_list_item.apply": "אני בפנים",
   "views.caseDetail.tasks_list_item.assigned_to": "מתנדב:",
+  "views.casesSearch.yourOpportunities": "ההזדמנויות שלך",
+  "views.casesSearch.sortBy": "מיין לפי",
+  "views.casesSearch.paging_title": "מציג {{resultsShownFrom}} - {{resultsShownTo}} מתוך {{totalCasesCount}} מקרים",
   "views.casesSearch.case.showDetails": "הצג פרטים",
   "views.casesSearch.case.header_title": "בואו נתערב",
   "views.casesSearch.case.header_subtitle": "מגוון אפשרויות להתנדבות חד פעמית שיהפכו רגע פנוי לרגע של שינוי",
+  "views.casesSearch.sortTypes": {
+	"newest": "חדש ביותר",
+	"oldest": "ישן ביותר",
+	"mostUrgent": "דחוף ביותר"  
+  },
   "views.login.title": "כניסה לחשבונך",
   "views.login.signup": "הירשם",
   "views.login.already_signed": "כבר נרשמת?",
@@ -37,6 +45,7 @@
   "views.login.task_assigned_title": "תודה!",
   "views.login.task_assignment_moved_to_pending": "נודיע לך בקרוב  שהתנדבותך התקבלה, וכן נשלח מייל עם כל הפרטים.",
   "views.userDetails.email" : "מייל",
+  "views.userDetails.username" : "שם משתמש",
   "views.userDetails.password" : "סיסמא",
   "views.userDetails.firstName" : "שם פרטי",
   "views.userDetails.lastName" : "שם משפחה",
@@ -103,7 +112,13 @@
   },
 
   "case_share": {
-	"title" : "אולי את/ה יכולים לעזור?",
-	"description": "GetInvolved - פלטפורמה אינטרנטית המחברת בין בקשות עזרה למתנדבים היכולים לסייע ע\"י התנדבויות חד פעמיות" 
+	"fb":{
+		"title" : "אולי את/ה יכולים לעזור?",
+		"description": "GetInvolved - פלטפורמה אינטרנטית המחברת בין בקשות עזרה למתנדבים היכולים לסייע ע\"י התנדבויות חד פעמיות"	
+	},
+	"email":{
+		"subject" : "אולי את/ה יכולים לעזור?",
+		"body": "GetInvolved - פלטפורמה אינטרנטית המחברת בין בקשות עזרה למתנדבים היכולים לסייע ע\"י התנדבויות חד פעמיות"	
+	}
   }
 }

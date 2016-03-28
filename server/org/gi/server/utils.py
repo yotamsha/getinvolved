@@ -33,6 +33,8 @@ HTTP_SERVER_ERROR = 500
 HTTP_SERVICE_UNAVAILABLE = 503
 HTTP_GATEWAY_TIMEOUT = 504
 
+COUNT_HEADER = 'X-Total-Count'
+
 
 def web_log(func):
     @wraps(func)
@@ -65,6 +67,9 @@ def handle_id(record):
 def to_object_id(record_id):
     return ObjectId(record_id)
 
+
+def get_hours_in_seconds(hours):
+    return hours * 60 * 60
 
 def diff_dict(original, modified):
     if isinstance(original, dict) and isinstance(modified, dict):

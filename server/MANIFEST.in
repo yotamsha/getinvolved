@@ -1,0 +1,2 @@
+recursive-include org/gi/server/service/templates/data *
+recursive-include org/gi/config *.json

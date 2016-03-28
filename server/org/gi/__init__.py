@@ -4,6 +4,7 @@ import os
 import sys
 
 __author__ = 'avishayb'
+global args
 
 
 def _validate_mode(mode):
@@ -16,10 +17,10 @@ def _validate_mode(mode):
 
 if 'utrunner.py' not in sys.argv[0] and 'run_all.py' not in sys.argv[0]:
     parser = argparse.ArgumentParser()
-    parser.add_argument('--mode', dest='mode', required=True, type=_validate_mode,
+    parser.add_argument('-m', '--mode', dest='mode', default='dev', type=_validate_mode,
                         help='The GI server mode (prod|dev)')
+    parser.add_argument('-c', '--clear', action="store_true")
     args = parser.parse_args()
-    mode = args.mode
-    os.environ['__MODE'] = mode
+    os.environ['__MODE'] = args.mode
 else:
     os.environ['__MODE'] = 'dev'

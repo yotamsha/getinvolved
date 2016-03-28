@@ -24,12 +24,14 @@
                 <div ng-show="vm.context === AUTH_CONTEXTS.HEADER_LOGIN" class="separator">{{"views.login.or" | translate}}</div>
                 <form  ng-show="vm.context === AUTH_CONTEXTS.HEADER_LOGIN" name="regularLoginForm" class="regular-login-form">
                     <md-input-container class="form-input-container">
-                        <label>{{"views.userDetails.email" | translate}}</label>
-                        <input name="email" required type="email" ng-model="vm.user.email">
+                        <label>{{"views.userDetails.username" | translate}}</label>
+                        <input name="username" required type="text" ng-model="vm.user.username">
 
-                        <div ng-messages="regularLoginForm.email.$error" role="alert" multiple>
+                        <div ng-messages="regularLoginForm.username.$error" role="alert" multiple>
                             <div ng-message="required" class="my-message">{{'views.userDetails.field_required' | translate}}</div>
+<!--
                             <div ng-message="email" class="my-message">{{'views.userDetails.invalid_email' | translate}}</div>
+-->
                         </div>
                     </md-input-container>
                     <md-input-container class="form-input-container">

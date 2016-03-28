@@ -4,14 +4,15 @@
 'use strict';
 
 angular.module('app.services.authentication.auth-service', [])
-    .service('AuthService', ['Restangular', '$rootScope', '$cookieStore', '$http', 'USER_ROLES', '$q', 'AUTH_EVENTS','USER_ACTIONS',
-        function (Restangular, $rootScope, $cookieStore, $http, USER_ROLES, $q, AUTH_EVENTS, USER_ACTIONS) {
+    .service('AuthService', ['Restangular', '$rootScope', '$cookieStore', '$http', 'USER_ROLES', '$q', 'AUTH_EVENTS','USER_ACTIONS','APP_CONFIG',
+        function (Restangular, $rootScope, $cookieStore, $http, USER_ROLES, $q, AUTH_EVENTS, USER_ACTIONS, APP_CONFIG) {
             var LOCAL_TOKEN_KEY = "AUTH-TOKEN";
             var authModel = {
                 isAuthenticated: false,
                 userSession: null,
                 isLoading: true
-            }
+            };
+            console.log("APP_CONFIG: ", APP_CONFIG);
             var facebookAuthenticator = {
                 statusChangeCallback: function (response) {
                     var _self = this;
@@ -51,11 +52,11 @@ angular.module('app.services.authentication.auth-service', [])
                     }
                 },
                 facebookSessionRetrieved: function (authResponse) {
-                    return $http.get("http://localhost:5000/login/fb_token/" + authResponse.accessToken)
+                    return $http.get(APP_CONFIG.serverHost +  "/login/fb_token/" + authResponse.accessToken)
                         .success(function (token) {
                             console.log(token);
                             setToken(token);
-                            return $http.get("http://localhost:5000/api/users/me")
+                            return $http.get(APP_CONFIG.serverHost +  "/api/users/me")
                                 .success(function (user) {
                                     storeUserCredentials(token, user);
                                     $rootScope.$broadcast(AUTH_EVENTS.authenticationCompleted,authModel.userSession);
@@ -88,11 +89,11 @@ angular.module('app.services.authentication.auth-service', [])
 
             var standardAuthenticator = {
                 login : function(userData){
-                    return $http.post("http://localhost:5000/login/", userData)
+                    return $http.post(APP_CONFIG.serverHost +  "/login", userData)
                         .success(function (token) {
                             console.log(token);
                             setToken(token);
-                            return $http.get("http://localhost:5000/api/users/me")
+                            return $http.get(APP_CONFIG.serverHost +  "/api/users/me")
                                 .success(function (user) {
                                     storeUserCredentials(token, user);
                                     $rootScope.$broadcast(AUTH_EVENTS.authenticationCompleted,authModel.userSession);
@@ -116,7 +117,7 @@ angular.module('app.services.authentication.auth-service', [])
                     var token = window.localStorage.getItem(LOCAL_TOKEN_KEY);
                     if (token) {
                         setToken(token);
-                        $http.get("http://localhost:5000/api/users/me")
+                        $http.get(APP_CONFIG.serverHost +  "/api/users/me")
                             .success(function (user) {
                                 storeUserCredentials(null, user);
                                 deferred.resolve(authModel.userSession);

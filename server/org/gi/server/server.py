@@ -46,7 +46,8 @@ def start_notification_loop():
 
 @app.route('/api/ping')
 def ping():
-    return 'Pong', u.HTTP_OK
+    import time
+    return 'Pong: ' + time.strftime("%c"), u.HTTP_OK
 
 
 api = Api(app)
@@ -68,7 +69,7 @@ if __name__ == '__main__':
     mode, sys.version_info[0], sys.version_info[1], sys.version_info[2]))
     print('------------------------------------------------------------------------------------')
     start_notification_loop()
-    app.run(debug=False, threaded=True)
+    app.run(debug=False, threaded=True, host='0.0.0.0')
     # app.run(debug=False)
     if not app.debug:
         import logging

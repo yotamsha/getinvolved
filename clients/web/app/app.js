@@ -26,6 +26,8 @@ angular.module('app', [
         'app.casesSearch',
         'app.login',
         'app.userProfile',
+        'app.partners',
+        'app.about_us',
 
         // Components
         'app.version',
@@ -34,6 +36,7 @@ angular.module('app', [
 
         // Models
         'app.models.case',
+        'app.models.task',
         'app.models.user',
 
         // Services
@@ -46,7 +49,10 @@ angular.module('app', [
         // 3rd-Party Wrappers - We wrap 3rd party libraries that aren't angular modules in order
         // to keep the global window clean. Only these libraries are accessible through a single variable: window._thirdParty
         // more on the method: http://jameshill.io/articles/angular-third-party-injection-pattern/
-        'app.vendors.momentjs'
+        'app.vendors.momentjs',
+
+        // Environment config module
+        'config'
 
     ])
     .constant('LOCALES', {
@@ -57,16 +63,35 @@ angular.module('app', [
         'preferredLocale': 'he_HE'
     })
     .constant('APP_CONFIG', {
-        'homeRoute': '/cases'
+        homeRoute: '/cases',
+        serverPort : 5000,
+        productionServerHost : '104.155.49.192'
     })
-    .config(['$urlRouterProvider', '$translateProvider', '$mdThemingProvider', 'RestangularProvider', 'APP_CONFIG',
-        function ($urlRouterProvider, $translateProvider, $mdThemingProvider, RestangularProvider, APP_CONFIG) {
+    .config(['$urlRouterProvider', '$translateProvider', '$mdThemingProvider', 'RestangularProvider', 'APP_CONFIG','ENV',
+        function ($urlRouterProvider, $translateProvider, $mdThemingProvider, RestangularProvider, APP_CONFIG, ENV) {
 
-            RestangularProvider.setBaseUrl('http://127.0.0.1:5000/api');
-            /*            RestangularProvider.setDefaultHeaders({
-             "Authorization": "Basic YWRtaW46YWRtaW4="
-             });*/
+            function getEnvFromHost(){
+                //TODO change this to be taken out of some parameter set in the grunt release package command.
+                if (location.host === APP_CONFIG.productionServerHost){
+                    return "production";
+                } else {
+                    return "dev";
+                }
+            }
 
+            function getServerHost(env){
+                if (env === "production"){
+                    return "http://" + APP_CONFIG.productionServerHost + ":" + APP_CONFIG.serverPort;
+                } else {
+                    return "http://localhost:" + APP_CONFIG.serverPort;
+                }
+            }
+
+            //var env = getEnvFromHost();
+            var serverHost = ENV.apiEndpoint;
+            console.log("using server host: " + serverHost)
+            RestangularProvider.setBaseUrl(serverHost + '/api');
+            APP_CONFIG.serverHost = serverHost;
             $mdThemingProvider.theme('default')
                 .primaryPalette('cyan')
                 .accentPalette('orange');

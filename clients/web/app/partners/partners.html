@@ -1,0 +1,18 @@
+﻿<div class="cases-search-view">
+  <div class="section-seperator">
+    <span class="seperator-text">
+      התורמים שלנו
+    </span>
+  </div>
+  <div layout="row" layout-wrap layout-align="start center" class="cases-container clearfix" style="margin-top:80px;text-align:center;">
+    <div flex-md="50" flex-sm="50" flex-xs="100" flex-lg="25" ng-repeat="partner in vm.partners">
+        <div class="partner">
+          <div>
+            <img style="width:230px;height:auto;margin-bottom:100px;" class="partner-img" src="{{ partner.imgSrc }}" />
+          </div>
+        
+        </div>
+    </div>
+  </div>
+
+</div>

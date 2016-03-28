@@ -1,0 +1,24 @@
+[
+  {
+    "first_name": "Zack",
+    "last_name": "TheZack",
+    "user_name": "Ezack",
+    "password": "12qwdfr56",
+    "email": "zack@gi.net",
+    "phone_number": {
+      "number": "0544537423",
+      "country_code": "IL"
+    }
+  },
+  {
+    "first_name": "boon",
+    "last_name": "toon",
+    "user_name": "Gboon",
+    "password": "zxcvbdfnm",
+    "email": "boon@gi.net",
+    "phone_number": {
+      "number": "036498612",
+      "country_code": "IL"
+    }
+  }
+]
