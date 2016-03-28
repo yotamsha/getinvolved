@@ -1,0 +1,12 @@
+{
+  "tasks": [
+    {
+      "id": "b6b038ac-57d5-42ea-9931-e8ad3086c229",
+      "type": "GENERAL"
+    }
+  ],
+  "description": "desc goes here",
+  "title": "title goes here",
+  "petitioner_id": "__REPLACE__",
+  "state": "pending_involvement"
+}

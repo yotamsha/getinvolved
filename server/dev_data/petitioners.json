@@ -1,0 +1,46 @@
+[
+  {
+    "first_name": "Dan",
+    "last_name": "Been",
+    "user_name": "Bdan",
+    "password": "12qwer56",
+    "email": "dan@gi.net",
+    "phone_number": {
+      "number": "0544567123",
+      "country_code": "IL"
+    }
+  },
+  {
+    "first_name": "Gan",
+    "last_name": "Been",
+    "user_name": "CGan",
+    "password": "12qwer56",
+    "email": "gan@gi.net",
+    "phone_number": {
+      "number": "0544567423",
+      "country_code": "IL"
+    }
+  },
+  {
+    "first_name": "Zorb",
+    "last_name": "TheBeen",
+    "user_name": "Dzorb",
+    "password": "12qdfdfr56",
+    "email": "zorb@gi.net",
+    "phone_number": {
+      "number": "0544517423",
+      "country_code": "IL"
+    }
+  },
+    {
+    "first_name": "Jeremy",
+    "last_name": "Thorn",
+    "user_name": "jthorn",
+    "password": "jeremythorn",
+    "email": "jeremy@gmail.net",
+    "phone_number": {
+      "number": "0544517426",
+      "country_code": "IL"
+    }
+  }
+]

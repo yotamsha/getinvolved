@@ -1,0 +1,50 @@
+﻿<div style="text-align:center;margin-top:20px;">
+  <div class="section-seperator">
+    <span class="seperator-text">
+      קצת עלינו
+    </span>
+  </div>
+  <div layout="row" layout-wrap layout-align="start center" class="cases-container clearfix" style="margin-top:80px;font-size:15px;padding: 15px;">
+    המקום הזה חשוב לנו. עדיין לא ויתרנו. אנחנו רוצות לעשות טוב, ואנחנו מאמינות שאנחנו לא היחידות.
+    <br><br>
+
+רצינו להתנדב ונתקלנו בקשיים ובעיות – היה קשה להגיע לאיש הקשר הרלוונטי בעמותות, היה מסובך למצוא זמן
+לפגישה, וכשבסוף מצאנו, ביקשו שנגיע כל יום שלישי בשעה 18:00. לא יכולנו להתחייב – היינו סטודנטיות עם
+לוח מבחנים ומשמרות בעבודה שלא אפשרו לנו להסתכל הרבה קדימה.
+<br><br>
+מסתבר שהרבה א/נשים מזדהים עם הקשיים האלו, ובישראל 4 מתוך 5 אזרחים – לא מתנדבים.
+<br>
+מצד שני, ישנם אלפי א/נשים עם צרכים שנותרים ללא מענה, על אף שהיו יכולים להיפתר בצורה נקודתית -
+<br>
+כשהשכן שלכם צריך עזרה במילוי מסמכים לביטוח לאומי, או כשזוג ללא אמצעים צריך עזרה ביום הקמת
+החתונה, או העברת סדנה או פעילות לקבוצה של קשישים... אלו קשיים אמיתיים ומשמעותיים שלא מקבלים
+מענה באף פלטפורמה שקיימת היום.
+<br><br>
+אנחנו getinvolved, פלטפורמה להתנדבויות חד פעמיות.
+
+בעולם שבו הכל נפתר בקליק, נראה לנו מובן מאליו שצריך להיות מקום בו מתנדבים/ות יוכלו לחפש התנדבות
+
+המטרה שלנו היא להגביר את המעורבות החברתית בישראל על ידי הנגשת אפשרויות להתנדבות ופישוט תהליך
+
+החזון שלנו הוא לקרב בין אנשים - שכל אחד שזקוק לעזרה ידע שיש לו למי לפנות, יש מי שרוצה ומוכן לעזור לו,
+
+נוחה להם, קרובה להם ושמעניינת אותם.
+
+בקשת עזרה עבור כל אדם ואישה, באשר הם.  
+<br>
+גם אם הם מאוכלוסיות שונות וממגזרים שונים.
+</div>
+<iframe width="600" height="400" layout-align="center center" src="https://www.youtube.com/embed/HaMbvqcJ_Ds" style="margin-top:30px;margin-bottom:50px;">
+</iframe>
+<div layout="row" layout-wrap layout-align="start center" class="cases-container clearfix">
+ <div flex-md="25" flex-sm="50" flex-xs="100" flex-lg="25" ng-repeat="member in vm.teamMembers">
+        <div class="member" style="padding:10px;">
+          <div>
+            <img style="width:230px;height:auto;border-radius:15px;" class="member-img" src="{{ member.imgSrc }}" />
+            <span style="font-size:14px;">{{member.name}}, {{member.title}}</span>
+          </div>
+        
+        </div>
+    </div>
+</div>
+</div>

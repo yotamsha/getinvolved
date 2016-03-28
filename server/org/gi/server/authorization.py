@@ -80,8 +80,11 @@ def authenticate():
 def requires_user_password(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        username = request.args.get('username') or request.json['username']
-        password = request.args.get('password') or request.json['password']
+        username = request.args.get('username')
+        password = request.args.get('password')
+        if request.json:
+             username = username or request.json['username']
+             password = password or request.json['password']
         if not (username and password) or not check_auth(username, password):
             return 'You need to authenticate', u.HTTP_UNAUTHORIZED
         session['username'] = username

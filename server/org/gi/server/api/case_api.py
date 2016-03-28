@@ -1,5 +1,6 @@
-from flask import request, abort
+from flask import request, abort, make_response
 from flask_restful import Resource, reqparse
+import json
 
 from org.gi.server import utils as u
 from org.gi.server.authorization import requires_auth
@@ -21,17 +22,6 @@ class CaseApi(Resource):
         except Exception as e:
             abort(u.HTTP_NOT_FOUND, str(e))
         return case, u.HTTP_OK
-
-    @u.web_log
-    @requires_auth
-    def delete(self, case_id):
-        try:
-            result = db.cases.delete_one({'_id': u.to_object_id(case_id)})
-            if result.deleted_count != 1:
-                raise Exception('One case should be deleted but %d cases were deleted' % result.deleted_count)
-        except Exception as e:
-            return str(e), u.HTTP_NOT_FOUND
-        return '', u.HTTP_NO_CONTENT
 
     @u.web_log
     @requires_auth
@@ -85,21 +75,20 @@ class CaseListApi(Resource):
         try:
             _filter, projection, sort, page_size_str, page_number_str, _count = u.get_fields_projection_and_filter(request)
             cases = db.cases.find(projection=projection, filter=_filter)
-            count = None
-            if _count:
-                count = cases.count()
-            else:
-                cases = u.handle_sort_and_paging(cases, sort, page_size_str, page_number_str)
-                if cases and sort:
-                    cases = cases.sort(sort)
+            count = count = cases.count()
+            cases = u.handle_sort_and_paging(cases, sort, page_size_str, page_number_str)
+            if cases and sort:
+                cases = cases.sort(sort)
         except ValueError as e:
             abort(u.HTTP_BAD_INPUT, str(e))
         except Exception as e:
             abort(u.HTTP_SERVER_ERROR, str(e))
-        if not count:
+        if not _count:
             cases = u.make_list(cases)
             for case in cases:
                 Case.prep_case_for_client(case)
-            return cases, u.HTTP_OK
+            resp = make_response(json.dumps(cases), u.HTTP_OK)
+            resp.headers.extend({u.COUNT_HEADER: count})
+            return resp
         else:
             return {'count': count}, u.HTTP_OK

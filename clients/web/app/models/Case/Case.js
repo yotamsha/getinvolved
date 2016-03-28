@@ -5,4 +5,4 @@
  * Model structure inspired by:
  * http://blog.shinetech.com/2014/02/04/rich-object-models-and-angular-js/
  */
-angular.module('app.models.case', []);
+angular.module('app.models.case', ['app.models.task']);

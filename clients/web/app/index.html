@@ -28,7 +28,7 @@
 
     <header></header>
 
-    <div class="view-container" ui-view></div>
+    <div class="view-container" ui-view autoscroll></div>
     <footer class="footer-container">
     </footer>
     <div id="fb-root"></div>
@@ -59,6 +59,7 @@
 
     <!-- App files -->
 
+
     <!-- /// VIEWS /// -->
 
     <script src="app.js"></script>
@@ -68,6 +69,9 @@
     <script src="casesSearch/casesSearchCtrl.js"></script>
     <script src="authentication/loginCtrl.js"></script>
     <script src="userProfile/userProfileCtrl.js"></script>
+    <script src="partners/partnersCtrl.js"></script>
+    <script src="about_us/about_usCtrl.js"></script>
+    <script src="views/ask-help/askHelp.js"></script>
 
     <!-- /// COMMON /// -->
 
@@ -89,7 +93,7 @@
 
     <script src="models/Case/Case.js"></script>
     <script src="models/Case/CaseDao.js"></script>
-    <script src="models/Case/CaseModel.js"></script>
+    <script src="models/Case/CaseDefaultImageProvider.js"></script>
     <script src="models/Case/CaseMapper.js"></script>
     <script src="models/Task/Task.js"></script>
     <script src="models/Task/TaskMapper.js"></script>
@@ -108,9 +112,14 @@
     <script src="services/interceptors/interceptors.js"></script>
     <script src="services/interceptors/auth-interceptor.js"></script>
 	<script src="services/share/fb-share-service.js"></script>
-	
+
     <!-- /// VENDORS /// -->
 
     <script src="vendors/moment-wrapper.js"></script>
+
+    <!-- /// CONFIG /// -->
+
+    <script src="config.js"></script>
+
 </body>
 </html>

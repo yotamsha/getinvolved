@@ -118,6 +118,12 @@ class GIServerUsersTestCase(unittest.TestCase):
         for user in r.json():
             self.assertTrue(user['email'] in emails)
 
+
+    def test_count_header(self):
+        r = requests.get('%s/users' % (SERVER_URL_API), auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_OK)
+        self.assertTrue(utils.COUNT_HEADER in r.headers)
+
     def test_filter_and(self):
         emails = ['dan@gi.net', 'jack@gi.net']
         _filter = '{"$and":[{"email":{"$eq":"%s"}},{"email":{"$eq":"%s"}}]}' % (emails[0], emails[1])
@@ -175,17 +181,6 @@ class GIServerUsersTestCase(unittest.TestCase):
     def test_no_first_name(self):
         r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH, json=_load('no_first_name.json', self.config_folder))
         self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
-
-    def test_delete_one(self):
-        try:
-            r = requests.delete('%s/users/%s' % (SERVER_URL_API, self.ids[0]), auth=ACCESS_TOKEN_AUTH)
-            self.assertEqual(r.status_code, utils.HTTP_NO_CONTENT)
-        except Exception:
-            self.remove_users_from_db()
-
-    def test_delete_wrong_user_id(self):
-        r = requests.delete('%s/users/%s' % (SERVER_URL_API, 'qazxswedc'), auth=ACCESS_TOKEN_AUTH)
-        self.assertEqual(r.status_code, utils.HTTP_NOT_FOUND)
 
     def test_empty_payload_put(self):
         r = requests.put('%s/users/%s' % (SERVER_URL_API, self.ids[0]), auth=ACCESS_TOKEN_AUTH, json=json.dumps({}))
@@ -288,9 +283,6 @@ class GIServerUsersTestCase(unittest.TestCase):
                           json=user_from_server)
         self.assertEqual(r.status_code, utils.HTTP_OK)
 
-
-
-
     def test_create_a_user_with_str_phone_num(self):
         r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH,
                           json=_load('a_user_with_str_phone_number.json', self.config_folder))
@@ -316,6 +308,10 @@ class GIServerUsersTestCase(unittest.TestCase):
         returned_user = json.loads(r.content)
         for key in returned_user.keys():
             self.assertEqual(db_user[key], returned_user[key])
+
+    def test_bad_http_methods(self):
+        r = requests.delete('%s/users/%s' % (SERVER_URL_API, self.ids[0]), auth=ACCESS_TOKEN_AUTH)
+        self.assertEqual(r.status_code, utils.HTTP_METHOD_NOT_ALLOWED)
 
     @unittest.skip("Skipping... It needs to run under production mode")
     def test_create_a_user_with_real_credentials(self):

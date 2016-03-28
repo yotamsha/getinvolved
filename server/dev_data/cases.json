@@ -1,0 +1,69 @@
+[
+  {
+    "state": "__undefined__",
+    "tasks": [
+      {
+        "state": "__undefined__",
+        "type": "GENERAL",
+        "title": "test: task title 1",
+        "due_date": "__REPLACE__",
+        "description": "I need help with T1"
+      }
+    ],
+    "petitioner_id": "__REPLACE__",
+    "description": "I need help with...",
+    "title": "test: case title 1"
+  },
+  {
+    "state": "__undefined__",
+    "tasks": [
+      {
+        "state": "__undefined__",
+        "type": "GENERAL",
+        "title": "test: task title 2",
+        "due_date": "__REPLACE__",
+        "description": "I need help with T2"
+      }
+    ],
+    "petitioner_id": "__REPLACE__",
+    "description": "I need help with...",
+    "title": "test: case title 2"
+  },
+  {
+    "state": "__undefined__",
+    "tasks": [
+      {
+        "state": "__undefined__",
+        "type": "GENERAL",
+        "title": "test: task title 3.1",
+        "due_date": "__REPLACE__",
+        "description": "I need help with T3.1"
+      },
+      {
+        "state": "__undefined__",
+        "type": "GENERAL",
+        "title": "test: task title 3.2",
+        "due_date": "__REPLACE__",
+        "description": "I need help with T3.2"
+      }
+    ],
+    "petitioner_id": "__REPLACE__",
+    "description": "I need help with...",
+    "title": "test: case title 3"
+  },
+  {
+    "state": "__undefined__",
+    "tasks": [
+      {
+        "state": "__undefined__",
+        "type": "GENERAL",
+        "title": "test: task title 4",
+        "due_date": "__REPLACE__",
+        "description": "I need help with T4"
+      }
+    ],
+    "petitioner_id": "__REPLACE__",
+    "description": "I need help with...",
+    "title": "test: case title 4"
+  }
+]

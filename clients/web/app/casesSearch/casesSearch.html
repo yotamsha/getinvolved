@@ -1,43 +1,49 @@
 <div class="cases-search-view">
-  <div id='your-oppurtunities-title' class="section-seperator">
-    <span class="seperator-text">
-      {{"views.casesSearch.yourOpportunities" | translate}}
-    </span>
-  </div>
-  <div class="top-strip">
-    <span> {{"views.casesSearch.sortBy" | translate}}: </span>
-	<span ng-repeat="sortType in vm.sortTypes"> 
-		<span class="sort-option" ng-class="{selected: vm.selectedSortIndex == $index}" ng-click="vm.onSortChange(sortType, $index)">
-			{{sortType.title}} 
-		</span>
-		<span>
-			{{!$last ? "|" : ""}}
-		</span>
-	</span>
-  </div>
-  <div layout="row" layout-wrap layout-align="start center" class="cases-container clearfix">
-    <div flex-gt-sm="33" flex-sm="50" flex-xs="100" dir-paginate="case in vm.cases | itemsPerPage: vm.casesPerPage" total-items="vm.totalCasesCount" current-page="vm.currentCasesPage">
-        <div class="case">
-          <div>
-            <img class="case-img" src="{{ case.imgSrc }}" />
-          </div>
-          <div class="case-details">
-            <span class='orange-bubble'></span>
-            <div class="case-title">{{ case.title }}</div>
-            <div>
-				<a ng-href="{{case.mailtoLink}}">
-					<span class="email-share-icon disp-ib va-mid"></span>
-				</a>
-				<span class="fb-share-icon disp-ib va-mid" ng-click="vm.facebookShare(case)"></span>
-				<a class="disp-ib va-mid" ui-sref="caseDetail({caseId: case.id})">
-					<button class="btn-secondary case-register-btn">{{"views.casesSearch.case.showDetails" | translate}} </button>
-				</a>
-            </div>
-          </div>
-        </div>
-    </div>
-  </div>
-  <div class='paging-controls-container' layout="row" layout-align="start center">
-      <dir-pagination-controls boundary-links="true" on-page-change="vm.onPageChange()" flex></dir-pagination-controls>
-  </div>
+	<div id='your-oppurtunities-title' class="section-seperator">
+		<span class="seperator-text">
+			{{"views.casesSearch.yourOpportunities" | translate}}
+    	</span>
+	</div>
+	<div class="sort-options" layout="row" layout-align-xs="center center">
+		<div>
+			<span> {{"views.casesSearch.sortBy" | translate}}: </span>
+			<span ng-repeat="sortType in vm.sortTypes"> 
+				<span class="sort-option" ng-class="{selected: vm.selectedSortIndex == $index}" ng-click="vm.onSortChange(sortType, $index)">
+					{{sortType.title}} 
+				</span>
+				<span>
+					{{!$last ? "|" : ""}}
+				</span>
+			</span>
+		</div>
+	</div>
+	<div class="cases-paging-title" layout="row" layout-align-xs="center center">
+		{{"views.casesSearch.paging_title" | translate: vm}}
+	</div>
+	<div layout="row" layout-wrap layout-align="start center" class="cases-container clearfix">
+		<div flex-gt-sm="33" flex-sm="50" flex-xs="100" dir-paginate="case in vm.cases | itemsPerPage: vm.casesPerPage" total-items="vm.totalCasesCount"
+		current-page="vm.currentCasesPage">
+			<div class="case">
+				<div>
+					<img class="case-img" src="{{ case.imgUrl }}" />
+				</div>
+				<div class="case-details">
+					<span class='orange-bubble'></span>
+					<div class="case-title">{{ case.title }}</div>
+					<div>
+						<a ng-href="{{case.mailtoLink}}">
+							<span class="email-share-icon disp-ib va-mid"></span>
+						</a>
+						<span class="fb-share-icon disp-ib va-mid" ng-click="vm.facebookShare(case)"></span>
+						<a class="disp-ib va-mid" ui-sref="caseDetail({caseId: case.id})">
+							<button class="btn-secondary case-register-btn">{{"views.casesSearch.case.showDetails" | translate}} </button>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class='paging-controls-container' layout="row" layout-align="start center">
+		<dir-pagination-controls boundary-links="true" on-page-change="vm.onPageChange()" flex></dir-pagination-controls>
+	</div>
 </div>
