@@ -76,13 +76,13 @@ angular.module('app.views.helpRequestForm', ['app.vendors.momentjs'])
             $mdDateLocale.msgOpenCalendar = 'פתח את לוח השנה';
     }])
 
-    .controller('askHelpCtrl', ['$scope',
-        function ($scope) {
+    .controller('askHelpCtrl', ['$scope', '$http',
+        function ($scope, $http) {
             var vm = this;
 
             vm.oneDaySeconds = 60 * 60 * 24; // todo: find a place for this
 
-            /* this is temporary. todo: create a service that GETS validations from server */
+            /* this is temporary. todo: create a module that GETS validations from server */
             vm.valids = {
                 task: {
                     description: {
@@ -135,8 +135,58 @@ angular.module('app.views.helpRequestForm', ['app.vendors.momentjs'])
 
             vm.phoneRegex = /^(\d{8})?(\d{10})?$/; // todo
 
+            //{
+            //    'title': "????",
+            //    'description': "????",
+            //    'petitioner_id': "????", // MongoDB ID
+            //    'tasks': [
+            //    // Atleast one
+            //<task_object/s>
+            //],
+            //    'state': <optional: string>, // This shouldnt be updated manually, only by ADMINs
+            //    'location': <optional: location_object>
+            //}
+
             vm.sendRequest = function() {
-                alert('todo :) send request to server.');
+                //alert('todo :) send request to server.');
+                var req = {
+                    method: 'POST',
+                    url: 'http://localhost:5000/api/cases',
+                    headers: {
+                        'access-token': srvAuth.user.token,
+                        'me': srvAuth.user.id
+                    },
+                    data: {
+                        'title': 'baryakir',
+                        'description' : 'this works. good joooobbbb.',
+                        'petitioner_id': '????????',
+                        'tasks': [
+                            {
+                                'volunteer_id': "????", // MongoDB ID,
+                                'description': "????",
+                                'title': "????",
+                                'type': "????",
+                                'due_date': "int" // Value in seconds
+                                //'state': <optional: string>, // Should not be specified on creation
+                                //'id': <optional: string>, // DO NOT specify this on creation, but REQUIRED for updates
+                                //'location': <optional: location_object>, // Required for type: transportation
+                                //'destination': <optional: location_object> // Required for type: transportation
+                            }
+                        ]
+                    }
+                };
+
+                $http(req)
+                    .then(function(response) {
+                        $scope.postSuccessMsg = "Your card was posted to your friend\'s wall!";
+                        alert('posted!')
+                        console.log($scope.postSuccessMsg);
+                        $scope.postBtnEnabled = true;
+                    })
+                    .catch(function() {
+                        //alert('An error occured. Your card was not posted to Facebook.');
+                        $scope.postBtnEnabled = true;
+                    });
             };
         }
     ]);
