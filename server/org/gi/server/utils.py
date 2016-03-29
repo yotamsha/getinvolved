@@ -34,6 +34,7 @@ HTTP_SERVICE_UNAVAILABLE = 503
 HTTP_GATEWAY_TIMEOUT = 504
 
 COUNT_HEADER = 'X-Total-Count'
+EXPOSE_HEADERS = 'Access-Control-Expose-Headers'
 
 
 def web_log(func):

@@ -31,7 +31,7 @@ class UserListApi(Resource):
             return {'count': count}, u.HTTP_OK
         else:
             resp = make_response(json.dumps(u.make_list(users)), u.HTTP_OK)
-            resp.headers.extend({u.COUNT_HEADER: count})
+            resp.headers.extend({u.COUNT_HEADER: count, u.EXPOSE_HEADERS: u.COUNT_HEADER})
             return resp
 
 
