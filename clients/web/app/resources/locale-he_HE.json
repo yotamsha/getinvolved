@@ -64,6 +64,12 @@
   "views" : {
       "askHelp" : {
           "title" : "בקשת עזרה",
+          "driveEscort": "הסעה וליווי",
+          "productDonation": "תרומת מוצר",
+          "activity": "סדנא / פעילות",
+          "occupationHelp": "עזרה לפי תחום עיסוק",
+          "lightMaintenance": "תחזוקה קלה",
+          "other": "אחר",
           "provideDetails" : "על מנת שנוכל לאשר את בקשתכם בהקדם אנא מסרו את הפרטים במלואם",
           "description" : "תיאור הבקשה",
           "description.sub" : "על מנת שהבקשה תעלה לאתר ותוכלו לקבל עזרה בהקדם, אנו זקוקים לפירוט רב ככל האפשר ",

@@ -1,164 +1,187 @@
 <!-- todo: (temporary solution) Adjust the datePicker directive in angular-material. (Comment out the triangle button) -->
 
 <div id="container" layout-margin layout-align="space-around center">
-		<br>
-		<!-- Images -->
-		<div layout="row" layout-margin >
-			<div flex><img class="volImg" src="{{vm.imgurl}}"/></div>
-			<div flex><img class="volImg" src="{{vm.imgurl}}"/></div>
-			<div flex><img class="volImg" src="{{vm.imgurl}}"/></div>
-			<div flex><img class="volImg" src="{{vm.imgurl}}"/></div>
-			<div flex><img class="volImg" src="{{vm.imgurl}}"/></div>
-			<div flex><img class="volImg" src="{{vm.imgurl}}"/></div>
+	<br>
+
+
+	<!-- Images -->
+	<div layout="row" layout-margin >
+		<div flex layout="column" layout-align="center center">
+			<label> {{ vm.translatePath + ".driveEscort" | translate }} </label>
+			<img class="volImg" ng-src="{{ vm.img.drive }}"/>
 		</div>
+		<div flex layout="column" layout-align="center center">
+			<label> {{ vm.translatePath + ".productDonation" | translate }} </label>
+			<img class="volImg" ng-src="{{ vm.img.product }}"/>
+		</div>
+		<div flex layout="column" layout-align="center center">
+			<label> {{ vm.translatePath + ".activity" | translate }} </label>
+			<img class="volImg" ng-src="{{ vm.img.activity }}"/>
+		</div>
+	</div>
 
-		<br><br>
+	<div layout="row" layout-margin >
+		<div flex layout="column" layout-align="center center">
+			<label> {{ vm.translatePath + ".occupationHelp" | translate }} </label>
+			<img class="volImg" ng-src="{{ vm.img.occupation }}"/>
+		</div>
+		<div flex layout="column" layout-align="center center">
+			<label> {{ vm.translatePath + ".lightMaintenance" | translate }} </label>
+			<img class="volImg" ng-src="{{ vm.img.maintenance }}"/>
+		</div>
+		<div flex layout="column" layout-align="center center">
+			<label> {{ vm.translatePath + ".other" | translate }} </label>
+			<img class="volImg" ng-src="{{ vm.img.other }}"/>
+		</div>
+	</div>
 
-		<!-- Form -->
-		<form name="requestForm">
-			<div layout="column" layout-align="space-around center" layout-margin>
-				<h5>{{ vm.translatePath + ".provideDetails" | translate }}</h5> <!-- todo: align to center -->
-				<br><br>
-				<label>{{ vm.translatePath + ".description" | translate }}</label>
-				<br hide-gt-sm> <br hide-gt-sm> <!-- This br prevents overlapping of lables -->
-				<md-input-container layout-fill flex>
-					<label>{{ vm.translatePath + ".description.sub" | translate }} </label>
-					<textarea type="text"
-							  name="requestDescription"
-							  ng-model="requestDescription"
-							  minlength="{{vm.valids.task.description.length.min}}"
-							  maxlength="{{vm.valids.task.description.length.max}}"
-							  required>
-					</textarea>
-					<div ng-messages="requestForm.requestDescription.$error" role="alert">
-						<div ng-message="required"> {{ vm.translatePath + ".errmsg.required" | translate }} </div>
-						<div ng-message="minlength">{{ vm.translatePath + ".errmsg.length.min" | translate }}</div>
-					</div>
-				</md-input-container>
+	<br><br>
 
-				<label>{{ vm.translatePath + ".provideRoute" | translate }}</label>
-				<br hide-gt-sm> <!-- This br prevents overlapping of lables -->
-				<md-input-container layout-fill flex>
-					<label>{{ vm.translatePath + ".provideRoute.sub" | translate }}</label>
-					<textarea type="text" name="courseDescription" ng-model="courseDescription" required></textarea>
-					<div ng-messages="requestForm.courseDescription.$error" role="alert">
-						<div ng-message="required"> {{ vm.translatePath + ".errmsg.required" | translate }} </div>
-					</div>
-				</md-input-container>
+	<!-- Form -->
+	<form name="requestForm">
+		<div layout="column" layout-align="space-around center" layout-margin>
+			<h5>{{ vm.translatePath + ".provideDetails" | translate }}</h5> <!-- todo: align to center -->
+			<br><br>
+			<label>{{ vm.translatePath + ".description" | translate }}</label>
+			<br hide-gt-sm> <br hide-gt-sm> <!-- This br prevents overlapping of lables -->
+			<md-input-container layout-fill flex>
+				<label>{{ vm.translatePath + ".description.sub" | translate }} </label>
+				<textarea type="text"
+						  name="requestDescription"
+						  ng-model="requestDescription"
+						  minlength="{{vm.valids.task.description.length.min}}"
+						  maxlength="{{vm.valids.task.description.length.max}}"
+						  required>
+				</textarea>
+				<div ng-messages="requestForm.requestDescription.$error" role="alert">
+					<div ng-message="required"> {{ vm.translatePath + ".errmsg.required" | translate }} </div>
+					<div ng-message="minlength">{{ vm.translatePath + ".errmsg.length.min" | translate }}</div>
+				</div>
+			</md-input-container>
 
-				<label>{{ vm.translatePath + ".reason" | translate }}</label>
-				<md-input-container layout-fill flex>
-					<label>{{ vm.translatePath + ".reason.sub" | translate }}</label>
-					<textarea type="text" name="requestReason" ng-model="requestReason" required></textarea>
-					<div ng-messages="requestForm.requestReason.$error" role="alert">
-						<div ng-message="required">{{ vm.translatePath + ".errmsg.required" | translate }}</div>
-					</div>
-				</md-input-container>
+			<label>{{ vm.translatePath + ".provideRoute" | translate }}</label>
+			<br hide-gt-sm> <!-- This br prevents overlapping of lables -->
+			<md-input-container layout-fill flex>
+				<label>{{ vm.translatePath + ".provideRoute.sub" | translate }}</label>
+				<textarea type="text" name="courseDescription" ng-model="courseDescription" required></textarea>
+				<div ng-messages="requestForm.courseDescription.$error" role="alert">
+					<div ng-message="required"> {{ vm.translatePath + ".errmsg.required" | translate }} </div>
+				</div>
+			</md-input-container>
 
-				<label>{{ vm.translatePath + ".time" | translate }}</label>
-				<div flex layout-gt-sm="row" layout="column" layout-margin layout-fill layout-align="center center">
-					<div flex>
-						<md-input-container layout-fill>
-							<md-select ng-model="time" placeholder="{{ vm.translatePath + '.time.sub' | translate }}">
-								<md-option ng-value="period" ng-repeat="period in vm.periods">
-									{{ period | translate }}
-								</md-option>
-							</md-select>
-						</md-input-container>
-					</div>
+			<label>{{ vm.translatePath + ".reason" | translate }}</label>
+			<md-input-container layout-fill flex>
+				<label>{{ vm.translatePath + ".reason.sub" | translate }}</label>
+				<textarea type="text" name="requestReason" ng-model="requestReason" required></textarea>
+				<div ng-messages="requestForm.requestReason.$error" role="alert">
+					<div ng-message="required">{{ vm.translatePath + ".errmsg.required" | translate }}</div>
+				</div>
+			</md-input-container>
 
-					<br hide-gt-sm>
-
-					<!--<div flex></div> &lt;!&ndash; This div is here to make space between Date and Period &ndash;&gt;-->
-
-					<div flex layout-gt-sm="row" layout="column" layout-align="center center">
-						<label flex>{{ vm.translatePath + ".date" | translate }}</label>
-						<div flex="70"><md-datepicker name="date" ng-model="date"></md-datepicker></div>
-					</div>
-				</div> <br><br>
-
-
-				<label>{{ vm.translatePath + ".place" | translate }}</label>
-				<div flex layout="row" layout-xs="column" layout-margin layout-fill>
-					<md-input-container layout-fill flex>
-						<label>{{ vm.translatePath + ".city" | translate }}</label>
-						<input type="text" name="city" ng-model="city" required>
-						<div ng-messages="requestForm.city.$error" role="alert">
-							<div ng-message="required">{{ vm.translatePath + ".errmsg.required" | translate }}</div>
-						</div>
-					</md-input-container>
-
-					<md-input-container layout-fill flex>
-						<label>{{ vm.translatePath + ".address" | translate }}</label>
-						<input type="text" name="address" ng-model="address">
+			<label>{{ vm.translatePath + ".time" | translate }}</label>
+			<div flex layout-gt-sm="row" layout="column" layout-margin layout-fill layout-align="center center">
+				<div flex>
+					<md-input-container layout-fill>
+						<md-select ng-model="time" placeholder="{{ vm.translatePath + '.time.sub' | translate }}">
+							<md-option ng-value="period" ng-repeat="period in vm.periods">
+								{{ period | translate }}
+							</md-option>
+						</md-select>
 					</md-input-container>
 				</div>
 
 				<br hide-gt-sm>
 
-				<div layout="row">
-					<div flex>
-						<input type="checkbox" name="organizationCheck" ng-model="organizationCheck">
-						<label><b>{{ vm.translatePath + ".organization.title" | translate }}</b></label>
-					</div>
-				</div>
+				<!--<div flex></div> &lt;!&ndash; This div is here to make space between Date and Period &ndash;&gt;-->
 
-				<div id="organizationInfo" ng-show="organizationCheck"
-				 flex layout="column" layout-fill layout-align="center center" layout-margin>
-					<label>{{ vm.translatePath + ".organization.title.sub" | translate }}</label><br>
-					<div flex layout-gt-xs="row" layout="column" layout-fill>
-						<md-input-container layout-fill flex>
-							<label>{{ vm.translatePath + ".organization.name" | translate }}</label><br>
-							<input type="text" name="orgName" ng-model="orgName" ng-required="organizationCheck">
-						</md-input-container>
-						<md-input-container layout-fill flex>
-							<label>{{ vm.translatePath + ".organization.email" | translate }}</label><br>
-							<input type="email" name="orgMail" type="email" ng-model="orgMail" ng-required="organizationCheck">
-							<div ng-messages="requestForm.orgMail.$error" role="alert">
-								<div ng-message="email">{{ vm.translatePath + ".errmsg.email" | translate }}</div>
-							</div>
-						</md-input-container>
-					</div>
+				<div flex layout-gt-sm="row" layout="column" layout-align="center center">
+					<label flex>{{ vm.translatePath + ".date" | translate }}</label>
+					<div flex="70"><md-datepicker name="date" ng-model="date"></md-datepicker></div>
 				</div>
+			</div> <br><br>
 
-				<div layout="row">
-					<div flex>
-						<input type="checkbox" name="requesterCheck" ng-model="requesterCheck">
-						<label><b>{{ vm.translatePath + ".requester.title" | translate }}</b></label>
+
+			<label>{{ vm.translatePath + ".place" | translate }}</label>
+			<div flex layout="row" layout-xs="column" layout-margin layout-fill>
+				<md-input-container layout-fill flex>
+					<label>{{ vm.translatePath + ".city" | translate }}</label>
+					<input type="text" name="city" ng-model="city" required>
+					<div ng-messages="requestForm.city.$error" role="alert">
+						<div ng-message="required">{{ vm.translatePath + ".errmsg.required" | translate }}</div>
 					</div>
-				</div>
-				<div id="requesterInfo" ng-show="requesterCheck" layout-fill flex>
-					<div layout="row" layout-xs="column" layout-margin>
-						<md-input-container layout-fill flex>
-							<label> {{ vm.translatePath + ".requester.firstName" | translate }} </label>
-							<input type="text" name="requesterFirstName" ng-model="requesterFirstName">
-						</md-input-container>
-						<!--<div flex></div> &lt;!&ndash; This div is here to make space between FirstName and LastName &ndash;&gt;-->
-						<md-input-container layout-fill flex>
-							<label> {{ vm.translatePath + ".requester.lastName" | translate }} </label>
-							<input type="text" name="requesterLastName" ng-model="requesterLastName">
-						</md-input-container>
-					</div>
-					<div layout="row" layout-xs="column" layout-margin>
-						<md-input-container flex>
-							<label> {{ vm.translatePath + ".requester.phone" | translate }} </label>
-							<input name="requesterPhone" ng-pattern="vm.phoneRegex" ng-model="requesterPhone">
-							<div ng-messages="requestForm.requesterPhone.$error" role="alert">
-								<div ng-message="pattern">{{ vm.translatePath + ".errmsg.phone" | translate }}</div>
-							</div>
-						</md-input-container>
-						<!--<div flex></div> &lt;!&ndash; This div is here to make space between Phone and Email &ndash;&gt;-->
-						<md-input-container flex>
-							<label> {{ vm.translatePath + ".requester.email" | translate }} </label>
-							<input name="requesterEmail" type="email" ng-model="requesterEmail">
-							<div ng-messages="requestForm.requesterEmail.$error" role="alert">
-								<div ng-message="email">{{ vm.translatePath + ".errmsg.email" | translate }}</div>
-							</div>
-						</md-input-container>
-					</div>
-				</div>
-				<br ng-hide="requesterCheck">
-				<md-button ng-click="vm.sendRequest()" ng-disabled="requestForm.$invalid" class="btn-primary"> {{ vm.translatePath + ".send" | translate }} </md-button>
+				</md-input-container>
+
+				<md-input-container layout-fill flex>
+					<label>{{ vm.translatePath + ".address" | translate }}</label>
+					<input type="text" name="address" ng-model="address">
+				</md-input-container>
 			</div>
-		</form>
+
+			<br hide-gt-sm>
+
+			<div layout="row">
+				<div flex>
+					<input type="checkbox" name="organizationCheck" ng-model="organizationCheck">
+					<label><b>{{ vm.translatePath + ".organization.title" | translate }}</b></label>
+				</div>
+			</div>
+
+			<div id="organizationInfo" ng-show="organizationCheck"
+			 flex layout="column" layout-fill layout-align="center center" layout-margin>
+				<label>{{ vm.translatePath + ".organization.title.sub" | translate }}</label><br>
+				<div flex layout-gt-xs="row" layout="column" layout-fill>
+					<md-input-container layout-fill flex>
+						<label>{{ vm.translatePath + ".organization.name" | translate }}</label><br>
+						<input type="text" name="orgName" ng-model="orgName" ng-required="organizationCheck">
+					</md-input-container>
+					<md-input-container layout-fill flex>
+						<label>{{ vm.translatePath + ".organization.email" | translate }}</label><br>
+						<input type="email" name="orgMail" type="email" ng-model="orgMail" ng-required="organizationCheck">
+						<div ng-messages="requestForm.orgMail.$error" role="alert">
+							<div ng-message="email">{{ vm.translatePath + ".errmsg.email" | translate }}</div>
+						</div>
+					</md-input-container>
+				</div>
+			</div>
+
+			<div layout="row">
+				<div flex>
+					<input type="checkbox" name="requesterCheck" ng-model="requesterCheck">
+					<label><b>{{ vm.translatePath + ".requester.title" | translate }}</b></label>
+				</div>
+			</div>
+			<div id="requesterInfo" ng-show="requesterCheck" layout-fill flex>
+				<div layout="row" layout-xs="column" layout-margin>
+					<md-input-container layout-fill flex>
+						<label> {{ vm.translatePath + ".requester.firstName" | translate }} </label>
+						<input type="text" name="requesterFirstName" ng-model="requesterFirstName">
+					</md-input-container>
+					<!--<div flex></div> &lt;!&ndash; This div is here to make space between FirstName and LastName &ndash;&gt;-->
+					<md-input-container layout-fill flex>
+						<label> {{ vm.translatePath + ".requester.lastName" | translate }} </label>
+						<input type="text" name="requesterLastName" ng-model="requesterLastName">
+					</md-input-container>
+				</div>
+				<div layout="row" layout-xs="column" layout-margin>
+					<md-input-container flex>
+						<label> {{ vm.translatePath + ".requester.phone" | translate }} </label>
+						<input name="requesterPhone" ng-pattern="vm.phoneRegex" ng-model="requesterPhone">
+						<div ng-messages="requestForm.requesterPhone.$error" role="alert">
+							<div ng-message="pattern">{{ vm.translatePath + ".errmsg.phone" | translate }}</div>
+						</div>
+					</md-input-container>
+					<!--<div flex></div> &lt;!&ndash; This div is here to make space between Phone and Email &ndash;&gt;-->
+					<md-input-container flex>
+						<label> {{ vm.translatePath + ".requester.email" | translate }} </label>
+						<input name="requesterEmail" type="email" ng-model="requesterEmail">
+						<div ng-messages="requestForm.requesterEmail.$error" role="alert">
+							<div ng-message="email">{{ vm.translatePath + ".errmsg.email" | translate }}</div>
+						</div>
+					</md-input-container>
+				</div>
+			</div>
+			<br ng-hide="requesterCheck">
+			<md-button ng-click="vm.sendRequest()" ng-disabled="requestForm.$invalid" class="btn-primary"> {{ vm.translatePath + ".send" | translate }} </md-button>
+		</div>
+	</form>
 </div>

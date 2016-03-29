@@ -122,7 +122,17 @@ angular.module('app.views.helpRequestForm', ['app.vendors.momentjs'])
                 }
             };
 
-            vm.imgurl = "http://s9.postimg.org/47m1pb81b/vol.png";
+            //vm.imgurl = "http://s9.postimg.org/47m1pb81b/vol.png";
+
+            vm.img = {
+                drive: "/assets/img/ask-help/escort.drive.png",
+                product: "/assets/img/ask-help/product.donation.png",
+                activity: "/assets/img/ask-help/workshop.activity.png",
+                occupation: "/assets/img/ask-help/occupation.oriented.png",
+                maintenance: "/assets/img/ask-help/light.maintenance.png",
+                other: "/assets/img/ask-help/other.png"
+            };
+
             vm.translatePath = 'views.askHelp';
             vm.periods = [
                 'views.askHelp.hr1',
