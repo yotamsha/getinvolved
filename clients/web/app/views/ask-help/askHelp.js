@@ -2,6 +2,16 @@
 
 angular.module('app.views.helpRequestForm', ['app.vendors.momentjs'])
 
+    .constant('FORM', {
+        "DRIVE": "drive",
+        "PRODUCT": "product",
+        "ACTIVITY": "activity",
+        "PROFESSION": "profession",
+        "MAINTENANCE": "maintenance",
+        "OTHER": "other",
+        "NONE": "none"
+    })
+
     .config(['$stateProvider', function($stateProvider) {
             $stateProvider.state('helpRequestForm', {
                 url : "/ask-help",
@@ -76,19 +86,21 @@ angular.module('app.views.helpRequestForm', ['app.vendors.momentjs'])
             $mdDateLocale.msgOpenCalendar = 'פתח את לוח השנה';
     }])
 
-    .controller('askHelpCtrl', ['$scope', '$http',
-        function ($scope, $http) {
+    .controller('askHelpCtrl', ['$scope', '$http', 'FORM',
+        function ($scope, $http, FORM) {
             var vm = this;
 
-            vm.oneDaySeconds = 60 * 60 * 24; // todo: find a place for this
+            vm.FORM = FORM;
+            vm.currForm = "none";
+            vm.oneDaySeconds = 60 * 60 * 24; // todo: this will also be fetched from server
 
-            /* this is temporary. todo: create a module that GETS validations from server */
+            /* this is temporary. todo: create a module that fetches the validations from server */
             vm.valids = {
                 task: {
                     description: {
                         length: {
                             min: 10,
-                            max: 50
+                            max: 300 // todo: currently not corresponding with server constraints
                         }
                     },
                     durationMinutes: {
@@ -122,8 +134,6 @@ angular.module('app.views.helpRequestForm', ['app.vendors.momentjs'])
                 }
             };
 
-            //vm.imgurl = "http://s9.postimg.org/47m1pb81b/vol.png";
-
             vm.img = {
                 drive: "/assets/img/ask-help/escort.drive.png",
                 product: "/assets/img/ask-help/product.donation.png",
@@ -134,6 +144,8 @@ angular.module('app.views.helpRequestForm', ['app.vendors.momentjs'])
             };
 
             vm.translatePath = 'views.askHelp';
+
+            // todo: adjust these
             vm.periods = [
                 'views.askHelp.hr1',
                 'views.askHelp.hr2',
@@ -143,7 +155,17 @@ angular.module('app.views.helpRequestForm', ['app.vendors.momentjs'])
                 'views.askHelp.dy1'
             ];
 
-            vm.phoneRegex = /^(\d{8})?(\d{10})?$/; // todo
+            vm.hours = [];
+            for(var i = 0; i <= 23 ; ++i) {
+                vm.hours.push(i);
+            }
+
+            vm.minutes = [];
+            for(var i = 0; i <= 60 ; ++i) {
+                vm.minutes.push(i);
+            }
+
+            vm.phoneRegex = /^(\d{8})?(\d{10})?$/; // todo: use a standard way of phone number validation
 
             //{
             //    'title': "????",
@@ -157,6 +179,12 @@ angular.module('app.views.helpRequestForm', ['app.vendors.momentjs'])
             //    'location': <optional: location_object>
             //}
 
+            vm.selectForm = function(selectedForm) {
+                // this function is called by ng-click of an image (when user chooses the type of help)
+                vm.currForm = selectedForm;
+            };
+
+            // todo: connect with server
             vm.sendRequest = function() {
                 //alert('todo :) send request to server.');
                 var req = {
@@ -197,6 +225,23 @@ angular.module('app.views.helpRequestForm', ['app.vendors.momentjs'])
                         //alert('An error occured. Your card was not posted to Facebook.');
                         $scope.postBtnEnabled = true;
                     });
+
+
             };
         }
-    ]);
+    ])
+
+    .filter('numberFixedLen', function () {
+        return function (n, len) {
+            var num = parseInt(n, 10);
+            len = parseInt(len, 10);
+            if (isNaN(num) || isNaN(len)) {
+                return n;
+            }
+            num = '' + num;
+            while (num.length < len) {
+                num = '0'+num;
+            }
+            return num;
+        };
+    });
