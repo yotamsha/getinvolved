@@ -145,7 +145,7 @@ class GIServerUsersTestCase(unittest.TestCase):
         self.remove_users_from_db()
         r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH,
                           json=_load('a_user_with_notifications.json', self.config_folder))
-        self.assertEqual(r.status_code, utils.HTTP_CREATED)
+        self.assertEqual(r.status_code, utils.HTTP_CREATED,msg=r.text)
 
     def test_notifications_wrong_key(self):
         r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH,
@@ -224,7 +224,7 @@ class GIServerUsersTestCase(unittest.TestCase):
     def test_create_a_user(self):
         self.remove_users_from_db()
         r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH, json=_load('a_user.json', self.config_folder))
-        self.assertEqual(r.status_code, utils.HTTP_CREATED)
+        self.assertEqual(r.status_code, utils.HTTP_CREATED,msg=r.text)
         pushed_to_api = _load('a_user.json', self.config_folder)
         created = r.json()
         for k, v in pushed_to_api.iteritems():
@@ -253,7 +253,7 @@ class GIServerUsersTestCase(unittest.TestCase):
     def test_create_a_user_with_roles(self):
         self.remove_users_from_db()
         r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH, json=_load('a_user_with_roles.json', self.config_folder))
-        self.assertEqual(r.status_code, utils.HTTP_CREATED)
+        self.assertEqual(r.status_code, utils.HTTP_CREATED,msg=r.text)
         pushed_to_api = _load('a_user_with_roles.json', self.config_folder)
         created = r.json()
         for k, v in pushed_to_api.iteritems():
@@ -293,12 +293,13 @@ class GIServerUsersTestCase(unittest.TestCase):
         _AUTH = AccessTokenAuth('this is fake and should crashhh')
         r = requests.post('%s/users' % SERVER_URL_API, auth=_AUTH,
                           json=_load('a_user.json', self.config_folder))
-        self.assertEqual(r.status_code, utils.HTTP_CREATED)
+        self.assertEqual(r.status_code, utils.HTTP_CREATED,msg=r.text)
 
     def test_get_me(self):
         self.remove_users_from_db()
         r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH,
                 json=_load('a_user.json', self.config_folder))
+        self.assertEqual(r.status_code, utils.HTTP_CREATED,msg=r.text)
         db_user = json.loads(r.content)
         db_user['_id'] = db_user['id']
         access_token = generate_access_token(db_user)

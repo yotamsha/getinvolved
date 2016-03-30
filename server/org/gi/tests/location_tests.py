@@ -6,14 +6,16 @@ import unittest
 
 from org.gi.server.service import location as l
 
+def is_close(a, b, rel_tol=1e-09, abs_tol=0.001):
+    return abs(a-b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
 
 class GILocationTestCase(unittest.TestCase):
     def test_location_1(self):
         LAT = 37.4223372
         LNG = -122.0843304
         location = l.get_lat_lng('1600 Amphitheatre Parkway, Mountain View, CA')
-        self.assertEqual(location['lat'], LAT)
-        self.assertEqual(location['lng'], LNG)
+        self.assertTrue(is_close(location['lat'], LAT),msg='%f -- %f' % (location['lat'], LAT))
+        self.assertTrue(is_close(location['lng'], LNG),msg='%f -- %f' % (location['lng'], LNG))
 
     def test_location_2(self):
         LAT = 32.0666302
@@ -21,15 +23,15 @@ class GILocationTestCase(unittest.TestCase):
         CITY = 'תל-אביב'
         STREET = ' יונה קרמניצקי 6'
         location = l.get_lat_lng(CITY + ' , ' + STREET)
-        self.assertEqual(location['lat'], LAT)
-        self.assertEqual(location['lng'], LNG)
+        self.assertTrue(is_close(location['lat'], LAT))
+        self.assertTrue(is_close(location['lng'], LNG))
 
     def test_location_3(self):
         LAT = 32.0753543
         LNG = 34.77528300000001
         location = l.get_lat_lng('Dizengoff St 50, Tel Aviv-Yafo, 64332')
-        self.assertEqual(location['lat'], LAT)
-        self.assertEqual(location['lng'], LNG)
+        self.assertTrue(is_close(location['lat'], LAT))
+        self.assertTrue(is_close(location['lng'], LNG))
 
     def test_location_4(self):
         LAT = 32.0666302
@@ -38,8 +40,8 @@ class GILocationTestCase(unittest.TestCase):
         STREET = ' יונה קרמניצקי'
         address = {'city': CITY, 'country': 'ישראל', 'street_name': STREET, 'street_number': '6'}
         location = l.get_lat_lng(address)
-        self.assertEqual(location['lat'], LAT)
-        self.assertEqual(location['lng'], LNG)
+        self.assertTrue(is_close(location['lat'], LAT))
+        self.assertTrue(is_close(location['lng'], LNG))
 
     def test_location_5(self):
         STREET = ' יונה קרמניצקי'
