@@ -93,7 +93,7 @@ class Task:
         task_state = TASK_PENDING
         if Task.does_task_exist_in_task_list(task, db_tasks):  # task cant be created with volunteer assigned (!)
             if task.get('volunteer_id') and Task.state_before_assigned(task.get('state')):
-                task_state = TASK_ASSIGNED
+                task_state = TASK_ASSIGNMENT_IN_PROCESS
             elif task.get('state'):
                 task_state = task.get('state')
         return task_state

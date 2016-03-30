@@ -453,7 +453,7 @@ def validate_fields(fields, payload, meta, dummy_faults=None):
 
 def validate_ids_different(tasks, petitioner_id, faults):
     for task in tasks:
-        if task['volunteer_id'] == petitioner_id:
+        if task.get('volunteer_id') == petitioner_id:
             faults.append('Volunteer ID cannot be the same as Petitioner ID.')
 
 
