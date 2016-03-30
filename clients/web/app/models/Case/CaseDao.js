@@ -19,7 +19,10 @@ angular.module('app.models.case')
      */
     .factory('CaseDao', ['Restangular','CaseMapper','TaskMapper', function (Restangular, CaseMapper, TaskMapper ) {
         var modelName = 'cases';
-        var collectionDAO = Restangular.all(modelName);
+		
+        var collectionDAO = Restangular.withConfig(function(RestangularConfigurer) {
+    		RestangularConfigurer.setFullResponse(true);
+  		}).all(modelName);
         
 		function _getById(caseId, config){
             var queryParams = _buildQueryParams(config);
@@ -47,23 +50,11 @@ angular.module('app.models.case')
 			
 			return collectionDAO
 					.getList(queryParams)
-					.then(function (cases) {
-						return _.map(cases, CaseMapper.mapToVM);
-					});
-		}
-
-		function _getCasesCount(config){
-			var conf = angular.extend({
-				excludedStates: [],
-			}, config)
-			
-			var queryParams = _buildQueryParams(conf);
-			queryParams["count"] = "yes";
-			
-			return collectionDAO
-					.customGET("", queryParams)
-					.then(function (result) {
-						return result.count;
+					.then(function (response) {
+						return {
+							totalCount: response.headers('x-total-count'),
+							results: _.map(response.data, CaseMapper.mapToVM)
+						}
 					});
 		}
 
@@ -121,7 +112,6 @@ angular.module('app.models.case')
 		return {
             getById : _getById,
 			getMany: _getMany,
-			getCasesCount: _getCasesCount,
             assignTaskToVolunteer : _assignTaskToVolunteer
         };
     }]);
