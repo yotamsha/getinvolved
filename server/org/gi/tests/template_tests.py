@@ -37,11 +37,18 @@ class GITemplateTestCase(unittest.TestCase):
     # creating the expected results is tedious work
     # AND message templates are subject to change, postponing this for now
     def print_merged_templates(self):
+        print "EMAILS:"
+        print "Petitioner (NINA):"
+        all_data = _load('real_world_single_volunteer.json', 'template')
+        print load_and_merge('/petitioner/email/first_reminder', all_data['data'], lang='he')
+        print '###############################################################################'
         all_data = _load('real_world_single_volunteer.json', 'template')
         print load_and_merge('/petitioner/email/second_reminder', all_data['data'], lang='he')
         print '###############################################################################'
-        all_data = _load('real_world_multi_volunteers.json', 'template')
-        print load_and_merge('/petitioner/email/second_reminder', all_data['data'], lang='he')
+        all_data = _load('real_world_single_volunteer.json', 'template')
+        print load_and_merge('/petitioner/email/match', all_data['data'], lang='he')
+        print '###############################################################################'
+        print "Volunteer (VIKTOR):"
         print '###############################################################################'
         all_data = _load('real_world_volunteer.json', 'template')
         print load_and_merge('/volunteer/email/first_reminder', all_data['data'], lang='he')
@@ -57,17 +64,31 @@ class GITemplateTestCase(unittest.TestCase):
         all_data = _load('real_world_single_volunteer.json', 'template')
         print load_and_merge('/petitioner/email/case_approval', all_data['data'], lang='he')
         print '###############################################################################'
-        all_data = _load('real_world_single_volunteer.json', 'template')
-        print load_and_merge('/petitioner/email/match', all_data['data'], lang='he')
-        print '###############################################################################'
         all_data = _load('real_world_volunteer.json', 'template')
         print load_and_merge('/volunteer/email/register_to_case', all_data['data'], lang='he')
+        print '###############################################################################'
+        print "SMS:"
+        print '###############################################################################'
+        print "Petitioner (NINA):"
+        all_data = _load('real_world_single_volunteer.json', 'template')
+        print load_and_merge('/petitioner/sms/case_approval', all_data['data'], lang='he')
+        print '###############################################################################'
+        all_data = _load('real_world_single_volunteer.json', 'template')
+        print load_and_merge('/petitioner/sms/first_reminder', all_data['data'], lang='he')
+        print '###############################################################################'
+        all_data = _load('real_world_single_volunteer.json', 'template')
+        print load_and_merge('/petitioner/sms/second_reminder', all_data['data'], lang='he')
+        print '###############################################################################'
+        all_data = _load('real_world_single_volunteer.json', 'template')
+        print load_and_merge('/petitioner/sms/match', all_data['data'], lang='he')
+        print '###############################################################################'
+        print "Volunteer (VIKTOR):"
         print '###############################################################################'
 
     def test_single_print(self):
         print '###############################################################################'
-        all_data = _load('real_world_volunteer.json', 'template')
-        print load_and_merge('/volunteer/email/register_to_case', all_data['data'], lang='he')
+        all_data = _load('real_world_single_volunteer.json', 'template')
+        print load_and_merge('/petitioner/sms/match', all_data['data'], lang='he')
         print '###############################################################################'
 
     # negatives

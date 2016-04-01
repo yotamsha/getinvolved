@@ -1,13 +1,13 @@
 {{details.first_name}} שלום,
 {% if volunteers |count == 1 %}
 {% for volunteer in volunteers %}
- אנחנו מזכירים לכם שבעוד 3 שעות יגיע/תגיע אליך {{volunteer.first_name}} {{volunteer.last_name}}
- תוכלו ליצור עמם קשר במס' הטלפון {{volunteer.phone_number.number}}
- או בכתובת מייל {{volunteer.email}}
+אנחנו מזכירות לך שבעוד 3 שעות יגיע\תגיע אליך {{volunteer.first_name}} {{volunteer.last_name}}
+תוכלו ליצור עמם קשר במס' הטלפון  {{volunteer.phone_number.number}}
+או בכתובת מייל  {{volunteer.email}}
 
 {% endfor %}
 {% else %}
-אנחנו מזכירים לכם שבעוד 3 שעות יגיע/תגיע אליך -
+אנחנו מזכירות לך שבעוד 3 שעות יגיע\תגיע אליך -
 {% for volunteer in volunteers %}
 {{volunteer.first_name}} {{volunteer.last_name}}
  תוכלו ליצור עמם קשר במס' הטלפון {{volunteer.phone_number.number}}
@@ -15,6 +15,9 @@
 
 {% endfor %}
 {% endif %}
-אם יש בעיה אנא צרו איתנו קשר במייל -
-{{gi_email}}
+במידה וישנה בעיה כלשהי, אנא הודיע\י לנו בהדקם בכתובת המייל {{gi_email}}
 אנחנו כאן לכל שאלה
+
+בהצלחה!
+ getinvolved
+*ניתן להשיב למייל זה
