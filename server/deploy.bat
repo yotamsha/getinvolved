@@ -14,13 +14,13 @@ RMDIR /S /Q dist
 :: create the archive
 python setup.py sdist --formats=gztar
 
-call gcloud compute copy-files dist/%SERVER_ARCHIVE% %INSTANCE_NAME%: --zone %ZONE%
+call gcloud compute copy-files dist/%SERVER_ARCHIVE% %INSTANCE_NAME%:/home/%USERNAME% --zone %ZONE%
 
 :: copy remote script to GCE
-call gcloud compute copy-files %REMOTE_SCRIPT% %INSTANCE_NAME%: --zone %ZONE%
+call gcloud compute copy-files %REMOTE_SCRIPT% %INSTANCE_NAME%:/home/%USERNAME% --zone %ZONE%
 
 ::  run remote script
-call gcloud compute ssh %INSTANCE_NAME% --zone %ZONE%  chmod +x ./%REMOTE_SCRIPT%
-call gcloud compute ssh %INSTANCE_NAME% --zone %ZONE%   ./%REMOTE_SCRIPT%
+call gcloud compute ssh %INSTANCE_NAME% --zone %ZONE%  chmod +x /home/%USERNAME%/%REMOTE_SCRIPT%
+call gcloud compute ssh %INSTANCE_NAME% --zone %ZONE%   /home/%USERNAME%/%REMOTE_SCRIPT%
 
 
