@@ -5,7 +5,7 @@
   "views.main.header.hello" : "שלום",
   "views.main.header.logout" : "התנתק",
   "views.main.header.profile" : "עמוד פרופיל",
-  "views.main.header.login_or_signup" : "כניסה / הרשמה",
+  "views.main.header.login_or_signup" : "כניסה",
   "views.main.header.nav-menu.ask_help" : "לבקש עזרה",
   "views.main.header.nav-menu.about_us" : "קצת עלינו",
   "views.main.header.nav-menu.opportunities" : "הזדמנויות",
