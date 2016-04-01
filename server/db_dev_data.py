@@ -45,6 +45,7 @@ def load_db():
         cases_endpoint = '%s/cases' % SERVER_URL_API
         for user_id, case in zip(petitioner_ids, cases):
             case['petitioner_id'] = user_id
+        for case in cases:
             for task in case['tasks']:
                 task['due_date'] = next_due_date()
         insert_entities(cases_endpoint, case_ids, cases)
