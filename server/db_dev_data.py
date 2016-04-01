@@ -41,11 +41,12 @@ def load_db():
 
     case_ids = []
     with open("dev_data/cases.json", "r") as _cases:
-        cases = json.load(_cases)
+        cases = json.load(_cases, strict=False)
         cases_endpoint = '%s/cases' % SERVER_URL_API
-        for user_id, case in zip(petitioner_ids, cases):
-            case['petitioner_id'] = user_id
+        next_id = 0
         for case in cases:
+            case['petitioner_id'] = petitioner_ids[next_id % len(petitioner_ids)]
+            next_id += 1
             for task in case['tasks']:
                 task['due_date'] = next_due_date()
         insert_entities(cases_endpoint, case_ids, cases)
@@ -56,7 +57,7 @@ def load_db():
         users_endpoint = '%s/users' % SERVER_URL_API
         insert_entities(users_endpoint, volunteer_ids, users)
 
-    for index in range(len(case_ids) - 1):
+    for index in range(3):
         r = requests.get(cases_endpoint + "/{}".format(case_ids[index]), auth=access_token)
         case = json.loads(r.content)
         for volunteer_id, task in zip(volunteer_ids, case['tasks']):
