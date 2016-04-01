@@ -43,7 +43,6 @@ angular.module('app.header.header-ctrl', [])
                             return "";
                         },
                         classes: "profile",
-                        link: "/profile",
                         isMenu : true,
                         hide : function(){
                             return !ctrl.authModel.isAuthenticated;
@@ -51,6 +50,7 @@ angular.module('app.header.header-ctrl', [])
                         menuItems : [ // relevant only for desktop
                             {
                                 routeText : "views.main.header.profile",
+								link: "/profile",
                                 clickHandler : function(){
                                     ctrl.changeRoute('profile')
                                 }
@@ -63,21 +63,28 @@ angular.module('app.header.header-ctrl', [])
                         link: "/cases",
                         classes: "cases"
                     },
-                    {
-                        routeText: "views.main.header.nav-menu.about_us",
-                        link: "/about",
-                        classes: "about-us"
-                    },
-                    {
-                        routeText: "views.main.header.nav-menu.donors",
-                        link: "/partners",
-                        classes: "donors"
-                    },
-                    {
-                        routeText: "views.main.header.nav-menu.success_stories",
-                        link: "/success-stories",
-                        classes: "success-stories"
-                    },
+					{
+						routeText: "views.main.header.nav-menu.about",
+						classes: "about",
+						isMenu : true,
+						menuItems : [ // relevant only for desktop
+                            {
+								routeText: "views.main.header.nav-menu.about_us",
+								link: "/about",
+								classes: "about-us"
+							},
+							{
+								routeText: "views.main.header.nav-menu.donors",
+								link: "/partners",
+								classes: "donors"
+							},
+							{
+								routeText: "views.main.header.nav-menu.success_stories",
+								link: "/success-stories",
+								classes: "success-stories"
+							}
+                        ]
+					},
                     {
                         routeText: "views.main.header.nav-menu.contact_us",
                         link: "/contact",
@@ -87,11 +94,22 @@ angular.module('app.header.header-ctrl', [])
                         routeText: "views.main.header.nav-menu.ask_help",
                         link: "/ask-help",
                         classes: "ask-help"
-                    },
-                    logoutRoute
-
+                    }
                 ];
 
+				_.each(ctrl.headerLinks, function(link){
+					if (link.isMenu)
+						link.menuShown = false;
+				});
+				
+				ctrl.mobileLinks = _.flatten(_.map(ctrl.headerLinks, function(link){
+										if(!link.isMenu)
+											return link;
+
+										return link.menuItems;
+									}));
+				
+				
                 ctrl.headerAttributes = angular.copy(_headerDefaults);
                 ctrl.howItWorksLinks = [
                     {
@@ -119,7 +137,10 @@ angular.module('app.header.header-ctrl', [])
 
             ctrl.navClass = function (route) {
                 var currentRoute = $location.path();
-                return route.link === currentRoute ? 'active ' + route.classes : route.classes;
+				if (!route.isMenu)
+                	return route.link === currentRoute ? 'active ' + route.classes : route.classes;
+					
+				return _.any(route.menuItems, function(item) {return item.link == currentRoute}) ? 'active ' + route.classes : route.classes; 
             };
 
             ctrl.onHeaderButtonClick = function () {
@@ -128,7 +149,7 @@ angular.module('app.header.header-ctrl', [])
 
             ctrl.updateHeaderContent = function (toState) {
                 var newStateProperties = toState.data || {};
-                angular.extend(ctrl.headerAttributes,_headerDefaults,newStateProperties.header || {})
+                angular.extend(ctrl.headerAttributes, _headerDefaults, newStateProperties.header || {})
             };
 
             ctrl.openLoginDialog = function () {
@@ -138,18 +159,24 @@ angular.module('app.header.header-ctrl', [])
                     }
                 }});
             };
+			
             ctrl.changeRoute = function(route){
                 $location.path(route)
             };
+			
             ctrl.handleMenuClick = function(route){
-                if (route.link){
+
+                if (route.link) {
                     $location.path(route.link);
                     return;
                 }
-                if (route.clickHandler){
+				
+                if (route.clickHandler) {
                     route.clickHandler();
+					return;
                 }
             };
+			
             ctrl.getRouteText = function(route){
                 if (_.isString(route.routeText)){
                     return $filter('translate')(route.routeText);
@@ -157,6 +184,7 @@ angular.module('app.header.header-ctrl', [])
                     return route.routeText();
                 }
             };
+			
             ctrl.isSideNavOpen = false;
             ctrl.toggleSideNav = function (){
               ctrl.isSideNavOpen = !ctrl.isSideNavOpen;
@@ -165,7 +193,12 @@ angular.module('app.header.header-ctrl', [])
       	    $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
       	        ctrl.updateHeaderContent(toState);
       	    	ctrl.isSideNavOpen = false;
+				ctrl.showHowItWorksSection = false; 
+				_.each(ctrl.headerLinks, function (link) {
+					if (link.isMenu)
+						link.menuShown = false;
+				});
       	    });
 
-	          _init();
+	        _init();
 }]);
