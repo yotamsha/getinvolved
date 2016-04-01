@@ -10,8 +10,17 @@ LEN_ERR_MSG_TEMPLATE = '%s is not a valid %s. %s length should be in the range %
 
 
 def validate_len_in_range(entity_name, field_name, value):
-    return value and isinstance(value, basestring) and LC[entity_name][field_name][MIN_LEN] <= len(value.strip()) <= \
-                                                       LC[entity_name][field_name][MAX_LEN]
+    entity = LC.get(entity_name)
+    if not entity:
+        raise ValueError('The entity %s is not supported' % entity_name)
+    field = entity.get(field_name)
+    if not field:
+        raise ValueError('The field %s  of entity %s is not supported' % (entity_name, field_name))
+    if not value:
+        raise ValueError('Value can not be None')
+    if not isinstance(value, basestring):
+        raise ValueError('Value must be a string')
+    return field[MIN_LEN] <= len(value.strip()) <= field[MAX_LEN]
 
 
 def get_min_len(entity_name, field_name):
