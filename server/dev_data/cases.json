@@ -57,13 +57,118 @@
       {
         "state": "__undefined__",
         "type": "GENERAL",
-        "title": "test: task title 4",
+        "title": "עזרה בקניית כרטיסיית רכבת",
         "due_date": "__REPLACE__",
-        "description": "I need help with T4"
+        "description": "צעירה בסיכון בוגרת תכנית המנטורינג מבקשת עזרה בקניית כרטיסיית נסיעות לרכבת קו תא-רמלה"
       }
     ],
     "petitioner_id": "__REPLACE__",
     "description": "I need help with...",
-    "title": "test: case title 4"
+    "title": "עזרה בקניית כרטיסיית רכבת"
+  },
+  {
+    "state": "__undefined__",
+    "tasks": [
+      {
+        "state": "__undefined__",
+        "type": "GENERAL",
+        "title": "תרומת ציוד לתינוקות	",
+        "due_date": "__REPLACE__",
+        "description": "גן ילדים בדרום תל אביב זקוק לתרומת ציוד לתינוקות- רדיו טייפ, לולי תינוקות, שולחנות יצירה."
+      }
+    ],
+    "petitioner_id": "__REPLACE__",
+    "description": "I need help with...",
+    "title": "תרומת ציוד לתינוקות	"
+  },
+  {
+    "state": "__undefined__",
+    "tasks": [
+      {
+        "state": "__undefined__",
+        "type": "GENERAL",
+        "title": "הסעה וליווי לתל השומר",
+        "due_date": "__REPLACE__",
+        "description": "קשישה החיה בגפה זקוקה להסעה וליווי לבדיקה בתל השומר"
+      }
+    ],
+    "petitioner_id": "__REPLACE__",
+    "description": "I need help with...",
+    "title": "הסעה וליווי לתל השומר"
+  },
+  {
+    "state": "__undefined__",
+    "tasks": [
+      {
+        "state": "__undefined__",
+        "type": "GENERAL",
+        "title": "טיפול שיניים בהתנדבות",
+        "due_date": "__REPLACE__",
+        "description": "נער ממשפחה קשת יום סובל מכאבי שיניים וזקוק לטיפול בהתנדבות"
+      }
+    ],
+    "petitioner_id": "__REPLACE__",
+    "description": "I need help with...",
+    "title": "טיפול שיניים בהתנדבות"
+  },
+  {
+    "state": "__undefined__",
+    "tasks": [
+      {
+        "state": "__undefined__",
+        "type": "GENERAL",
+        "title": "ליווי לבנק לצורך עזרה בפריסת חובות",
+        "due_date": "__REPLACE__",
+        "description": "אב חד הורי לשני ילדים המתקיים מקצבת נכות בלבד זקוק לליווי לבנק לצורך עזרה בפריסת חובותיו"
+      }
+    ],
+    "petitioner_id": "__REPLACE__",
+    "description": "I need help with...",
+    "title": "ליווי לבנק לצורך עזרה בפריסת חובות"
+  },
+  {
+    "state": "__undefined__",
+    "tasks": [
+      {
+        "state": "__undefined__",
+        "type": "GENERAL",
+        "title": "סטודיו לקרמיקה עם תנור לשריפת כלים",
+        "due_date": "__REPLACE__",
+        "description": "אם חד הורית עם קשיים כלכליים מחפשת סטודיו לקרמיקה עם תנור לשריפת כלים כדי שתוכל להתפרנס ממכירת יצירותיה"
+      }
+    ],
+    "petitioner_id": "__REPLACE__",
+    "description": "I need help with...",
+    "title": "סטודיו לקרמיקה עם תנור לשריפת כלים"
+  },
+  {
+    "state": "__undefined__",
+    "tasks": [
+      {
+        "state": "__undefined__",
+        "type": "GENERAL",
+        "title": "מתנדבים לצביעה, סידור וארגון גן ילדים בדרום תל-אביב",
+        "due_date": "__REPLACE__",
+        "description": "גן ילדים בדרום תל אביב זקוק למתנדבים לצביעה, סידור וארגון הגן *ידיים טובות ומקדחה- יתרון!"
+      }
+    ],
+    "petitioner_id": "__REPLACE__",
+    "description": "I need help with...",
+    "title": "מתנדבים לצביעה, סידור וארגון גן ילדים בדרום תל-אביב"
+  },
+  {
+    "state": "__undefined__",
+    "tasks": [
+      {
+        "state": "__undefined__",
+        "type": "GENERAL",
+        "title": "עזרה בפריקת ארגזים לאחר מעבר דירה",
+        "due_date": "__REPLACE__",
+        "description": "אם חד הורית עם מוגבלות פיזית זקוקה לעזרה בפריקת ארגזים לאחר מעבר דירה"
+      }
+    ],
+    "petitioner_id": "__REPLACE__",
+    "description": "I need help with...",
+    "title": "עזרה בפריקת ארגזים לאחר מעבר דירה"
   }
 ]

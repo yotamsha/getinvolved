@@ -1,0 +1,11 @@
+{
+  "first_name": "Bar",
+  "last_name": "Wachtel",
+  "user_name": "Bazza88",
+  "password": "Bazza88888",
+  "email": "bazza@gmail.net",
+  "phone_number": {
+    "number": "0527588594",
+    "country_code": "IL"
+  }
+}
