@@ -157,6 +157,11 @@
 		display: block;
 		padding: 10px 10px;
 	}
+	
+	&.active { 
+		background-color: rgba(88, 145, 161, 0.71); 
+		color: #ffffff;
+	}
 }
 
 .how-it-works-section{
