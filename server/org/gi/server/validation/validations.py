@@ -137,10 +137,12 @@ def validate_password(password, faults):
             password_strength['has_num'] = True
         score = len([b for b in password_strength.values() if b])
         return password_scores[score]
-
+    if not isinstance(password, basestring):
+        faults.append('Password must be a string, sent {}'.format(type(password)))
+        return
     if not validate_len_in_range('user', 'password', password):
         faults.append(LEN_ERR_MSG_TEMPLATE % (
-            password,'password','password', get_min_len('user', 'password'), get_max_len('user', 'password')))
+            password, 'password', 'password', get_min_len('user', 'password'), get_max_len('user', 'password')))
         return
     if _get_password_strength(password) != 'Strong':
         faults.append('password should be a combination of upper case, lower case and numbers')
