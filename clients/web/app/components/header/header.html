@@ -1,13 +1,15 @@
 <div class="header" layout="column">
   <div class="nav-bar" layout="row" hide show-gt-sm>
     <div class="logo"></div>
-    <div ng-repeat="route in ctrl.headerLinks" class="route-link" ng-mouseleave="route.menuShown=false" ng-class="ctrl.navClass(route)" ng-hide="(route.hide && route.hide()) || route.showAsPrimaryLinkInMobileOnly ">
+    <div ng-repeat="route in ctrl.headerLinks" class="nav-bar-section" ng-mouseleave="route.menuShown=false" ng-class="route.classes" ng-hide="(route.hide && route.hide()) || route.hideOnWeb">
         <!-- Regular link -->
-        <a class="nav-bar-link" ng-click="ctrl.handleMenuClick(route)" ng-mouseover="route.menuShown=true"> {{ctrl.getRouteText(route)}}</a>
+        <div class="nav-bar-main-link nav-bar-link"  ng-class="[ctrl.navClass(route), route.menuShown == true && route.isMenu && 'menu-open']" ng-click="ctrl.handleMenuClick(route)" ng-mouseover="route.menuShown=true"> 
+			{{ctrl.getRouteText(route)}}
+		</div>
         <!-- Link with sub-menu -->
         <div class="sub-menu" ng-if="route.isMenu" ng-show="route.menuShown">
-			<div ng-repeat="subMenu in route.menuItems" class="sub-menu-item">
-				<a ng-click="ctrl.handleMenuClick(subMenu)"> {{subMenu.routeText | translate}}</a>
+			<div ng-repeat="subMenu in route.menuItems" class="sub-menu-item" ng-click="ctrl.handleMenuClick(subMenu)" ng-class="ctrl.navClass(subMenu)">
+				{{subMenu.routeText | translate}}
 			</div>
 		</div>
     </div>
@@ -19,7 +21,7 @@
   <div class="backdrop" ng-show="ctrl.isSideNavOpen" hide show-sm show-xs></div>
   <div class="side-nav-menu" ng-show="ctrl.isSideNavOpen" hide show-sm show-xs>
       <ul>
-        <li ng-repeat="route in ctrl.mobileLinks" ng-hide="route.hide && route.hide()" ng-class="ctrl.navClass(route)" class="side-nav-option route-link ">
+        <li ng-repeat="route in ctrl.mobileLinks" ng-hide="(route.hide && route.hide()) || route.hideOnMobile" ng-class="ctrl.navClass(route)" class="side-nav-option route-link ">
             <a ng-click="ctrl.handleMenuClick(route)"> {{ctrl.getRouteText(route)}}</a>
         </li>
       </ul>

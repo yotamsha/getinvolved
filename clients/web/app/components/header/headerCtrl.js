@@ -14,17 +14,8 @@ angular.module('app.header.header-ctrl', [])
             };
 
             function _init() {
-                ctrl.showHowItWorksSection = false;
-                var logoutRoute = {
-                    routeText : "views.main.header.logout",
-                    clickHandler : function(){
-                        ctrl.authSrv.logout();
-                    },
-                    showAsPrimaryLinkInMobileOnly : true,
-                    hide : function(){
-                        return !ctrl.authModel.isAuthenticated;
-                    }
-                };
+                ctrl.showHowItWorksSection = false;             
+				
                 ctrl.headerLinks = [
                     {
                         routeText: "views.main.header.login_or_signup",
@@ -43,19 +34,26 @@ angular.module('app.header.header-ctrl', [])
                             return "";
                         },
                         classes: "profile",
-                        isMenu : true,
                         hide : function(){
                             return !ctrl.authModel.isAuthenticated;
                         },
+						isMenu : true,
+						includeMenuTitleInMobile: true,
                         menuItems : [ // relevant only for desktop
                             {
                                 routeText : "views.main.header.profile",
-								link: "/profile",
-                                clickHandler : function(){
-                                    ctrl.changeRoute('profile')
-                                }
+								link: "/profile"
                             },
-                            logoutRoute
+                            {
+								routeText : "views.main.header.logout",
+								clickHandler : function(){
+									ctrl.authSrv.logout();
+								},
+								hideOnMobile : true,
+								hide : function() {
+									return !ctrl.authModel.isAuthenticated;
+								}
+							}
                         ]
                     },
                     {
@@ -94,19 +92,34 @@ angular.module('app.header.header-ctrl', [])
                         routeText: "views.main.header.nav-menu.ask_help",
                         link: "/ask-help",
                         classes: "ask-help"
-                    }
+                    },
+					{
+						routeText : "views.main.header.logout",
+						clickHandler : function(){
+							ctrl.authSrv.logout();
+						},
+						hideOnWeb : true,
+						hide : function() {
+							return !ctrl.authModel.isAuthenticated;
+						}
+					}
                 ];
 
 				_.each(ctrl.headerLinks, function(link){
-					if (link.isMenu)
-						link.menuShown = false;
+					if (!link.isMenu)
+						return;
+					
+					link.menuShown = false;	
 				});
 				
 				ctrl.mobileLinks = _.flatten(_.map(ctrl.headerLinks, function(link){
 										if(!link.isMenu)
 											return link;
-
-										return link.menuItems;
+										
+										if (!link.includeMenuTitleInMobile)
+											return link.menuItems;
+											
+										return [link].concat(link.menuItems);
 									}));
 				
 				
@@ -138,9 +151,9 @@ angular.module('app.header.header-ctrl', [])
             ctrl.navClass = function (route) {
                 var currentRoute = $location.path();
 				if (!route.isMenu)
-                	return route.link === currentRoute ? 'active ' + route.classes : route.classes;
+                	return route.link === currentRoute ? 'active' : "";
 					
-				return _.any(route.menuItems, function(item) {return item.link == currentRoute}) ? 'active ' + route.classes : route.classes; 
+				return _.any(route.menuItems, function(item) {return item.link == currentRoute}) ? 'active' : ""; 
             };
 
             ctrl.onHeaderButtonClick = function () {
@@ -158,10 +171,6 @@ angular.module('app.header.header-ctrl', [])
                         context : AUTH_CONTEXTS.HEADER_LOGIN
                     }
                 }});
-            };
-			
-            ctrl.changeRoute = function(route){
-                $location.path(route)
             };
 			
             ctrl.handleMenuClick = function(route){

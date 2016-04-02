@@ -16,17 +16,19 @@
 	.header-title {
 		color: #ffffff;
 		font-size: 40px;
+		margin-top: 20px;
 	}
 
 	.header-subtitle {
+		margin-top: 5px;
 		color: #ffffff;
-		font-size: 28px;
+		font-size: 24px;
 		width: 470px;
 		text-align: center;
 	}
 
 	.how-it-works-btn {
-		margin-top: 15px;
+		margin-top: 10px;
 		padding: 5px 20px;
 		background-color: initial;
 		border: 1px solid white;
@@ -48,58 +50,59 @@
 		width: 270px;
 	}
 
-	.route-link {
-		padding: 45px 5px 10px 5px;
+	.nav-bar-section {
 		position: relative;
+		min-width: 90px;
 		margin-left: 30px;
-		min-width: 60px;
 		text-align: center;
 		cursor: pointer;
+		
+		&.ask-help {
+			
+			.nav-bar-main-link {
+				margin-top: 39px;
+				padding: 5px 20px;
+				border: 1px solid #ffffff;
+				
+				&.active {
+					background-color: initial;
+				}
+			}		
+			
+		}
 	}
 
-	.nav-bar-link {
+	.nav-bar-main-link {
 		color: #ffffff;
+		padding: 45px 5px 10px 5px;
+		position: relative;
+		min-width: 60px;
 
-		&:visited {
-			color: #ffffff;
-		}
+		&:hover { color: #F4EEEE; }
+		//&.menu-open { color: gray; }
 
-		&:hover {
-			color: #F4EEEE;
+		&.active {
+			background-color: rgba(88, 145, 161, 0.71);
+			
+			&:hover { color: #ffffff; }
+			&.menu-open {color: #ffffff; }
+			
+			.sub-menu-item:first-child {
+				border: 0;
+			}
 		}
 	}
 	
 	.sub-menu {
 		position: absolute;
-		margin-top: 10px;
+		width: 100%;
 	}
 	
 	.sub-menu-item {
 		padding: 10px 0px;
-		border-top: 1px solid white;
+		border-bottom: 1px solid #ffffff;
 		
-		&:hover {
-			color: #F4EEEE;
-		}
-	}
-}
-
-.route-link {
-	&.ask-help {
-		margin-top: -2px;
-		a {
-			padding: 5px 20px;
-			font-size: 14px;
-			border: 1px solid white;
-		}
-		
-		&.active {
-			background-color: initial;
-		}
-	}
-
-	&.active {
-		background-color: rgba(88, 145, 161, 0.71);
+		&:hover { color: #F4EEEE; }
 	}
 }
 
