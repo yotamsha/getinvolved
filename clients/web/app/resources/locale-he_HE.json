@@ -3,7 +3,7 @@
   "views.general.save": "שמור",
   "views.home.title": "עמוד הבית",
   "views.main.header.hello" : "שלום",
-  "views.main.header.logout" : "התנתק",
+  "views.main.header.logout" : "התנתקות",
   "views.main.header.profile" : "פרופיל",
   "views.main.header.login_or_signup" : "כניסה",
   "views.main.header.nav-menu.ask_help" : "לבקש עזרה",
