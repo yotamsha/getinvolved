@@ -1,9 +1,8 @@
 {{details.first_name}} שלום,
-אנחנו מאד שמחים שבחרת להתערב!
-הנה הפרטים של ההתנדבות שלך:
-פרטי ההתנדבות למקרה "{{case_title}}"
+אנחנו מאד שמחות שבחרת להתערב!
+הנה פרטי ההתנדבות שלך:
 {% for task in tasks %}
-ולמשימה "{{task.title}}"
+"{{task.title}}"
 {% if task.location is defined %}
 איפה ?
 {{task.location.address.city}}, {{task.location.address.street_name}} {{task.location.address.street_number}}
@@ -19,10 +18,8 @@
 
 פרטייך מועברים למעלה הבקשה והם יצרו איתך קשר בנוגע להתנדבותך.
 
-אנא צרו קשר על מנת לוודא את הגעתכם או במקרה של בעיה -
-בכתובת מייל: {{gi_email}}
-או במס' טלפון: {{gi_phone}}
+במידה וישנה בעיה כלשהי, אנא הודיע\י לנו בהקדם במס' הטלפון
+{{gi_phone}}
 
-אנחנו כאן לכל שאלה
  getinvolved
 *ניתן להשיב למייל זה

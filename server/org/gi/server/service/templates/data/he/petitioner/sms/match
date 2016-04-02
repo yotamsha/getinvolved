@@ -1,16 +1,14 @@
 {{details.first_name}} שלום,
-שמחים לבשר שמצאנו בשבילך מתנדב/ת ל-"{{case_title}}"
+אנחנו שמחות לבשר שמצאנו בשבילך מתנדב/ת ל-"{{case_title}}"
 
 {% for volunteer in volunteers %}
- אנא צרו קשר עם המתנדב/ת {{volunteer.first_name}} {{volunteer.last_name}} בהקדם
- תוכלו ליצור עמם קשר במס' הטלפון {{volunteer.phone_number.number}}
- או בכתובת מייל {{volunteer.email}}
+אנא צור/צרי קשר עם המתנדב/ת {{volunteer.first_name}} {{volunteer.last_name}} בהקדם
+תוכל/י ליצור איתו/איתה קשר במס' הטלפון {{volunteer.phone_number.number}}
+או בכתובת מייל  {{volunteer.email}}
 {% endfor %}
 
-אם יש בעיה כלשהי אנא הודיע/י לנו בהקדם
-בכתובת מייל: {{gi_email}}
-או במס' טלפון: {{gi_phone}}
-
+במידה וישנה בעיה כלשהי, אנא הודיע\י לנו בהקדם במס' הטלפון
+{{gi_phone}}
 אנחנו כאן לכל שאלה
+
  getinvolved
-*ניתן להשיב למייל זה

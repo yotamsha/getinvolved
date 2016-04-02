@@ -93,7 +93,7 @@ angular.module('app.casesSearch', ['app.services.share','app.models.case.viewMod
 							var resultsShownTo = vm.currentCasesPage * vm.casesPerPage; 
 							vm.resultsShownTo = resultsShownTo > vm.totalCasesCount ? vm.totalCasesCount : resultsShownTo;  
 							
-							CaseEmailShareExpander.expandCases(cases);
+							CaseEmailShareExpander.expandCases(vm.cases);
 						});
 				}
 				
