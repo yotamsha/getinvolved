@@ -16,111 +16,8 @@ angular.module('app.header.header-ctrl', [])
             function _init() {
                 ctrl.showHowItWorksSection = false;             
 				
-                ctrl.headerLinks = [
-                    {
-                        routeText: "views.main.header.login_or_signup",
-                        classes: "login",
-                        clickHandler :  ctrl.openLoginDialog,
-                        hide : function(){
-                            return ctrl.authModel.isAuthenticated || ctrl.authModel.isLoading;
-                        }
-                    },
-                    {
-                        routeText: function(){
-                            if (ctrl.authModel.userSession){
-                                return $filter('translate')('views.main.header.hello') + " " +
-                                    ctrl.authModel.userSession.first_name;
-                            }
-                            return "";
-                        },
-                        classes: "profile",
-                        hide : function(){
-                            return !ctrl.authModel.isAuthenticated;
-                        },
-						isMenu : true,
-						includeMenuTitleInMobile: true,
-                        menuItems : [ // relevant only for desktop
-                            {
-                                routeText : "views.main.header.profile",
-								link: "/profile"
-                            },
-                            {
-								routeText : "views.main.header.logout",
-								clickHandler : function(){
-									ctrl.authSrv.logout();
-								},
-								hideOnMobile : true,
-								hide : function() {
-									return !ctrl.authModel.isAuthenticated;
-								}
-							}
-                        ]
-                    },
-                    {
-                        routeText: "views.main.header.nav-menu.opportunities",
-                        link: "/cases",
-                        classes: "cases"
-                    },
-					{
-						routeText: "views.main.header.nav-menu.about",
-						classes: "about",
-						isMenu : true,
-						menuItems : [ // relevant only for desktop
-                            {
-								routeText: "views.main.header.nav-menu.about_us",
-								link: "/about",
-								classes: "about-us"
-							},
-							{
-								routeText: "views.main.header.nav-menu.donors",
-								link: "/partners",
-								classes: "donors"
-							},
-							{
-								routeText: "views.main.header.nav-menu.success_stories",
-								link: "/success-stories",
-								classes: "success-stories"
-							}
-                        ]
-					},
-                    {
-                        routeText: "views.main.header.nav-menu.contact_us",
-                        link: "/contact",
-                        classes: "contact"
-                    },
-                    {
-                        routeText: "views.main.header.nav-menu.ask_help",
-                        link: "/ask-help",
-                        classes: "ask-help"
-                    },
-					{
-						routeText : "views.main.header.logout",
-						clickHandler : function(){
-							ctrl.authSrv.logout();
-						},
-						hideOnWeb : true,
-						hide : function() {
-							return !ctrl.authModel.isAuthenticated;
-						}
-					}
-                ];
-
-				_.each(ctrl.headerLinks, function(link){
-					if (!link.isMenu)
-						return;
-					
-					link.menuShown = false;	
-				});
-				
-				ctrl.mobileLinks = _.flatten(_.map(ctrl.headerLinks, function(link){
-										if(!link.isMenu)
-											return link;
-										
-										if (!link.includeMenuTitleInMobile)
-											return link.menuItems;
-											
-										return [link].concat(link.menuItems);
-									}));
+                ctrl.headerLinks = initNavMenuLinks();
+				ctrl.mobileLinks = initMobileNavMenuLinks();
 				
 				
                 ctrl.headerAttributes = angular.copy(_headerDefaults);
@@ -209,5 +106,159 @@ angular.module('app.header.header-ctrl', [])
 				});
       	    });
 
-	        _init();
+			function initNavMenuLinks() {
+				var links = [
+				{
+					routeText: "views.main.header.login_or_signup",
+					classes: "login",
+					clickHandler :  ctrl.openLoginDialog,
+					hide : function(){
+						return ctrl.authModel.isAuthenticated || ctrl.authModel.isLoading;
+					}
+				},
+				{
+					routeText: function(){
+						if (ctrl.authModel.userSession){
+							return $filter('translate')('views.main.header.hello') + " " +
+								ctrl.authModel.userSession.first_name;
+						}
+						return "";
+					},
+					classes: "profile",
+					hide : function(){
+						return !ctrl.authModel.isAuthenticated;
+					},
+					isMenu : true,
+					menuItems : [
+						{
+							routeText : "views.main.header.profile",
+							link: "/profile"
+						},
+						{
+							routeText : "views.main.header.logout",
+							clickHandler : function(){
+								ctrl.authSrv.logout();
+							},
+							hide : function() {
+								return !ctrl.authModel.isAuthenticated;
+							}
+						}
+					]
+				},
+				{
+					routeText: "views.main.header.nav-menu.opportunities",
+					link: "/cases",
+					classes: "cases"
+				},
+				{
+					routeText: "views.main.header.nav-menu.about",
+					classes: "about",
+					isMenu : true,
+					menuItems : [
+						{
+							routeText: "views.main.header.nav-menu.about_us",
+							link: "/about",
+							classes: "about-us"
+						},
+						{
+							routeText: "views.main.header.nav-menu.donors",
+							link: "/partners",
+							classes: "donors"
+						},
+						{
+							routeText: "views.main.header.nav-menu.success_stories",
+							link: "/success-stories",
+							classes: "success-stories"
+						}
+					]
+				},
+				{
+					routeText: "views.main.header.nav-menu.contact_us",
+					link: "/contact",
+					classes: "contact"
+				},
+				{
+					routeText: "views.main.header.nav-menu.ask_help",
+					link: "/ask-help",
+					classes: "ask-help"
+				}];
+				
+				_.each(ctrl.headerLinks, function(link){
+					if (!link.isMenu)
+						return;
+				
+					link.menuShown = false;	
+				}); 
+				
+				return links;
+			};
+
+			function initMobileNavMenuLinks() {
+				var links = [
+				{
+					routeText: "views.main.header.login_or_signup",
+					classes: "login",
+					clickHandler :  ctrl.openLoginDialog,
+					hide : function(){
+						return ctrl.authModel.isAuthenticated || ctrl.authModel.isLoading;
+					}
+				},
+				{
+					routeText: function(){
+						if (ctrl.authModel.userSession){
+							return $filter('translate')('views.main.header.hello') + " " +
+								ctrl.authModel.userSession.first_name;
+						}
+						return "";
+					},
+					classes: "profile",
+					link: "/profile",
+					hide : function(){
+						return !ctrl.authModel.isAuthenticated;
+					}
+				},
+				{
+					routeText: "views.main.header.nav-menu.opportunities",
+					link: "/cases",
+					classes: "cases"
+				},
+				{
+					routeText: "views.main.header.nav-menu.about_us",
+					link: "/about",
+					classes: "about-us"
+				},
+				{
+					routeText: "views.main.header.nav-menu.donors",
+					link: "/partners",
+					classes: "donors"
+				},
+				{
+					routeText: "views.main.header.nav-menu.success_stories",
+					link: "/success-stories",
+					classes: "success-stories"
+				},
+				{
+					routeText: "views.main.header.nav-menu.contact_us",
+					link: "/contact",
+					classes: "contact"
+				},
+				{
+					routeText: "views.main.header.nav-menu.ask_help",
+					link: "/ask-help",
+					classes: "ask-help"
+				},
+				{
+					routeText : "views.main.header.logout",
+					clickHandler : function(){
+						ctrl.authSrv.logout();
+					},
+					hide : function() {
+						return !ctrl.authModel.isAuthenticated;
+					}
+				}];
+				
+				return links;
+			};
+
+	   		_init();
 }]);
