@@ -1,23 +1,21 @@
 {{details.first_name}} שלום,
-{% if volunteers |count == 1 %}
-{% for volunteer in volunteers %}
-אנחנו מזכירות לך שמחר יגיע\תגיע אליך {{volunteer.first_name}} {{volunteer.last_name}}
-תוכל\י ליצור  איתו\איתה קשר במס' הטלפון  {{volunteer.phone_number.number}}
-או בכתובת מייל  {{volunteer.email}}
+אנחנו רוצות להזכיר לך שההתנדבות שלך מתקיימת מחר
+{% for task in tasks %}
+{% if task.location is defined %}
+איפה ?
+{{task.location.address.city}}, {{task.location.address.street_name}} {{task.location.address.street_number}}
+{% if task.location.address.apartment_number is defined %}
+{% if task.location.address.entrance is defined %} כניסה {{task.location.address.entrance}},{% endif %} דירה מס' {{task.location.address.apartment_number}}{% if task.location.address.floor is defined %}, קומה {{task.location.address.floor}}{% endif %}
 
-{% endfor %}
-{% else %}
-אנחנו מזכירות לך שמחר יגיע\תגיע אליך  -
-{% for volunteer in volunteers %}
-{{volunteer.first_name}} {{volunteer.last_name}}
-תוכל\י ליצור  איתו\איתה קשר במס' הטלפון  {{volunteer.phone_number.number}}
-או בכתובת מייל  {{volunteer.email}}
-
-{% endfor %}
 {% endif %}
+{% endif %}
+
+מתי?
+{{task.due_date}}
+{% endfor %}
+
 במידה וישנה בעיה כלשהי, אנא הודיע\י לנו בהקדם במס' הטלפון
 {{gi_phone}}
-אנחנו כאן לכל שאלה
 
-בהצלחה!
+אנחנו כאן לכל שאלה
  getinvolved
