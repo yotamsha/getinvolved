@@ -23,20 +23,10 @@ class GITemplateTestCase(unittest.TestCase):
     def test_load_and_merge_from_directory(self):
         self.assertEqual(load_and_merge('/test/test_only.jinja', {'test': 'success'}), 'Hello success')
 
-    def test_first_reminder_template_single_volunteer(self):
-        all_data = _load('real_world_single_volunteer.json', 'template')
-        merged_template = load_and_merge('/petitioner/email/first_reminder', all_data['data'], lang='he')
-        self.assertEqual(merged_template, all_data['response'])
-
-    def test_first_reminder_template_multi_volunteers(self):
-        all_data = _load('real_world_multi_volunteers.json', 'template')
-        merged_template = load_and_merge('/petitioner/email/first_reminder', all_data['data'], lang='he')
-        self.assertEqual(merged_template, all_data['response'])
-
     # This method is used to manually verify template correctness,
     # creating the expected results is tedious work
     # AND message templates are subject to change, postponing this for now
-    def test_print_merged_templates(self):
+    def print_merged_templates(self):
         print "EMAILS:"
 
         print "Petitioner (NINA):"
