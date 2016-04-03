@@ -405,7 +405,8 @@ TASK_META = {
     'created_at': None,
     'updated_at': None,
     'duration': None,
-    'id': validate_task_id
+    'id': validate_task_id,
+    'img_url': None
 }
 
 NOTIFICATIONS_META = {
