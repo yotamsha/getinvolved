@@ -381,7 +381,8 @@ CASE_META = {
     'petitioner_id': (noop, MANDATORY),
     'tasks': (validate_tasks, MANDATORY),
     'state': (validate_case_state, not MANDATORY),
-    'location': (location_validator.validate_location, not MANDATORY)
+    'location': (location_validator.validate_location, not MANDATORY),
+    'img_url': (noop, not MANDATORY)
 }
 
 TASK_META = {
