@@ -137,6 +137,7 @@ def validate_password(password, faults):
             password_strength['has_num'] = True
         score = len([b for b in password_strength.values() if b])
         return password_scores[score]
+
     if not isinstance(password, basestring):
         faults.append('Password must be a string, sent {}'.format(type(password)))
         return
@@ -178,7 +179,8 @@ def validate_title(title, faults):
 def validate_description(description, faults):
     if not validate_len_in_range('case', 'description', description):
         faults.append(LEN_ERR_MSG_TEMPLATE % (
-            description,'description','description', get_min_len('case', 'description'), get_max_len('case', 'description')))
+            description, 'description', 'description', get_min_len('case', 'description'),
+            get_max_len('case', 'description')))
 
 
 def validate_petitioner_id(petitioner_id, faults):
@@ -334,6 +336,11 @@ def validate_notifications(notification, faults):
             faults.append('\'%s\' field with value \'%s\' must has a boolean value' % (key, notification[key]))
 
 
+def validate_gender(gender, faults):
+    if gender and gender not in ['male', 'female']:
+        faults.append('gender can have the values: male,female')
+
+
 def validate_date_in_the_future(due_date, faults):
     if not due_date or not isinstance(due_date, int):
         faults.append('due_date must be none empty int')
@@ -366,6 +373,7 @@ USER_META = {
     'first_name': (validate_first_name, MANDATORY),
     'last_name': (validate_last_name, MANDATORY),
     'user_name': validate_user_name,
+    'gender': validate_gender,
     'password': validate_password,
     'email': (validate_email, MANDATORY),
     'phone_number': validate_phone_number,
