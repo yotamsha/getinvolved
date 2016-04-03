@@ -21,6 +21,7 @@ call gcloud compute copy-files %REMOTE_SCRIPT% %INSTANCE_NAME%:/home/%USERNAME% 
 
 ::  run remote script
 call gcloud compute ssh %INSTANCE_NAME% --zone %ZONE%  chmod +x /home/%USERNAME%/%REMOTE_SCRIPT%
-call gcloud compute ssh %INSTANCE_NAME% --zone %ZONE%   /home/%USERNAME%/%REMOTE_SCRIPT%
+call gcloud compute ssh %INSTANCE_NAME% --zone %ZONE%  dos2unix /home/%USERNAME%/%REMOTE_SCRIPT%
+call gcloud compute ssh %INSTANCE_NAME% --zone %ZONE%  /home/%USERNAME%/%REMOTE_SCRIPT%
 
 
