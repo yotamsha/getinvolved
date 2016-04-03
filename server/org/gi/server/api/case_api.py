@@ -88,7 +88,7 @@ class CaseListApi(Resource):
             for case in cases:
                 Case.prep_case_for_client(case)
             resp = make_response(json.dumps(cases), u.HTTP_OK)
-            resp.headers.extend({u.COUNT_HEADER: count})
+            resp.headers.extend({u.COUNT_HEADER: count, u.EXPOSE_HEADERS: u.COUNT_HEADER})
             return resp
         else:
             return {'count': count}, u.HTTP_OK

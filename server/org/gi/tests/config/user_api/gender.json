@@ -4,13 +4,9 @@
   "user_name": "one_user",
   "password": "Qwerty123",
   "email": "one_user@gi.net",
+  "gender" : "__REPLACE__",
   "phone_number": {
-    "number": "036497317",
+    "number": "036497312",
     "country_code": "IL"
-  },
-  "notifications": {
-    "email": "true",
-    "sms" : false
   }
-
 }

@@ -4,7 +4,6 @@
 angular.module('app.models.case')
     .factory('CaseMapper', ['CaseDefaultImageProvider','TaskMapper', function (CaseDefaultImageProvider , TaskMapper) {
         
-		
         function _mapToVM(caseDto){
             var caseVM = {
 				id: caseDto.id, 

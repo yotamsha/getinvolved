@@ -1,6 +1,7 @@
 import pycountry
 
-from org.gi.server.validation.validation_utils import validate_len_in_range, validate_mandatory_and_present_fields
+from org.gi.server.validation.validation_utils import validate_len_in_range, validate_mandatory_and_present_fields, \
+    get_max_len, get_min_len, LEN_ERR_MSG_TEMPLATE
 
 
 def validate_location(location, faults):
@@ -26,70 +27,54 @@ def validate_geo_location(geo_location, faults):
 
 
 def validate_street_name(street_name, faults):
-    if not street_name or not isinstance(street_name, (str, unicode)):
-        faults.append('street_name  must be none empty string')
-        return
-    if not validate_len_in_range(street_name, STREET_NAME_MIN, STREET_NAME_MAX):
-        faults.append('%s is not a valid street_name. street_name length should be in the range %d - %d' % (
-            street_name, STREET_NAME_MIN, STREET_NAME_MAX))
+    if not validate_len_in_range('address', 'street_name', street_name):
+        faults.append(LEN_ERR_MSG_TEMPLATE % (
+            street_name, 'street_name', 'street_name', get_min_len('address', 'street_name'),
+            get_max_len('address', 'street_name')))
 
 
 def validate_street_number(street_number, faults):
-    if not street_number or not isinstance(street_number, (str, unicode)):
-        faults.append('street_number  must be none empty string')
-        return
-    if not validate_len_in_range(street_number, STREET_NUMBER_MIN, STREET_NUMBER_MAX):
-        faults.append('%s is not a valid street_number. street_number length should be in the range %d - %d' % (
-            street_number, STREET_NUMBER_MIN, STREET_NUMBER_MAX))
+    if not validate_len_in_range('address', 'street_number', street_number):
+        faults.append(LEN_ERR_MSG_TEMPLATE % (
+            street_number, 'street_number', 'street_number', get_min_len('address', 'street_number'),
+            get_max_len('address', 'street_number')))
 
 
 def validate_entrance(entrance, faults):
-    if not entrance or not isinstance(entrance, (str, unicode)):
-        faults.append('entrance  must be none empty string')
-        return
-    if not validate_len_in_range(entrance, ENTRANCE_MIN, ENTRANCE_MAX):
-        faults.append('%s is not a valid entrance. entrance length should be in the range %d - %d' % (
-            entrance, ENTRANCE_MIN, ENTRANCE_MAX))
+    if not validate_len_in_range('address', 'entrance', entrance):
+        faults.append(LEN_ERR_MSG_TEMPLATE % (
+            entrance, 'entrance', 'entrance', get_min_len('address', 'entrance'),
+            get_max_len('address', 'entrance')))
 
 
 def validate_floor(floor, faults):
-    if not floor or not isinstance(floor, (str, unicode)):
-        faults.append('floor must be none empty string')
-        return
-    if not validate_len_in_range(floor, FLOOR_MIN, FLOOR_MAX):
-        faults.append('%s is not a valid floor. floor length should be in the range %d - %d' % (
-            floor, FLOOR_MIN, FLOOR_MAX))
+    if not validate_len_in_range('address', 'floor', floor):
+        faults.append(LEN_ERR_MSG_TEMPLATE % (
+            floor, 'floor', 'floor', get_min_len('address', 'floor'), get_max_len('address', 'floor')))
 
 
 def validate_apartment_number(apartment_number, faults):
-    if not apartment_number or not isinstance(apartment_number, (str, unicode)):
-        faults.append('apartment_number must be none empty string')
-        return
-    if not validate_len_in_range(apartment_number, APARTMENT_NUMBER_MIN, APARTMENT_NUMBER_MAX):
-        faults.append('%s is not a valid street_name. description length should be in the range %d - %d' % (
-            apartment_number, APARTMENT_NUMBER_MIN, APARTMENT_NUMBER_MAX))
+    if not validate_len_in_range('address', 'apartment_number', apartment_number):
+        faults.append(
+            LEN_ERR_MSG_TEMPLATE % (
+                apartment_number,'apartment_number', 'apartment_number', get_min_len('address', 'apartment_number'),
+                get_max_len('address', 'apartment_number')))
 
 
 def validate_zip_code(zip_code, faults):
-    if not zip_code or not isinstance(zip_code, (str, unicode)):
-        faults.append('zip_code must be none empty string')
-        return
-    if not validate_len_in_range(zip_code, ZIP_CODE_MIN, ZIP_CODE_MIN_MAX):
-        faults.append('%s is not a valid zip_code. zip_code length should be in the range %d - %d' % (
-            zip_code, ZIP_CODE_MIN, ZIP_CODE_MIN_MAX))
+    if not validate_len_in_range('address', 'zip_code', zip_code):
+        faults.append(LEN_ERR_MSG_TEMPLATE% (
+            zip_code,'zipcode','zipcode', get_min_len('address', 'zip_code'), get_max_len('address', 'zip_code')))
 
 
 def validate_city(city, faults):
-    if not city or not isinstance(city, (str, unicode)):
-        faults.append('city must be none empty string')
-        return
-    if not validate_len_in_range(city, CITY_MIN, CITY_MAX):
-        faults.append('%s is not a valid city. city length should be in the range %d - %d' % (
-            city, CITY_MIN, CITY_MAX))
+    if not validate_len_in_range('address', 'city', city):
+        faults.append(LEN_ERR_MSG_TEMPLATE % (
+            city,'city','city', get_min_len('address', 'city'), get_max_len('address', 'city')))
 
 
 def validate_state(state, faults):
-    if not state or not isinstance(state, (str, unicode)):
+    if not state or not isinstance(state, basestring):
         faults.append('state must be none empty string')
         return
     if state not in STATES:
@@ -97,7 +82,7 @@ def validate_state(state, faults):
 
 
 def validate_country(country, faults):
-    if not country or not isinstance(country, (str, unicode)):
+    if not country or not isinstance(country, basestring):
         faults.append('country must be none empty string')
         return
     try:
@@ -134,27 +119,6 @@ STATES = ['AK', 'AL', 'AR', 'AZ', 'CA', 'CO', 'CT', 'DC', 'DE',
           'NC', 'ND', 'NE', 'NH', 'NJ', 'NM', 'NV', 'NY', 'OH',
           'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT',
           'VA', 'VT', 'WA', 'WI', 'WV', 'WY']
-
-STREET_NAME_MIN = 3
-STREET_NAME_MAX = 25
-
-STREET_NUMBER_MIN = 1
-STREET_NUMBER_MAX = 6
-
-ENTRANCE_MIN = 1
-ENTRANCE_MAX = 4
-
-FLOOR_MIN = 1
-FLOOR_MAX = 4
-
-APARTMENT_NUMBER_MIN = 1
-APARTMENT_NUMBER_MAX = 5
-
-ZIP_CODE_MIN = 3
-ZIP_CODE_MIN_MAX = 7
-
-CITY_MIN = 3
-CITY_MAX = 25
 
 MAX_LATITUDE = 90
 MIN_LATITUDE = -90

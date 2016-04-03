@@ -1,6 +1,10 @@
-from flask import send_from_directory, Blueprint
+from flask import send_from_directory, Blueprint,make_response
 from sys import platform as _platform
+import org.gi.server.validation.field_constraints as fc
 import os
+import json
+import org.gi.server.utils as u
+
 
 static_bp = Blueprint('static_bp', __name__)
 
@@ -30,3 +34,9 @@ def send_css(path):
 @static_bp.route('/js/<path:path>')
 def send_js(path):
     return send_from_directory(_get_static_folder('js'), path)
+
+@static_bp.route('/api/misc/constraints')
+def get_fields_len_constraints():
+    resp = make_response(json.dumps(fc.LENGTH_CONSTRAINTS), u.HTTP_OK)
+    resp.headers.extend({'Content-Type': 'application/json'})
+    return resp

@@ -3,3 +3,5 @@
 org/gi/config/local_config.json
 org/test.py
 gi_server.log
+dist
+get_involved_server.egg-info

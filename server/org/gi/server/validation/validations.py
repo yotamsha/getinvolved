@@ -7,12 +7,14 @@ import phonenumbers
 
 import org.gi.server.authorization as auth
 import org.gi.server.validation.location_validator as location_validator
+
 from org.gi.server import utils as u
 from org.gi.server.db import db
 from org.gi.server.validation.case_state_machine import VALID_CASE_STATES, CASE_COMPLETED, CASE_TRANSITIONS
 from org.gi.server.validation.task import TASK_TYPES, TASK_TYPE_PRODUCT_TRANSPORTATION
 from org.gi.server.validation.task.task_state_machine import VALID_TASK_STATES, TASK_COMPLETED, TASK_TRANSITIONS
-from org.gi.server.validation.validation_utils import validate_len_in_range, validate_mandatory_and_present_fields
+from org.gi.server.validation.validation_utils import validate_len_in_range, validate_mandatory_and_present_fields, \
+    get_max_len, get_min_len, LEN_ERR_MSG_TEMPLATE
 
 __author__ = 'avishayb'
 
@@ -75,24 +77,6 @@ def validate_email(email, faults):
         faults.append('%s is not a valid email address' % email)
 
 
-PASSWORD_MIN = 8
-PASSWORD_MAX = 12
-
-FIRST_NAME_MIN = 2
-FIRST_NAME_MAX = 22
-
-LAST_NAME_MIN = 2
-LAST_NAME_MAX = 22
-
-USER_NAME_MIN = 2
-USER_NAME_MAX = 22
-
-TITLE_NAME_MIN = 2
-TITLE_NAME_MAX = 22
-
-DESCRIPTION_NAME_MIN = 2
-DESCRIPTION_NAME_MAX = 22
-
 FB_TOKEN_MIN_LENGTH = 10
 FB_ID_MIN_LENGTH = 8
 FB_ID_MAX_LENGTH = 40
@@ -105,12 +89,6 @@ TASK_MAX_DURATION_MINUTES = 60 * 24
 ONE_DAY_SECONDS = 60 * 60 * 24
 MIN_DUE_DATE_SECONDS = ONE_DAY_SECONDS
 MAX_DUE_DATE_SECONDS = ONE_DAY_SECONDS * 90
-
-TASK_DESCRIPTION_MIN = 10
-TASK_DESCRIPTION_MAX = 50
-
-TASK_TITLE_MIN = 8
-TASK_TITLE_MAX = 25
 
 
 def validate_phone_number(phone_number, faults):
@@ -134,58 +112,75 @@ def validate_phone_number(phone_number, faults):
             phone_number['number'], phone_number['country_code'], str(e)))
 
 
+def validate_task_description(task_description, faults):
+    if not validate_len_in_range('task', 'description', task_description):
+        faults.append(LEN_ERR_MSG_TEMPLATE % (
+            task_description, 'description', 'description',
+            get_min_len('task', 'description'), get_max_len('task', 'description')))
+
+
+def validate_task_title(task_title, faults):
+    if not validate_len_in_range('task', 'title', task_title):
+        faults.append(LEN_ERR_MSG_TEMPLATE % (
+            task_title, 'title', 'title', get_max_len('task', 'title'), get_max_len('task', 'title')))
+
+
 def validate_password(password, faults):
-    if not password or not isinstance(password, (str, unicode)):
-        faults.append('password must be none empty string')
+    def _get_password_strength(password):
+        password_scores = {0: 'Horrible', 1: 'Weak', 2: 'Medium', 3: 'Strong'}
+        password_strength = dict.fromkeys(['has_upper', 'has_lower', 'has_num'], False)
+        if re.search(r'[A-Z]', password):
+            password_strength['has_upper'] = True
+        if re.search(r'[a-z]', password):
+            password_strength['has_lower'] = True
+        if re.search(r'[0-9]', password):
+            password_strength['has_num'] = True
+        score = len([b for b in password_strength.values() if b])
+        return password_scores[score]
+
+    if not isinstance(password, basestring):
+        faults.append('Password must be a string, sent {}'.format(type(password)))
         return
-    if not validate_len_in_range(password, PASSWORD_MIN, PASSWORD_MAX):
-        faults.append('%s is not a valid password. Password length should be in the range %d - %d' % (
-            password, PASSWORD_MIN, PASSWORD_MAX))
+    if not validate_len_in_range('user', 'password', password):
+        faults.append(LEN_ERR_MSG_TEMPLATE % (
+            password, 'password', 'password', get_min_len('user', 'password'), get_max_len('user', 'password')))
+        return
+    if _get_password_strength(password) != 'Strong':
+        faults.append('password should be a combination of upper case, lower case and numbers')
 
 
 def validate_first_name(first_name, faults):
-    if not first_name or not isinstance(first_name, (str, unicode)):
-        faults.append('first_name must be none empty string')
-        return
-    if not validate_len_in_range(first_name, FIRST_NAME_MIN, FIRST_NAME_MAX):
-        faults.append('%s is not a valid first name. first name length should be in the range %d - %d' % (
-            first_name, FIRST_NAME_MIN, FIRST_NAME_MAX))
+    if not validate_len_in_range('user', 'first_name', first_name):
+        faults.append(LEN_ERR_MSG_TEMPLATE % (
+            first_name, 'first_name', 'first_name', get_min_len('user', 'first_name'),
+            get_max_len('user', 'first_name')))
 
 
 def validate_last_name(last_name, faults):
-    if not last_name or not isinstance(last_name, (str, unicode)):
-        faults.append('last_name must be none empty string')
-        return
-    if not validate_len_in_range(last_name, LAST_NAME_MIN, LAST_NAME_MAX):
-        faults.append('%s is not a valid first name. first name length should be in the range %d - %d' % (
-            last_name, LAST_NAME_MIN, LAST_NAME_MAX))
+    if not validate_len_in_range('user', 'last_name', last_name):
+        faults.append(LEN_ERR_MSG_TEMPLATE % (
+            last_name, 'last_name', 'last_name', get_min_len('user', 'last_name'),
+            get_max_len('user', 'last_name')))
 
 
 def validate_user_name(user_name, faults):
-    if not user_name or not isinstance(user_name, (str, unicode)):
-        faults.append('user_name  must be none empty string')
-        return
-    if not validate_len_in_range(user_name, USER_NAME_MIN, USER_NAME_MAX):
-        faults.append('%s is not a valid first name. first name length should be in the range %d - %d' % (
-            user_name, USER_NAME_MIN, USER_NAME_MAX))
+    if not validate_len_in_range('user', 'user_name', user_name):
+        faults.append(LEN_ERR_MSG_TEMPLATE % (
+            user_name, 'user_name', 'user_name', get_min_len('user', 'user_name'),
+            get_max_len('user', 'user_name')))
 
 
 def validate_title(title, faults):
-    if not title or not isinstance(title, (str, unicode)):
-        faults.append('title  must be none empty string')
-        return
-    if not validate_len_in_range(title, TITLE_NAME_MIN, TITLE_NAME_MAX):
-        faults.append('%s is not a valid title. title length should be in the range %d - %d' % (
-            title, TITLE_NAME_MIN, TITLE_NAME_MAX))
+    if not validate_len_in_range('case', 'title', title):
+        faults.append(LEN_ERR_MSG_TEMPLATE % (
+            title, 'title', 'title', get_min_len('case', 'title'), get_max_len('case', 'title')))
 
 
 def validate_description(description, faults):
-    if not description or not isinstance(description, (str, unicode)):
-        faults.append('description  must be none empty string')
-        return
-    if not validate_len_in_range(description, DESCRIPTION_NAME_MIN, DESCRIPTION_NAME_MAX):
-        faults.append('%s is not a valid description. description length should be in the range %d - %d' % (
-            description, DESCRIPTION_NAME_MIN, DESCRIPTION_NAME_MAX))
+    if not validate_len_in_range('case', 'description', description):
+        faults.append(LEN_ERR_MSG_TEMPLATE % (
+            description, 'description', 'description', get_min_len('case', 'description'),
+            get_max_len('case', 'description')))
 
 
 def validate_petitioner_id(petitioner_id, faults):
@@ -281,8 +276,9 @@ def _validate_status_transition(current_state, new_state, valid_states, valid_tr
         faults.append('%s is invalid state. Valid states are %s' % (current_state, str(valid_states)))
         return
     if new_state not in valid_transitions[current_state]:
-        faults.append('The transition from state %s to state %s in invalid. Possible values for new state are %s' % (
-            current_state, new_state, str(valid_transitions[current_state])))
+        faults.append(
+            'The transition from state %s to state %s in invalid. Possible values for new state are %s' % (
+                current_state, new_state, str(valid_transitions[current_state])))
 
 
 def validate_user_role(role, faults):
@@ -340,6 +336,11 @@ def validate_notifications(notification, faults):
             faults.append('\'%s\' field with value \'%s\' must has a boolean value' % (key, notification[key]))
 
 
+def validate_gender(gender, faults):
+    if gender and gender not in ['male', 'female']:
+        faults.append('gender can have the values: male,female')
+
+
 def validate_date_in_the_future(due_date, faults):
     if not due_date or not isinstance(due_date, int):
         faults.append('due_date must be none empty int')
@@ -348,18 +349,6 @@ def validate_date_in_the_future(due_date, faults):
     if due_date < now + MIN_DUE_DATE_SECONDS or due_date > now + MAX_DUE_DATE_SECONDS:
         faults.append('Invalid due date. Due date must be in the range %d - %d seconds. Current value is %d' % (
             now + MIN_DUE_DATE_SECONDS, now + MAX_DUE_DATE_SECONDS, due_date))
-
-
-def validate_task_description(task_description, faults):
-    if not validate_len_in_range(task_description, TASK_DESCRIPTION_MIN, TASK_DESCRIPTION_MAX):
-        faults.append('%s is not a valid description. description length should be in the range %d - %d' % (
-            task_description, TASK_DESCRIPTION_MIN, TASK_DESCRIPTION_MAX))
-
-
-def validate_task_title(task_title, faults):
-    if not validate_len_in_range(task_title, TASK_TITLE_MIN, TASK_TITLE_MAX):
-        faults.append('%s is not a valid title. title length should be in the range %d - %d' % (
-            task_title, TASK_TITLE_MIN, TASK_TITLE_MAX))
 
 
 def validate_facebook_id(facebook_id, faults):
@@ -384,6 +373,7 @@ USER_META = {
     'first_name': (validate_first_name, MANDATORY),
     'last_name': (validate_last_name, MANDATORY),
     'user_name': validate_user_name,
+    'gender': validate_gender,
     'password': validate_password,
     'email': (validate_email, MANDATORY),
     'phone_number': validate_phone_number,
@@ -473,7 +463,7 @@ def validate_fields(fields, payload, meta, dummy_faults=None):
 
 def validate_ids_different(tasks, petitioner_id, faults):
     for task in tasks:
-        if task['volunteer_id'] == petitioner_id:
+        if task.get('volunteer_id') == petitioner_id:
             faults.append('Volunteer ID cannot be the same as Petitioner ID.')
 
 
