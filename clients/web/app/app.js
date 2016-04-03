@@ -101,7 +101,7 @@ angular.module('app', [
                 prefix: 'resources/locale-',// path to translations files
                 suffix: '.json'// suffix, currently- extension of the translations
             });
-            $translateProvider.preferredLanguage('he_HE');// is applied on first load // yak: todo: USE CONSTANT?
+            $translateProvider.preferredLanguage('LOCALES.preferredLocale');// is applied on first load
             $translateProvider.useLocalStorage();// saves selected language to localStorage
             // App routing is using ui-router module - https://github.com/angular-ui/ui-router
             $urlRouterProvider.otherwise(APP_CONFIG.homeRoute);
