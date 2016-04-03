@@ -3,6 +3,11 @@
   height: auto;
 }
 
-.askHelpInput{
-  //width: 100%;
+// hide the mdDatePicker small arrow button. It overlaps with the date text when in RTL.
+.md-datepicker-expand-triangle {
+  display: none;
+}
+
+.formPickDiv {
+  cursor: pointer;
 }

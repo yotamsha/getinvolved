@@ -84,7 +84,7 @@ module.exports = function (grunt) {
             },
             production: {
                 options: {
-                    dest: 'dist/app/config.js'
+                    dest: 'dist/config.js'
                 },
                 constants: {
                     ENV: {

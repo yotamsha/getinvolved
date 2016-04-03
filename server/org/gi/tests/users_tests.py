@@ -170,6 +170,30 @@ class GIServerUsersTestCase(unittest.TestCase):
         r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH, json=_load('wrong_phone_number.json', self.config_folder))
         self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
 
+    def test_create_male_user(self):
+        user_data = _load('gender.json', self.config_folder)
+        user_data['gender'] = 'male'
+        r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH, json=user_data)
+        self.assertEqual(r.status_code, utils.HTTP_CREATED)
+        self.remove_users_from_db()
+
+
+    def test_create_female_user(self):
+        user_data = _load('gender.json', self.config_folder)
+        user_data['gender'] = 'female'
+        r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH, json=user_data)
+        self.assertEqual(r.status_code, utils.HTTP_CREATED)
+        self.remove_users_from_db()
+
+
+    def test_create_wrong_gender_user(self):
+        user_data = _load('gender.json', self.config_folder)
+        user_data['gender'] = 'invalid_gender'
+        r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH, json=user_data)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
+        self.remove_users_from_db()
+
+
     def test_short_password(self):
         r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH, json=_load('short_password.json', self.config_folder))
         self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
