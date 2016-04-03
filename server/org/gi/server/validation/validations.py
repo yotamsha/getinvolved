@@ -389,7 +389,8 @@ CASE_META = {
     'petitioner_id': (noop, MANDATORY),
     'tasks': (validate_tasks, MANDATORY),
     'state': (validate_case_state, not MANDATORY),
-    'location': (location_validator.validate_location, not MANDATORY)
+    'location': (location_validator.validate_location, not MANDATORY),
+    'img_url': (noop, not MANDATORY)
 }
 
 TASK_META = {
@@ -404,7 +405,8 @@ TASK_META = {
     'created_at': None,
     'updated_at': None,
     'duration': None,
-    'id': validate_task_id
+    'id': validate_task_id,
+    'img_url': None
 }
 
 NOTIFICATIONS_META = {

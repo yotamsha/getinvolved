@@ -6,6 +6,7 @@ import time
 from org.gi import args
 from org.gi.server.db import mongo
 from org.gi.server.utils import get_hours_in_seconds
+from org.gi.server.validation.case_state_machine import CASE_PENDING_INVOLVEMENT
 from org.gi.server.validation.task.task_state_machine import TASK_ASSIGNED
 from org.gi.server.web_token import AccessTokenAuth
 
@@ -64,6 +65,12 @@ def load_db():
             task['volunteer_id'] = volunteer_id
             task['state'] = TASK_ASSIGNED
         requests.put(cases_endpoint + "/{}".format(case_ids[index]), auth=access_token, json=case)
+
+    update = {
+        'state': CASE_PENDING_INVOLVEMENT
+    }
+    for index in range(3,len(case_ids)):
+        r = requests.put(cases_endpoint + "/{}".format(case_ids[index]), auth=access_token, json=update)
 
 
 def insert_entities(endpoint, entity_ids, entities):
