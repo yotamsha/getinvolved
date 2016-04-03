@@ -3,14 +3,13 @@ import time
 import unittest
 
 import requests
-
 from misc import _remove_from_db, _load, _push_to_db, MONGO, SERVER_URL_API, ACCESS_TOKEN_AUTH, validate_server_is_up
 from org.gi.server import utils as utils
 from org.gi.server.model.Task import ALL_TASKS_SAME_STATE_TRANSITION
 from org.gi.server.service.notification.fetch_users_to_notify import fetch_users_with_upto_x_hours_until_task
 from org.gi.server.validation.task.task_state_machine import TASK_UNDEFINED, TASK_ASSIGNED, TASK_COMPLETED, \
     TASK_PENDING, \
-    TASK_ATTENDANCE_CONFIRMED
+    TASK_ATTENDANCE_CONFIRMED, TASK_ASSIGNMENT_IN_PROCESS
 from org.gi.tests.users_tests import CONFIG_DATA_DIRECTORY as USER_CONFIG_DATA_DIRECTORY
 import org.gi.server.validation.case_state_machine
 from org.gi.server.validation.case_state_machine import CASE_PARTIALLY_ASSIGNED
@@ -158,6 +157,8 @@ class TestGIServerCaseTestCase(unittest.TestCase):
     def test_case_assign_user_to_task(self):
         # SETUP
         case = self._get_inserted_case()
+        for task in case.get('tasks'):
+            del task['volunteer_id']
         task = case['tasks'][0]
         task['state'] = TASK_ASSIGNED
         task['volunteer_id'] = self.user_ids[3]
@@ -512,8 +513,8 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         r = requests.put('%s/cases/%s' % (SERVER_URL_API, case_from_server['id']), json=case_from_server,
                          auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_OK)
-        self.assertEqual(r.json()['state'], 'assignment_in_process')
-
+        self.assertEqual(r.json()['state'], org.gi.server.validation.case_state_machine.CASE_PENDING_INVOLVEMENT)
+        self.assertEqual(r.json()['tasks'][0]['state'], TASK_ASSIGNMENT_IN_PROCESS)
 
     def test_ticket_246(self):
         """
@@ -540,6 +541,7 @@ class TestGIServerCaseTestCase(unittest.TestCase):
     def test_bad_http_methods(self):
         r = requests.delete('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]), auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_METHOD_NOT_ALLOWED)
+
 
 def _get_case_from_db(case_id):
     r = requests.get('%s/cases/%s' % (SERVER_URL_API, case_id), auth=ACCESS_TOKEN_AUTH)

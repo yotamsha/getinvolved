@@ -52,19 +52,19 @@ class TestCaseModel(unittest.TestCase):
         self.assertEqual(300, updated_case['due_date'])
 
     def test_case_state_update_override(self):
-        self.assertTrue(Case._update_state_overrides_transition(CASE_MISSING_INFO))
-        self.assertTrue(Case._update_state_overrides_transition(CASE_REJECTED))
-        self.assertTrue(Case._update_state_overrides_transition(CASE_OVERDUE))
-        self.assertTrue(Case._update_state_overrides_transition(CASE_CANCELLED_BY_USER))
-        self.assertTrue(Case._update_state_overrides_transition(CASE_CANCELLED_BY_ADMIN))
+        self.assertTrue(Case._changeless_state(CASE_MISSING_INFO))
+        self.assertTrue(Case._changeless_state(CASE_REJECTED))
+        self.assertTrue(Case._changeless_state(CASE_OVERDUE))
+        self.assertTrue(Case._changeless_state(CASE_CANCELLED_BY_USER))
+        self.assertTrue(Case._changeless_state(CASE_CANCELLED_BY_ADMIN))
 
     # negatives
 
     def test_case_state_update_not_override(self):
-        self.assertFalse(Case._update_state_overrides_transition(CASE_UNDEFINED))
-        self.assertFalse(Case._update_state_overrides_transition(CASE_PENDING_APPROVAL))
-        self.assertFalse(Case._update_state_overrides_transition(CASE_PENDING_INVOLVEMENT))
-        self.assertFalse(Case._update_state_overrides_transition(CASE_PARTIALLY_ASSIGNED))
-        self.assertFalse(Case._update_state_overrides_transition(CASE_ASSIGNED))
-        self.assertFalse(Case._update_state_overrides_transition(CASE_PARTIALLY_COMPLETED))
-        self.assertFalse(Case._update_state_overrides_transition(CASE_COMPLETED))
+        self.assertFalse(Case._changeless_state(CASE_UNDEFINED))
+        self.assertFalse(Case._changeless_state(CASE_PENDING_APPROVAL))
+        self.assertFalse(Case._changeless_state(CASE_PENDING_INVOLVEMENT))
+        self.assertFalse(Case._changeless_state(CASE_PARTIALLY_ASSIGNED))
+        self.assertFalse(Case._changeless_state(CASE_ASSIGNED))
+        self.assertFalse(Case._changeless_state(CASE_PARTIALLY_COMPLETED))
+        self.assertFalse(Case._changeless_state(CASE_COMPLETED))

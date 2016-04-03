@@ -3,7 +3,7 @@ import sys
 from org.gi.server.validation.case_state_machine import CASE_ASSIGNED, \
     CASE_PENDING_INVOLVEMENT, CASE_COMPLETED, CASE_PARTIALLY_ASSIGNED, CASE_PARTIALLY_COMPLETED
 from org.gi.server.validation.task.task_state_machine import TASK_PENDING, TASK_ASSIGNED, TASK_COMPLETED, \
-    TASK_ATTENDANCE_CONFIRMED
+    TASK_ATTENDANCE_CONFIRMED, TASK_UNDEFINED
 from org.gi.server.validation.task.task_state_machine import TASK_PENDING_USER_APPROVAL, TASK_ASSIGNMENT_IN_PROCESS
 
 ALL_TASKS_SAME_STATE_TRANSITION = {
@@ -87,6 +87,20 @@ class Task:
             if task.get('due_date') < nearest_due_date:
                 nearest_due_date = task.get('due_date')
         return nearest_due_date
+
+    @classmethod
+    def update_task_state(cls, task, db_tasks):
+        task_state = TASK_PENDING
+        if Task.does_task_exist_in_task_list(task, db_tasks):  # task cant be created with volunteer assigned (!)
+            if task.get('volunteer_id') and Task.state_before_assigned(task.get('state')):
+                task_state = TASK_ASSIGNMENT_IN_PROCESS
+            elif task.get('state'):
+                task_state = task.get('state')
+        return task_state
+
+    @classmethod
+    def state_before_assigned(cls, curr_task_state):
+        return curr_task_state and curr_task_state in [TASK_PENDING]
 
 
 class BadTaskStateException(Exception):

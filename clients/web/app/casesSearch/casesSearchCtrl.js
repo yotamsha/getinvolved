@@ -77,15 +77,8 @@ angular.module('app.casesSearch', ['app.services.share','app.models.case.viewMod
 					});
 				}
 				
-				function updateCasesListByCurrentPage(){
-					CaseDao
-						.getCasesCount({
-							excludedStates: ["completed", "assigned"],
-						})
-						.then(function(count){
-							vm.totalCasesCount = count;
-						});
-					
+				function updateCasesListByCurrentPage() {
+										
 					CaseDao
 						.getMany({
 							excludedStates: ["completed", "assigned"],
@@ -93,13 +86,14 @@ angular.module('app.casesSearch', ['app.services.share','app.models.case.viewMod
 							pageSize: vm.casesPerPage,
 							sort: currentSortType.sortMethod
 						})
-						.then(function (cases) {
-							vm.cases = cases;
+						.then(function (data) {
+							vm.totalCasesCount = data.totalCount;
+							vm.cases = data.results;
 							vm.resultsShownFrom = ((vm.currentCasesPage - 1) * vm.casesPerPage) + 1;
 							var resultsShownTo = vm.currentCasesPage * vm.casesPerPage; 
 							vm.resultsShownTo = resultsShownTo > vm.totalCasesCount ? vm.totalCasesCount : resultsShownTo;  
 							
-							CaseEmailShareExpander.expandCases(cases);
+							CaseEmailShareExpander.expandCases(vm.cases);
 						});
 				}
 				

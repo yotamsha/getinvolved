@@ -15,7 +15,7 @@ angular.module('app.models.task')
 				title: taskDto.title,
 				description: taskDto.description,
 				type: taskDto.type,
-				due_date: moment(taskDto.due_date).format('LLLL'),
+				due_date: moment.unix(taskDto.due_date).format('LLLL'),
 				state: taskDto.state,
 				location: taskDto.location,
 				destination: taskDto.destination

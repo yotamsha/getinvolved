@@ -3,13 +3,14 @@
   "views.general.save": "שמור",
   "views.home.title": "עמוד הבית",
   "views.main.header.hello" : "שלום",
-  "views.main.header.logout" : "התנתק",
-  "views.main.header.profile" : "עמוד פרופיל",
-  "views.main.header.login_or_signup" : "כניסה / הרשמה",
+  "views.main.header.logout" : "התנתקות",
+  "views.main.header.profile" : "פרופיל",
+  "views.main.header.login_or_signup" : "כניסה",
   "views.main.header.nav-menu.ask_help" : "לבקש עזרה",
+  "views.main.header.nav-menu.about" : "אודות",
   "views.main.header.nav-menu.about_us" : "קצת עלינו",
   "views.main.header.nav-menu.opportunities" : "הזדמנויות",
-  "views.main.header.nav-menu.donors" : "תורמים",
+  "views.main.header.nav-menu.donors" : "שותפים",
   "views.main.header.nav-menu.contact_us" : "צור קשר",
   "views.main.header.nav-menu.success_stories" : "הצלחות",
   "views.main.header.how_it_works_button" : "איך זה עובד",
@@ -109,11 +110,11 @@
 
   "case_share": {
 	"fb":{
-		"title" : "אולי את/ה יכולים לעזור?",
-		"description": "GetInvolved - פלטפורמה אינטרנטית המחברת בין בקשות עזרה למתנדבים היכולים לסייע ע\"י התנדבויות חד פעמיות"	
+		"title" : "אולי את/ה יכול/ה לעזור?",
+		"description": "ממש פה בקישור יש הזדמנות לעשות משהו משמעותי עבור מישהו/י אחר/ת, בקלות ופשטות. GetInvolved - פלטפורמה אינטרנטית להתנדבויות חד פעמיות"	
 	},
 	"email":{
-		"subject" : "אולי את/ה יכולים לעזור?",
+		"subject" : "אולי את/ה יכול/ה לעזור?",
 		"body": "GetInvolved - פלטפורמה אינטרנטית המחברת בין בקשות עזרה למתנדבים היכולים לסייע ע\"י התנדבויות חד פעמיות"	
 	}
   }
