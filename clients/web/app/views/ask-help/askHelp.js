@@ -86,8 +86,8 @@ angular.module('app.views.helpRequestForm', ['app.vendors.momentjs'])
             $mdDateLocale.msgOpenCalendar = 'פתח את לוח השנה';
     }])
 
-    .controller('askHelpCtrl', ['$scope', '$http', 'FORM',
-        function ($scope, $http, FORM) {
+    .controller('askHelpCtrl', ['$scope', '$http', 'FORM', '$anchorScroll', '$location',
+        function ($scope, $http, FORM, $anchorScroll, $location) {
             var vm = this;
 
             vm.FORM = FORM;
@@ -182,6 +182,8 @@ angular.module('app.views.helpRequestForm', ['app.vendors.momentjs'])
             vm.selectForm = function(selectedForm) {
                 // this function is called by ng-click of an image (when user chooses the type of help)
                 vm.currForm = selectedForm;
+                $location.hash("requestForm");
+                $anchorScroll();
             };
 
             // todo: connect with server

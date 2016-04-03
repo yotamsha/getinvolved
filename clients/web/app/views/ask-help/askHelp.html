@@ -11,7 +11,7 @@
 <div id="container" layout-margin layout-align="space-around center">
 	<br>
 
-	<div ng-if="vm.currForm == vm.FORM.NONE">
+	<div>
 
 		<!-- First Row: Drive, Product, Activity -->
 		<div layout="row" layout-margin >
@@ -94,7 +94,7 @@
 	</div>
 
 	<!-- Relevant Request Form -->
-	<form name="requestForm" ng-if="vm.currForm != vm.FORM.NONE">
+	<form id="requestForm" name="requestForm" ng-if="vm.currForm != vm.FORM.NONE">
 		<div layout="column" layout-align="space-around center" layout-margin>
 
 			<div id="requestDescription"
@@ -332,7 +332,6 @@
 				</div>
 
 				<!-- todo: maybe get a better hour picker -->
-				<!-- todo: check if ng-required works for md-select -->
 				<div id="hourPicker" layout-gt-sm="row" layout="column" layout-align="start center" flex>
 					<!-- todo: when gt-sm than too far away from hourPicker -->
 					<label flex="20"> {{ vm.translatePath + ".hour" | translate }} </label>
