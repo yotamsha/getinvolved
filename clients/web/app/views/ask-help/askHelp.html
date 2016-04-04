@@ -1,17 +1,13 @@
-<!-- todo: decide whether to use:
+<!-- todo: make style adjustments -->
+<!-- todo: keep data on form inputs upon switching forms -->
+<!-- todo: tell user which fields are required -->
 
-		(ng-if currForm == none) and ADD BACK BUTTON   <== Current
-
-			OR
-
-		(route to different view) and GO BACK WITH BROWSER (BACK BUTTON)
-
--->
+<button ng-click="vm.check()">CHECK</button>
 
 <div id="container" layout-margin layout-align="space-around center">
 	<br>
 
-	<div ng-if="vm.currForm == vm.FORM.NONE">
+	<div>
 
 		<!-- First Row: Drive, Product, Activity -->
 		<div layout="row" layout-margin >
@@ -94,7 +90,7 @@
 	</div>
 
 	<!-- Relevant Request Form -->
-	<form name="requestForm" ng-if="vm.currForm != vm.FORM.NONE">
+	<form id="requestForm" name="requestForm" ng-if="vm.currForm != vm.FORM.NONE" class="animate-if">
 		<div layout="column" layout-align="space-around center" layout-margin>
 
 			<div id="requestDescription"
@@ -108,13 +104,13 @@
 				<br> <br> <!-- This br prevents overlapping of lables -->
 				<md-input-container layout-fill flex>
 					<label>{{ vm.translatePath + ".description" | translate }} </label>
-				<textarea type="text"
-						  name="requestDescription"
-						  ng-model="requestDescription"
-						  minlength="{{vm.valids.task.description.length.min}}"
-						  maxlength="{{vm.valids.task.description.length.max}}"
-						  required>
-				</textarea>
+					<textarea type="text"
+							  name="requestDescription"
+							  ng-model="vm.requestForm.requestDescription"
+							  minlength="{{vm.valids.task.description.length.min}}"
+							  maxlength="{{vm.valids.task.description.length.max}}"
+							  required>
+					</textarea>
 					<div ng-messages="requestForm.requestDescription.$error" role="alert">
 						<div ng-message="required"> {{ vm.translatePath + ".errmsg.required" | translate }} </div>
 						<div ng-message="minlength">{{ vm.translatePath + ".errmsg.length.min" | translate }}</div>
@@ -148,7 +144,7 @@
 					<md-input-container flex layout-fill>
 
 						<label> {{ vm.translatePath + ".city" | translate }} </label>
-						<input type="text" name="city" ng-model="city" ng-required="vm.currForm == vm.FORM.DRIVE
+						<input type="text" name="city" ng-model="vm.requestForm.srcAddress.city" ng-required="vm.currForm == vm.FORM.DRIVE
 							   														|| vm.currForm == vm.FORM.ACTIVITY
 							   														|| vm.currForm == vm.FORM.MAINTENANCE">
 
@@ -165,7 +161,7 @@
 
 						<md-input-container flex="80" layout-fill>
 							<label> {{ vm.translatePath + ".street" | translate }} </label>
-							<input type="text" name="street" ng-model="street" ng-required="vm.currForm == vm.FORM.DRIVE
+							<input type="text" name="street" ng-model="vm.requestForm.srcAddress.street" ng-required="vm.currForm == vm.FORM.DRIVE
 							   																|| vm.currForm == vm.FORM.ACTIVITY
 							   																|| vm.currForm == vm.FORM.MAINTENANCE">
 
@@ -179,7 +175,7 @@
 
 						<md-input-container flex="20" layout-fill>
 							<label> {{ vm.translatePath + ".number" | translate }} </label>
-							<input type="number" name="number" ng-model="number" ng-required="vm.currForm == vm.FORM.DRIVE
+							<input type="number" name="number" ng-model="vm.requestForm.srcAddress.number" ng-required="vm.currForm == vm.FORM.DRIVE
 							   																|| vm.currForm == vm.FORM.ACTIVITY
 							   																|| vm.currForm == vm.FORM.MAINTENANCE">
 
@@ -198,7 +194,7 @@
 						<!-- entrance field. todo: create regex ng-pattern for validation-->
 						<md-input-container flex="50" layout-fill>
 							<label> {{ vm.translatePath + ".entrance" | translate }} </label>
-							<input type="text" name="entrance" ng-model="entrance">
+							<input type="text" name="entrance" ng-model="vm.requestForm.srcAddress.entrance">
 
 							<div ng-messages="requestForm.entrance.$error" role="alert">
 								<!--<div ng-message="minlength"> {{ vm.translatePath + "." | translate }} </div>-->
@@ -210,7 +206,7 @@
 
 						<md-input-container flex="50" layout-fill>
 							<label> {{ vm.translatePath + ".apartment" | translate }} </label>
-							<input type="number" name="apartment" ng-model="apartment">
+							<input type="number" name="apartment" ng-model="vm.requestForm.srcAddress.apartment">
 
 							<div ng-messages="requestForm.apartment.$error" role="alert">
 								<!--<div ng-message="minlength"> {{ vm.translatePath + "." | translate }} </div>-->
@@ -244,7 +240,7 @@
 					<md-input-container flex layout-fill required>
 
 						<label> {{ vm.translatePath + ".city" | translate }} </label>
-						<input type="text" name="destCity" ng-model="destCity" ng-required="vm.currForm == vm.FORM.DRIVE
+						<input type="text" name="destCity" ng-model="vm.requestForm.destAddress.city" ng-required="vm.currForm == vm.FORM.DRIVE
 																							|| vm.currForm == vm.FORM.PRODUCT">
 
 						<div ng-messages="requestForm.destCity.$error" role="alert">
@@ -260,7 +256,7 @@
 
 						<md-input-container flex="80" layout-fill>
 							<label> {{ vm.translatePath + ".street" | translate }} </label>
-							<input type="text" name="destStreet" ng-model="destStreet" ng-required="vm.currForm == vm.FORM.DRIVE
+							<input type="text" name="destStreet" ng-model="vm.requestForm.destAddress.street" ng-required="vm.currForm == vm.FORM.DRIVE
 																									|| vm.currForm == vm.FORM.PRODUCT">
 
 							<div ng-messages="requestForm.destStreet.$error" role="alert">
@@ -273,7 +269,7 @@
 
 						<md-input-container flex="20" layout-fill>
 							<label> {{ vm.translatePath + ".number" | translate }} </label>
-							<input type="number" name="destNumber" ng-model="destNumber" ng-required="vm.currForm == vm.FORM.DRIVE
+							<input type="number" name="destNumber" ng-model="vm.requestForm.destAddress.number" ng-required="vm.currForm == vm.FORM.DRIVE
 																										|| vm.currForm == vm.FORM.PRODUCT">
 
 							<div ng-messages="requestForm.destNumber.$error" role="alert">
@@ -291,7 +287,7 @@
 						<!-- entrance field. todo: create regex ng-pattern for validation-->
 						<md-input-container flex="50" layout-fill>
 							<label> {{ vm.translatePath + ".entrance" | translate }} </label>
-							<input type="text" name="destEntrance" ng-model="destEntrance">
+							<input type="text" name="destEntrance" ng-model="vm.requestForm.destAddress.entrance">
 
 							<div ng-messages="requestForm.destEntrance.$error" role="alert">
 								<!--<div ng-message="minlength"> {{ vm.translatePath + "." | translate }} </div>-->
@@ -303,7 +299,7 @@
 
 						<md-input-container flex="50" layout-fill>
 							<label> {{ vm.translatePath + ".apartment" | translate }} </label>
-							<input type="number" name="destApartment" ng-model="destApartment">
+							<input type="number" name="destApartment" ng-model="vm.requestForm.destAddress.apartment">
 
 							<div ng-messages="requestForm.destApartment.$error" role="alert">
 								<!--<div ng-message="minlength"> {{ vm.translatePath + "." | translate }} </div>-->
@@ -327,23 +323,22 @@
 
 				<div flex layout-gt-sm="row" layout="column" layout-align="center center">
 					<label flex>{{ vm.translatePath + ".date" | translate }}</label>
-					<div flex="70"><md-datepicker name="date" ng-model="date" ng-required="vm.currForm == vm.FORM.DRIVE">
+					<div flex="70"><md-datepicker name="date" ng-model="vm.requestForm.time.date" ng-required="vm.currForm == vm.FORM.DRIVE">
 					</md-datepicker></div>
 				</div>
 
 				<!-- todo: maybe get a better hour picker -->
-				<!-- todo: check if ng-required works for md-select -->
 				<div id="hourPicker" layout-gt-sm="row" layout="column" layout-align="start center" flex>
 					<!-- todo: when gt-sm than too far away from hourPicker -->
 					<label flex="20"> {{ vm.translatePath + ".hour" | translate }} </label>
 
 					<div layout="row" flex layout-align="center center">
-						<md-select name="minute" ng-model="minute" placeholder="{{ vm.translatePath + '.minute' | translate }}"
+						<md-select name="minute" ng-model="vm.requestForm.time.minute" placeholder="{{ vm.translatePath + '.minute' | translate }}"
 								   ng-required="vm.currForm == vm.FORM.DRIVE">
 							<md-option ng-value="min" ng-repeat="min in vm.minutes"> {{ min | numberFixedLen:2 }} </md-option>
 						</md-select>
 
-						<md-select name="hour" ng-model="hour" placeholder="{{ vm.translatePath + '.hour' | translate }}"
+						<md-select name="hour" ng-model="vm.requestForm.time.hour" placeholder="{{ vm.translatePath + '.hour' | translate }}"
 								   ng-required="vm.currForm == vm.FORM.DRIVE">
 							<md-option ng-value="hr" ng-repeat="hr in vm.hours"> {{ hr | numberFixedLen:2 }} </md-option>
 						</md-select>
@@ -364,7 +359,7 @@
 				<div flex layout="row" layout-xs="column" layout-margin layout-fill>
 					<md-input-container layout-fill flex>
 						<label> {{ vm.translatePath + ".firstName" | translate }} </label>
-						<input type="text" name="userFirstName" ng-model="userFirstName" required>
+						<input type="text" name="userFirstName" ng-model="vm.requestForm.user.firstName" required>
 						<div ng-messages="requestForm.userFirstName.$error" role="alert">
 							<div ng-message="required">{{ vm.translatePath + ".errmsg.required" | translate }}</div>
 						</div>
@@ -372,14 +367,14 @@
 					<!--<div flex></div> &lt;!&ndash; This div is here to make space between FirstName and LastName &ndash;&gt;-->
 					<md-input-container layout-fill flex>
 						<label> {{ vm.translatePath + ".lastName" | translate }} </label>
-						<input type="text" name="userLastName" ng-model="userLastName" required>
+						<input type="text" name="userLastName" ng-model="vm.requestForm.user.lastName" required>
 						<div ng-messages="requestForm.userLastName.$error" role="alert">
 							<div ng-message="required">{{ vm.translatePath + ".errmsg.required" | translate }}</div>
 						</div>
 					</md-input-container>
 					<md-input-container flex>
 						<label> {{ vm.translatePath + ".phone" | translate }} </label>
-						<input name="userPhone" ng-pattern="vm.phoneRegex" ng-model="userPhone" required>
+						<input name="userPhone" ng-pattern="vm.phoneRegex" ng-model="vm.requestForm.user.phone" required>
 						<div ng-messages="requestForm.userPhone.$error" role="alert">
 							<div ng-message="pattern">{{ vm.translatePath + ".errmsg.phone" | translate }}</div>
 							<div ng-message="required">{{ vm.translatePath + ".errmsg.required" | translate }}</div>
@@ -388,7 +383,7 @@
 				</div>
 				<div flex layout="row" layout-margin>
 					<!-- todo: is sms checkbox also required? -->
-					<input name="userSmsCheck" type="checkbox" ng-model="userSmsCheck" required>
+					<input name="userSmsCheck" type="checkbox" ng-model="vm.requestForm.user.smsCheck" required>
 					<label> {{ vm.translatePath + '.smsOk' | translate }} </label>
 				</div>
 			</div>
@@ -416,12 +411,12 @@
 
 			<!-- todo: auto fill the organization info if available -->
 			<div flex layout-margin layout="row">
-				<input type="checkbox" name="organizationCheck" ng-model="organizationCheck">
+				<input type="checkbox" name="organizationCheck" ng-model="vm.requestForm.organization.check">
 				<label><b>{{ vm.translatePath + ".organization.title" | translate }}</b></label>
 			</div>
 
 			<div id="organizationInfo"
-				 ng-if="organizationCheck"
+				 ng-if="vm.requestForm.organization.check"
 				 flex
 				 layout="column"
 				 layout-fill
@@ -432,14 +427,14 @@
 				<div flex layout-gt-xs="row" layout="column" layout-fill>
 					<md-input-container layout-fill flex>
 						<label>{{ vm.translatePath + ".organization.name" | translate }}</label><br>
-						<input type="text" name="orgName" ng-model="orgName" required>
+						<input type="text" name="orgName" ng-model="vm.requestForm.organization.name" required>
 						<div ng-messages="requestForm.orgName.$error" role="alert">
 							<div ng-message="required">{{ vm.translatePath + ".errmsg.required" | translate }}</div>
 						</div>
 					</md-input-container>
 					<md-input-container layout-fill flex>
 						<label>{{ vm.translatePath + ".organization.email" | translate }}</label><br>
-						<input type="email" name="orgMail" type="email" ng-model="orgMail" required>
+						<input type="email" name="orgMail" type="email" ng-model="vm.requestForm.organization.mail" required>
 						<div ng-messages="requestForm.orgMail.$error" role="alert">
 							<div ng-message="required">{{ vm.translatePath + ".errmsg.required" | translate }}</div>
 							<div ng-message="email">{{ vm.translatePath + ".errmsg.email" | translate }}</div>
@@ -451,20 +446,20 @@
 			<!-- todo: if left empty, auto-fill this section with the USER details -->
 			<div layout="row" layout-margin>
 				<div flex>
-					<input type="checkbox" name="requesterCheck" ng-model="requesterCheck">
+					<input type="checkbox" name="requesterCheck" ng-model="vm.requestForm.requester.check">
 					<label><b>{{ vm.translatePath + ".requester.title" | translate }}</b></label>
 				</div>
 			</div>
-			<div id="requesterInfo" ng-if="requesterCheck" layout-fill flex>
+			<div id="requesterInfo" ng-if="vm.requestForm.requester.check" layout-fill flex>
 				<div layout="row" layout-xs="column" layout-margin>
 					<md-input-container layout-fill flex>
 						<label> {{ vm.translatePath + ".firstName" | translate }} </label>
-						<input type="text" name="requesterFirstName" ng-model="requesterFirstName">
+						<input type="text" name="requesterFirstName" ng-model="vm.requestForm.requester.firstName">
 					</md-input-container>
 					<!--<div flex></div> &lt;!&ndash; This div is here to make space between FirstName and LastName &ndash;&gt;-->
 					<md-input-container layout-fill flex>
 						<label> {{ vm.translatePath + ".lastName" | translate }} </label>
-						<input type="text" name="requesterLastName" ng-model="requesterLastName">
+						<input type="text" name="requesterLastName" ng-model="vm.requestForm.requester.lastName">
 					</md-input-container>
 				</div>
 
@@ -473,30 +468,30 @@
 					<div flex layout="row" layout-xs="column" layout-margin layout-fill>
 						<md-input-container flex>
 							<label> {{ vm.translatePath + ".phone" | translate }} </label>
-							<input name="requesterPhone" ng-pattern="vm.phoneRegex" ng-model="requesterPhone">
+							<input name="requesterPhone" ng-pattern="vm.phoneRegex" ng-model="vm.requestForm.requester.phone">
 							<div ng-messages="requestForm.requesterPhone.$error" role="alert">
 								<div ng-message="pattern">{{ vm.translatePath + ".errmsg.phone" | translate }}</div>
 							</div>
 						</md-input-container>
 						<md-input-container flex>
 							<label> {{ vm.translatePath + ".email" | translate }} </label>
-							<input name="requesterEmail" type="email" ng-model="requesterEmail">
+							<input name="requesterEmail" type="email" ng-model="vm.requestForm.requester.email">
 							<div ng-messages="requestForm.requesterEmail.$error" role="alert">
 								<div ng-message="email">{{ vm.translatePath + ".errmsg.email" | translate }}</div>
 							</div>
 						</md-input-container>
 
 					</div>
-					<div flex layout="row" layout-margin>
+					<div flex layout="row" layout-margin>`
 						<!-- todo: is sms checkbox also required? -->
-						<input name="requesterSmsCheck" type="checkbox" ng-model="requesterSmsCheck" required>
+						<input name="requesterSmsCheck" type="checkbox" ng-model="vm.requestForm.requester.smsOk" required>
 						<label> {{ vm.translatePath + '.smsOk' | translate }} </label>
 					</div>
 
 				</div>
 
 			</div>
-			<br ng-hide="requesterCheck">
+			<br ng-hide="vm.requestForm.requester.check">
 			<md-button ng-click="vm.sendRequest()" ng-disabled="requestForm.$invalid" class="btn-primary"> {{ vm.translatePath + ".send" | translate }} </md-button>
 		</div>
 	</form>

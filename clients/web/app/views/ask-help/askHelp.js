@@ -1,6 +1,10 @@
 'use strict';
 
-angular.module('app.views.helpRequestForm', ['app.vendors.momentjs'])
+angular.module('app.views.helpRequestForm', [
+    'app.vendors.momentjs',
+    'app.services.authentication.auth-service',
+    'app.common.constants'
+])
 
     .constant('FORM', {
         "DRIVE": "drive",
@@ -21,8 +25,9 @@ angular.module('app.views.helpRequestForm', ['app.vendors.momentjs'])
             });
     }])
 
-    .run(['moment','$mdDateLocale',
-        function(moment, $mdDateLocale){
+    .run(['moment','$mdDateLocale', 'AuthService',
+        function(moment, $mdDateLocale, srvAuth){
+
             $mdDateLocale.months = [
                 'ינואר',
                 'פברואר',
@@ -86,9 +91,24 @@ angular.module('app.views.helpRequestForm', ['app.vendors.momentjs'])
             $mdDateLocale.msgOpenCalendar = 'פתח את לוח השנה';
     }])
 
-    .controller('askHelpCtrl', ['$scope', '$http', 'FORM',
-        function ($scope, $http, FORM) {
+    .controller('askHelpCtrl', ['$scope', '$http', 'FORM', '$anchorScroll', '$location', 'AuthService', 'AUTH_EVENTS', '$rootScope',
+        function ($scope, $http, FORM, $anchorScroll, $location, srvAuth, AUTH_EVENTS, $rootScope) {
             var vm = this;
+
+            vm.markErrors = function(errorResponse) {
+                // todo
+            };
+
+            vm.check = function() {
+                console.log(vm.requestForm);
+            };
+
+            vm.requestForm = {};
+
+            function scrollTo(anchor) {
+                $location.hash(anchor);
+                $anchorScroll();
+            }
 
             vm.FORM = FORM;
             vm.currForm = "none";
@@ -167,44 +187,41 @@ angular.module('app.views.helpRequestForm', ['app.vendors.momentjs'])
 
             vm.phoneRegex = /^(\d{8})?(\d{10})?$/; // todo: use a standard way of phone number validation
 
-            //{
-            //    'title': "????",
-            //    'description': "????",
-            //    'petitioner_id': "????", // MongoDB ID
-            //    'tasks': [
-            //    // Atleast one
-            //<task_object/s>
-            //],
-            //    'state': <optional: string>, // This shouldnt be updated manually, only by ADMINs
-            //    'location': <optional: location_object>
-            //}
-
             vm.selectForm = function(selectedForm) {
                 // this function is called by ng-click of an image (when user chooses the type of help)
                 vm.currForm = selectedForm;
+                scrollTo("requestForm");
             };
 
             // todo: connect with server
             vm.sendRequest = function() {
                 //alert('todo :) send request to server.');
+                var user = srvAuth.model().userSession;
+
+                var dateInSeconds = Math.round(vm.requestForm.time.date.getTime() / 1000);
+                var hourInSeconds = vm.requestForm.time.hour * 60 * 60;
+                var minutesInSeconds = vm.requestForm.time.minute * 60;
+
+                var dueDateInSeconds = dateInSeconds + hourInSeconds + minutesInSeconds;
+
                 var req = {
                     method: 'POST',
                     url: 'http://localhost:5000/api/cases',
                     headers: {
-                        'access-token': srvAuth.user.token,
-                        'me': srvAuth.user.id
+                        'access-token': user.facebook_access_token,
+                        'me': user.id
                     },
                     data: {
-                        'title': 'baryakir',
-                        'description' : 'this works. good joooobbbb.',
-                        'petitioner_id': '????????',
+                        'title': 'Second Request',
+                        'description' : vm.requestForm.requestDescription,
+                        'petitioner_id': user.id,
                         'tasks': [
                             {
-                                'volunteer_id': "????", // MongoDB ID,
-                                'description': "????",
-                                'title': "????",
-                                'type': "????",
-                                'due_date': "int" // Value in seconds
+                                'volunteer_id': user.id,
+                                'description': vm.requestForm.requestDescription,
+                                'title': "Second Task",
+                                'type': "GENERAL",
+                                'due_date': dueDateInSeconds // Value in seconds
                                 //'state': <optional: string>, // Should not be specified on creation
                                 //'id': <optional: string>, // DO NOT specify this on creation, but REQUIRED for updates
                                 //'location': <optional: location_object>, // Required for type: transportation
@@ -214,19 +231,18 @@ angular.module('app.views.helpRequestForm', ['app.vendors.momentjs'])
                     }
                 };
 
+                console.log('Case Request', req);
+
                 $http(req)
                     .then(function(response) {
-                        $scope.postSuccessMsg = "Your card was posted to your friend\'s wall!";
-                        alert('posted!')
-                        console.log($scope.postSuccessMsg);
+                        console.log(response);
                         $scope.postBtnEnabled = true;
                     })
-                    .catch(function() {
-                        //alert('An error occured. Your card was not posted to Facebook.');
+                    .catch(function(error) {
+                        console.log('ERROR: Case post request FAILED.', error);
+                        vm.markErrors(error);
                         $scope.postBtnEnabled = true;
                     });
-
-
             };
         }
     ])

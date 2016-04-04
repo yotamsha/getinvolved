@@ -4,6 +4,7 @@ import time
 
 import bson
 import phonenumbers
+from phonenumbers import PhoneNumberType
 
 import org.gi.server.authorization as auth
 import org.gi.server.validation.location_validator as location_validator
@@ -107,6 +108,9 @@ def validate_phone_number(phone_number, faults):
         if not valid:
             faults.append(
                 'The phone number %s (country %s) is invalid.' % (phone_number['number'], phone_number['country_code']))
+        number_type = phonenumbers.number_type(number)
+        if number_type != PhoneNumberType.MOBILE:
+            faults.append('The phone number %s (country %s) is not a mobile number.' % (phone_number['number'], phone_number['country_code']))
     except Exception as e:
         faults.append('The phone number %s (country %s) is invalid. Reason: %s' % (
             phone_number['number'], phone_number['country_code'], str(e)))
