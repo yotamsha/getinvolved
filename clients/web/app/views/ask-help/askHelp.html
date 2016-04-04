@@ -382,8 +382,7 @@
 					</md-input-container>
 				</div>
 				<div flex layout="row" layout-margin>
-					<!-- todo: is sms checkbox also required? -->
-					<input name="userSmsCheck" type="checkbox" ng-model="vm.requestForm.user.smsCheck" required>
+					<input name="userSmsCheck" type="checkbox" ng-model="vm.requestForm.user.smsCheck">
 					<label> {{ vm.translatePath + '.smsOk' | translate }} </label>
 				</div>
 			</div>
@@ -483,8 +482,7 @@
 
 					</div>
 					<div flex layout="row" layout-margin>`
-						<!-- todo: is sms checkbox also required? -->
-						<input name="requesterSmsCheck" type="checkbox" ng-model="vm.requestForm.requester.smsOk" required>
+						<input name="requesterSmsCheck" type="checkbox" ng-model="vm.requestForm.requester.smsOk">
 						<label> {{ vm.translatePath + '.smsOk' | translate }} </label>
 					</div>
 
