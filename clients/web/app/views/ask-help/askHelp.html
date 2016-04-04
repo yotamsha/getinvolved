@@ -2,15 +2,61 @@
 <!-- todo: keep data on form inputs upon switching forms -->
 <!-- todo: tell user which fields are required -->
 
-<button ng-click="vm.check()">CHECK</button>
+<!--<button ng-click="vm.check()">CHECK</button>--> <!-- This is for debug -->
 
-<div id="container" layout-margin layout-align="space-around center">
+<div class="askHelp" id="container" layout-margin layout-align="space-around start">
 	<br>
 
 	<div>
 
+		<div id="squaresMobile" hide-gt-sm>
+			<div layout="row" layout-margin>
+				<div ng-repeat="sq in vm.helpTypesSquares"
+					 ng-if="sq.row == 1"
+					 flex
+					 class="formPickDiv"
+					 layout="column"
+					 layout-align="center center"
+					 ng-click="vm.selectForm(sq.form)">
+					<label class="formPickDiv"> {{ sq.translateLabel | translate }} </label>
+					<img class="volImg" ng-src="{{ sq.img }}"/>
+
+				</div>
+			</div>
+			<div layout="row" layout-margin>
+				<div ng-repeat="sq in vm.helpTypesSquares"
+					 ng-if="sq.row == 2"
+					 flex
+					 class="formPickDiv"
+					 layout="column"
+					 layout-align="center center"
+					 ng-click="vm.selectForm(sq.form)">
+					<label class="formPickDiv"> {{ sq.translateLabel | translate }} </label>
+					<img class="volImg" ng-src="{{ sq.img }}"/>
+
+				</div>
+			</div>
+		</div>
+
+		<div id="squaresDesktopTablet" hide-sm hide-xs>
+			<div layout="row" layout-margin>
+				<div ng-repeat="sq in vm.helpTypesSquares"
+					 flex
+					 class="formPickDiv"
+					 layout="column"
+					 layout-align="center center"
+					 ng-click="vm.selectForm(sq.form)">
+					<label class="formPickDiv"> {{ sq.translateLabel | translate }} </label>
+					<img class="volImg" ng-src="{{ sq.img }}"/>
+
+				</div>
+			</div>
+		</div>
+
+
+
 		<!-- First Row: Drive, Product, Activity -->
-		<div layout="row" layout-margin >
+		<!--<div layout="row" layout-margin >
 
 			<div flex
 				 class="formPickDiv"
@@ -48,7 +94,7 @@
 		</div>
 
 		<!-- Second Row: Profession, Maintenance, Other -->
-		<div layout="row" layout-margin >
+		<!--<div layout="row" layout-margin >
 
 			<div flex
 				 class="formPickDiv"
@@ -90,15 +136,19 @@
 	</div>
 
 	<!-- Relevant Request Form -->
+
 	<form id="requestForm" name="requestForm" ng-if="vm.currForm != vm.FORM.NONE" class="animate-if">
-		<div layout="column" layout-align="space-around center" layout-margin>
+		<div layout="column" layout-align="space-around start" layout-margin>
 
 			<div id="requestDescription"
 				 layout="column"
 				 flex
 				 layout-fill>
+				<div>
+					<label><b>{{ vm.translatePath + ".provideAllDetails.1" | translate }}</b></label> <br>
+					<label><b>{{ vm.translatePath + ".provideAllDetails.2" | translate }}</b></label>
+				</div>
 
-				<label><b>{{ vm.translatePath + ".provideAllDetails" | translate }}</b></label> <!-- todo: align to center -->
 				<br><br>
 				<label>{{ vm.translatePath + ".provideDetails" | translate }}</label> <!-- todo: align to center -->
 				<br> <br> <!-- This br prevents overlapping of lables -->
@@ -121,7 +171,7 @@
 
 			<!-- todo: City & Street Auto Suggest -->
 			<!-- todo: Auto fill address info if available for user -->
-			<div id="sourceAddress"
+			<div id="location"
 				 layout-fill
 				 flex
 				 ng-if="vm.currForm == vm.FORM.DRIVE
@@ -130,21 +180,21 @@
 				 		|| vm.currForm == vm.FORM.PROFESSION
 				 		|| vm.currForm == vm.FORM.OTHER"
 				 layout="column"
-				 layout-align="center center">
+				 layout-align="center start">
 
-				<label flex="nogrow"> {{ vm.translatePath + ".address.src" | translate }} </label>
+				<label flex="nogrow"> {{ vm.translatePath + ".address.src" | translate }} </label> <br>
 				<div flex
 					 layout-gt-sm="row"
 					 layout="column"
 					 layout-margin
 					 layout-fill
-					 layout-align="center center">
+					 layout-align="center start">
 
 
 					<md-input-container flex layout-fill>
 
 						<label> {{ vm.translatePath + ".city" | translate }} </label>
-						<input type="text" name="city" ng-model="vm.requestForm.srcAddress.city" ng-required="vm.currForm == vm.FORM.DRIVE
+						<input type="text" name="city" ng-model="vm.requestForm.location.city" ng-required="vm.currForm == vm.FORM.DRIVE
 							   														|| vm.currForm == vm.FORM.ACTIVITY
 							   														|| vm.currForm == vm.FORM.MAINTENANCE">
 
@@ -161,7 +211,7 @@
 
 						<md-input-container flex="80" layout-fill>
 							<label> {{ vm.translatePath + ".street" | translate }} </label>
-							<input type="text" name="street" ng-model="vm.requestForm.srcAddress.street" ng-required="vm.currForm == vm.FORM.DRIVE
+							<input type="text" name="street" ng-model="vm.requestForm.location.street" ng-required="vm.currForm == vm.FORM.DRIVE
 							   																|| vm.currForm == vm.FORM.ACTIVITY
 							   																|| vm.currForm == vm.FORM.MAINTENANCE">
 
@@ -175,7 +225,7 @@
 
 						<md-input-container flex="20" layout-fill>
 							<label> {{ vm.translatePath + ".number" | translate }} </label>
-							<input type="number" name="number" ng-model="vm.requestForm.srcAddress.number" ng-required="vm.currForm == vm.FORM.DRIVE
+							<input type="number" name="number" ng-model="vm.requestForm.location.number" ng-required="vm.currForm == vm.FORM.DRIVE
 							   																|| vm.currForm == vm.FORM.ACTIVITY
 							   																|| vm.currForm == vm.FORM.MAINTENANCE">
 
@@ -194,7 +244,7 @@
 						<!-- entrance field. todo: create regex ng-pattern for validation-->
 						<md-input-container flex="50" layout-fill>
 							<label> {{ vm.translatePath + ".entrance" | translate }} </label>
-							<input type="text" name="entrance" ng-model="vm.requestForm.srcAddress.entrance">
+							<input type="text" name="entrance" ng-model="vm.requestForm.location.entrance">
 
 							<div ng-messages="requestForm.entrance.$error" role="alert">
 								<!--<div ng-message="minlength"> {{ vm.translatePath + "." | translate }} </div>-->
@@ -206,7 +256,7 @@
 
 						<md-input-container flex="50" layout-fill>
 							<label> {{ vm.translatePath + ".apartment" | translate }} </label>
-							<input type="number" name="apartment" ng-model="vm.requestForm.srcAddress.apartment">
+							<input type="number" name="apartment" ng-model="vm.requestForm.location.apartment">
 
 							<div ng-messages="requestForm.apartment.$error" role="alert">
 								<!--<div ng-message="minlength"> {{ vm.translatePath + "." | translate }} </div>-->
@@ -221,26 +271,26 @@
 			</div>
 
 			<!-- todo: City & Street Auto Suggest -->
-			<div id="destAddress"
+			<div id="destination"
 				 flex
 				 layout-fill
 				 ng-if="vm.currForm == vm.FORM.DRIVE || vm.currForm == vm.FORM.PRODUCT || vm.currForm == vm.FORM.OTHER"
 				 layout="column"
-				 layout-align="center center">
+				 layout-align="center start">
 
-				<label flex="nogrow"> {{ vm.translatePath + ".address.dest" | translate }} </label>
+				<label flex="nogrow"> {{ vm.translatePath + ".address.dest" | translate }} </label><br>
 				<div flex
 					 layout-gt-sm="row"
 					 layout="column"
 					 layout-margin
 					 layout-fill
-					 layout-align="center center">
+					 layout-align="center start">
 
 
 					<md-input-container flex layout-fill required>
 
 						<label> {{ vm.translatePath + ".city" | translate }} </label>
-						<input type="text" name="destCity" ng-model="vm.requestForm.destAddress.city" ng-required="vm.currForm == vm.FORM.DRIVE
+						<input type="text" name="destCity" ng-model="vm.requestForm.destination.city" ng-required="vm.currForm == vm.FORM.DRIVE
 																							|| vm.currForm == vm.FORM.PRODUCT">
 
 						<div ng-messages="requestForm.destCity.$error" role="alert">
@@ -256,7 +306,7 @@
 
 						<md-input-container flex="80" layout-fill>
 							<label> {{ vm.translatePath + ".street" | translate }} </label>
-							<input type="text" name="destStreet" ng-model="vm.requestForm.destAddress.street" ng-required="vm.currForm == vm.FORM.DRIVE
+							<input type="text" name="destStreet" ng-model="vm.requestForm.destination.street" ng-required="vm.currForm == vm.FORM.DRIVE
 																									|| vm.currForm == vm.FORM.PRODUCT">
 
 							<div ng-messages="requestForm.destStreet.$error" role="alert">
@@ -269,7 +319,7 @@
 
 						<md-input-container flex="20" layout-fill>
 							<label> {{ vm.translatePath + ".number" | translate }} </label>
-							<input type="number" name="destNumber" ng-model="vm.requestForm.destAddress.number" ng-required="vm.currForm == vm.FORM.DRIVE
+							<input type="number" name="destNumber" ng-model="vm.requestForm.destination.number" ng-required="vm.currForm == vm.FORM.DRIVE
 																										|| vm.currForm == vm.FORM.PRODUCT">
 
 							<div ng-messages="requestForm.destNumber.$error" role="alert">
@@ -287,7 +337,7 @@
 						<!-- entrance field. todo: create regex ng-pattern for validation-->
 						<md-input-container flex="50" layout-fill>
 							<label> {{ vm.translatePath + ".entrance" | translate }} </label>
-							<input type="text" name="destEntrance" ng-model="vm.requestForm.destAddress.entrance">
+							<input type="text" name="destEntrance" ng-model="vm.requestForm.destination.entrance">
 
 							<div ng-messages="requestForm.destEntrance.$error" role="alert">
 								<!--<div ng-message="minlength"> {{ vm.translatePath + "." | translate }} </div>-->
@@ -299,7 +349,7 @@
 
 						<md-input-container flex="50" layout-fill>
 							<label> {{ vm.translatePath + ".apartment" | translate }} </label>
-							<input type="number" name="destApartment" ng-model="vm.requestForm.destAddress.apartment">
+							<input type="number" name="destApartment" ng-model="vm.requestForm.destination.apartment">
 
 							<div ng-messages="requestForm.destApartment.$error" role="alert">
 								<!--<div ng-message="minlength"> {{ vm.translatePath + "." | translate }} </div>-->
@@ -319,7 +369,7 @@
 				 layout-fill
 				 ng-if="vm.currForm == vm.FORM.DRIVE || vm.currForm == vm.FORM.ACTIVITY || vm.currForm == vm.FORM.OTHER"
 				 layout="row"
-				 layout-align="center center">
+				 layout-align="center start">
 
 				<div flex layout-gt-sm="row" layout="column" layout-align="center center">
 					<label flex>{{ vm.translatePath + ".date" | translate }}</label>
@@ -330,9 +380,9 @@
 				<!-- todo: maybe get a better hour picker -->
 				<div id="hourPicker" layout-gt-sm="row" layout="column" layout-align="start center" flex>
 					<!-- todo: when gt-sm than too far away from hourPicker -->
-					<label flex="20"> {{ vm.translatePath + ".hour" | translate }} </label>
+					<label flex=> {{ vm.translatePath + ".hour" | translate }} </label>
 
-					<div layout="row" flex layout-align="center center">
+					<div layout="row" flex layout-align="start center">
 						<md-select name="minute" ng-model="vm.requestForm.time.minute" placeholder="{{ vm.translatePath + '.minute' | translate }}"
 								   ng-required="vm.currForm == vm.FORM.DRIVE">
 							<md-option ng-value="min" ng-repeat="min in vm.minutes"> {{ min | numberFixedLen:2 }} </md-option>
