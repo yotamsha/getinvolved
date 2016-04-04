@@ -36,4 +36,14 @@ class ValidationsTest(unittest.TestCase):
     def test_len_range_long(self):
         self.assertFalse(validation_utils.validate_len_in_range('task', 'description', 'long' * 100))
 
+    def test_not_a_mobile_number(self):
+        faults = []
+        validations.validate_phone_number({'number': '036497314','country_code': 'IL'},faults)
+        self.assertEqual(len(faults),1)
+
+    def test_is_a_mobile_number(self):
+        faults = []
+        validations.validate_phone_number({'number': 'o544280114','country_code': 'IL'},faults)
+        self.assertEqual(len(faults),0)
+
 
