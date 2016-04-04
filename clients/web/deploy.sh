@@ -10,21 +10,26 @@ ZONE=europe-west1-b
 CLIENT_ARCHIVE=get_involved_client.tar.gz
 INSTANCE_NAME=gi-server
 REMOTE_SCRIPT=client_remote_deploy.sh
+REMOTE_SCRIPT_PATH=/var/local
+
 REMOTE_PATH=/var/wwww/html
 
+echo packaging client..
+grunt release
+echo $?
 rm -rf ${CLIENT_ARCHIVE}
-python zipit.py ${CLIENT_ARCHIVE} ./app
+python zipit.py ${CLIENT_ARCHIVE} ./dist/
 echo $?
 gcloud compute copy-files ./${CLIENT_ARCHIVE} ${INSTANCE_NAME}:~/ --zone ${ZONE}
 echo $?
-gcloud compute copy-files ./${REMOTE_SCRIPT} ${INSTANCE_NAME}:~/ --zone ${ZONE}
-echo $?
+# gcloud compute copy-files ./${REMOTE_SCRIPT} ${INSTANCE_NAME}:~/ --zone ${ZONE}
+#echo $?
 rm -rf ${CLIENT_ARCHIVE}
 echo $?
 # run remote script
-gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} chmod +x ./${REMOTE_SCRIPT}
-echo $?
-gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE}  ./${REMOTE_SCRIPT}
+#gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE} chmod +x ./${REMOTE_SCRIPT}
+#echo $?
+gcloud compute ssh ${INSTANCE_NAME} --zone ${ZONE}  ${REMOTE_SCRIPT_PATH}/${REMOTE_SCRIPT}
 echo $?
 
 
