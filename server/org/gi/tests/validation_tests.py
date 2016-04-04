@@ -43,7 +43,7 @@ class ValidationsTest(unittest.TestCase):
 
     def test_is_a_mobile_number(self):
         faults = []
-        validations.validate_phone_number({'number': 'o544280114','country_code': 'IL'},faults)
+        validations.validate_phone_number({'number': '0544280114','country_code': 'IL'},faults)
         self.assertEqual(len(faults),0)
 
 
