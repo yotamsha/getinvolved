@@ -1,5 +1,6 @@
 import pycountry
 
+from org.gi.server.model import Location
 from org.gi.server.validation.validation_utils import validate_len_in_range, validate_mandatory_and_present_fields, \
     get_max_len, get_min_len, LEN_ERR_MSG_TEMPLATE
 
@@ -11,6 +12,10 @@ def validate_location(location, faults):
         validate_address(location.get('address'), faults)
     elif location.get('geo_location'):
         validate_geo_location(location.get('geo_location'), faults)
+    try:
+        Location.Location.retrieve_all_location_data(location)
+    except:
+        faults.append("Location address/geo is incorrect")
 
 
 def validate_geo_location(geo_location, faults):
@@ -27,6 +32,10 @@ def validate_geo_location(geo_location, faults):
 
 
 def validate_street_name(street_name, faults):
+    if not street_name or not isinstance(street_name, basestring):
+        faults.append('street_name must be none empty string')
+        return
+
     if not validate_len_in_range('address', 'street_name', street_name):
         faults.append(LEN_ERR_MSG_TEMPLATE % (
             street_name, 'street_name', 'street_name', get_min_len('address', 'street_name'),
@@ -34,6 +43,10 @@ def validate_street_name(street_name, faults):
 
 
 def validate_street_number(street_number, faults):
+    if not street_number or not isinstance(street_number, basestring):
+        faults.append('country must be none empty string')
+        return
+
     if not validate_len_in_range('address', 'street_number', street_number):
         faults.append(LEN_ERR_MSG_TEMPLATE % (
             street_number, 'street_number', 'street_number', get_min_len('address', 'street_number'),
@@ -41,6 +54,9 @@ def validate_street_number(street_number, faults):
 
 
 def validate_entrance(entrance, faults):
+    if not entrance or not isinstance(entrance, basestring):
+        faults.append('country must be none empty string')
+        return
     if not validate_len_in_range('address', 'entrance', entrance):
         faults.append(LEN_ERR_MSG_TEMPLATE % (
             entrance, 'entrance', 'entrance', get_min_len('address', 'entrance'),
@@ -48,12 +64,18 @@ def validate_entrance(entrance, faults):
 
 
 def validate_floor(floor, faults):
+    if not floor or not isinstance(floor, basestring):
+        faults.append('country must be none empty string')
+        return
     if not validate_len_in_range('address', 'floor', floor):
         faults.append(LEN_ERR_MSG_TEMPLATE % (
             floor, 'floor', 'floor', get_min_len('address', 'floor'), get_max_len('address', 'floor')))
 
 
 def validate_apartment_number(apartment_number, faults):
+    if not apartment_number or not isinstance(apartment_number, basestring):
+        faults.append('country must be none empty string')
+        return
     if not validate_len_in_range('address', 'apartment_number', apartment_number):
         faults.append(
             LEN_ERR_MSG_TEMPLATE % (
@@ -62,18 +84,27 @@ def validate_apartment_number(apartment_number, faults):
 
 
 def validate_zip_code(zip_code, faults):
+    if not zip_code or not isinstance(zip_code, basestring):
+        faults.append('country must be none empty string')
+        return
     if not validate_len_in_range('address', 'zip_code', zip_code):
         faults.append(LEN_ERR_MSG_TEMPLATE% (
             zip_code,'zipcode','zipcode', get_min_len('address', 'zip_code'), get_max_len('address', 'zip_code')))
 
 
 def validate_city(city, faults):
+    if not city or not isinstance(city, basestring):
+        faults.append('country must be none empty string')
+        return
     if not validate_len_in_range('address', 'city', city):
         faults.append(LEN_ERR_MSG_TEMPLATE % (
             city,'city','city', get_min_len('address', 'city'), get_max_len('address', 'city')))
 
 
 def validate_state(state, faults):
+    if not state or not isinstance(state, basestring):
+        faults.append('country must be none empty string')
+        return
     if not state or not isinstance(state, basestring):
         faults.append('state must be none empty string')
         return
