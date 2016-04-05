@@ -94,21 +94,20 @@ angular.module('app.views.helpRequestForm', [
             $mdDateLocale.msgOpenCalendar = 'פתח את לוח השנה';
     }])
 
-    .controller('askHelpCtrl', ['$scope', '$http', 'FORM', '$anchorScroll', '$location', 'AuthService', 'AUTH_EVENTS', '$rootScope',
-        function ($scope, $http, FORM, $anchorScroll, $location, srvAuth, AUTH_EVENTS, $rootScope) {
-            var vm = this;
+    .controller('askHelpCtrl', ['$scope', '$http', 'FORM', '$anchorScroll', '$location', 'AuthService', 'AUTH_EVENTS', '$rootScope', '$translate',
+        function ($scope, $http, FORM, $anchorScroll, $location, srvAuth, AUTH_EVENTS, $rootScope, $translate) {
 
+            var vm = this;
             vm.requestForm = {}; // this holds all of the form input values
+            vm.FORM = FORM;
+            vm.currForm = FORM.DRIVE;
 
             vm.markErrors = function(errorResponse) {
                 // todo
             };
 
-            vm.FORM = FORM;
-            vm.currForm = "none";
-            vm.oneDaySeconds = 60 * 60 * 24; // todo: this will also be fetched from server
-
             /* this is temporary. todo: create a module that fetches the validations from server */
+            vm.oneDaySeconds = 60 * 60 * 24; // todo: this will also be fetched from server
             vm.valids = {
                 task: {
                     description: {
@@ -148,20 +147,7 @@ angular.module('app.views.helpRequestForm', [
                 }
             };
 
-            //<div ng-repeat="sq in helpTypesSquares"
-            //flex
-            //class="formPickDiv"
-            //layout="column"
-            //layout-align="center center"
-            //ng-click="vm.selectForm(sq.form)">
-            //
-            //    <label class="formPickDiv"> {{ sq.translateLabel | translate }} </label>
-            //<img class="volImg" ng-src="{{ sq.img }}"/>
-            //
-            //</div>
-            //
             vm.translatePath = 'views.askHelp';
-
 
             vm.helpTypesSquares = [
                 {
@@ -200,26 +186,6 @@ angular.module('app.views.helpRequestForm', [
                     row: 2
 
                 },
-            ];
-
-            vm.img = {
-                drive: "/assets/img/ask-help/escort.drive.png",
-                product: "/assets/img/ask-help/product.donation.png",
-                activity: "/assets/img/ask-help/workshop.activity.png",
-                occupation: "/assets/img/ask-help/occupation.oriented.png",
-                maintenance: "/assets/img/ask-help/light.maintenance.png",
-                other: "/assets/img/ask-help/other.png"
-            };
-
-
-            // todo: adjust these
-            vm.periods = [
-                'views.askHelp.hr1',
-                'views.askHelp.hr2',
-                'views.askHelp.hr3',
-                'views.askHelp.hr4-8',
-                'views.askHelp.dy0.5',
-                'views.askHelp.dy1'
             ];
 
             vm.hours = []; // this is for the ng-repeat
@@ -397,9 +363,23 @@ angular.module('app.views.helpRequestForm', [
                 $anchorScroll();
             }
 
-            vm.logReq = function() {
-                console.log(createCasePostRequest());
+            function getTranslation(translateId) { // todo: asynch
+                var translation;
+
+                $translate(translateId)
+                    .then(function (translated) {
+                        translation = translated;
+                    })
+                    .catch(function(error){
+                        // error = the same string which was asked to be translated (AKA: the non-valid $transalte Id)
+                        translation = error;
+                    });
             }
+
+            vm.logReq = function() { //  todo: delete this function. it's for debug
+                console.log(createCasePostRequest());
+            };
+
         }
     ])
 
