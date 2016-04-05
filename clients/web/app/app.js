@@ -67,8 +67,8 @@ angular.module('app', [
         serverPort : 5000,
         productionServerHost : '104.155.49.192'
     })
-    .config(['$urlRouterProvider', '$translateProvider', '$mdThemingProvider', 'RestangularProvider', 'APP_CONFIG','ENV',
-        function ($urlRouterProvider, $translateProvider, $mdThemingProvider, RestangularProvider, APP_CONFIG, ENV) {
+    .config(['$urlRouterProvider', '$translateProvider', '$mdThemingProvider', 'RestangularProvider', 'APP_CONFIG','ENV', 'LOCALES',
+        function ($urlRouterProvider, $translateProvider, $mdThemingProvider, RestangularProvider, APP_CONFIG, ENV, LOCALES) {
 
             function getEnvFromHost(){
                 //TODO change this to be taken out of some parameter set in the grunt release package command.
@@ -101,7 +101,7 @@ angular.module('app', [
                 prefix: 'resources/locale-',// path to translations files
                 suffix: '.json'// suffix, currently- extension of the translations
             });
-            $translateProvider.preferredLanguage('LOCALES.preferredLocale');// is applied on first load
+            $translateProvider.preferredLanguage(LOCALES.preferredLocale);// is applied on first load // todo: use LOCALES.preferredLocale
             $translateProvider.useLocalStorage();// saves selected language to localStorage
             // App routing is using ui-router module - https://github.com/angular-ui/ui-router
             $urlRouterProvider.otherwise(APP_CONFIG.homeRoute);
