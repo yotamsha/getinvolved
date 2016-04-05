@@ -241,21 +241,29 @@ angular.module('app.views.helpRequestForm', [
 
             vm.sendRequest = function() {
 
-                var req = createCasePostRequest();
+                //if (!$scope.requestForm.$valid)
+                //{
+                //    console.log("Form is not valid.");
+                //}
+                //else
+                //{
+                    var req = createCasePostRequest();
 
-                //console.log('Case Request', req);
+                    console.log('Request', req);
 
-                $http(req)
-                    .then(function(response) {
-                        console.log('[AskHelp:sendRequest] POST Case Success!', response);
-                        $scope.postBtnEnabled = true;
-                    })
-                    .catch(function(error) {
-                        console.log('[AskHelp:sendRequest] POST Case FAIL.', error);
-                        vm.markErrors(error);
-                        vm.resp = error;
-                        $scope.postBtnEnabled = true;
-                    });
+                    $http(req)
+                        .then(function(response) {
+                            console.log('[AskHelp:sendRequest] POST Case Success!', response);
+                            $scope.postBtnEnabled = true;
+                        })
+                        .catch(function(error) {
+                            console.log('[AskHelp:sendRequest] POST Case FAIL.', error);
+                            vm.markErrors(error);
+                            vm.resp = error;
+                            $scope.postBtnEnabled = true;
+                        });
+                //}
+
             };
 
             // Internal Functions

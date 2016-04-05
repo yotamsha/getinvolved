@@ -81,7 +81,7 @@
 				<h3>{{ vm.translatePath + ".description" | translate }} </h3>
 				<br>
 				<label>{{ vm.translatePath + ".provideDetails" | translate }}</label> <!-- todo: align to center -->
-				<br> <br> <!-- This br prevents overlapping of lables -->
+				<br>  <!-- This br prevents overlapping of lables -->
 
 				<div flex layout="row">
 					<md-input-container flex="85">
@@ -94,16 +94,14 @@
 							  maxlength="{{vm.valids.task.description.length.max}}"
 							  required>
 					</textarea>
-						<div ng-messages="requestForm.requestDescription.$error" role="alert">
+						<div ng-messages="requestForm.requestDescription.$error || requestForm.requestDescription.$touched == false" role="alert">
 							<div ng-message="required"> {{ vm.translatePath + ".errmsg.required" | translate }} </div>
 							<div ng-message="minlength">{{ vm.translatePath + ".errmsg.length.min" | translate }}</div>
 						</div>
 
 					</md-input-container>
 				</div>
-
-
-			</div> <br><br>
+			</div>
 
 			<!-- todo: City & Street Auto Suggest -->
 			<!-- todo: Auto fill address info if available for user -->
@@ -210,6 +208,8 @@
 					</div>
 				</div>
 			</div>
+
+			<br hide-gt-sm>
 
 			<!-- todo: City & Street Auto Suggest -->
 			<div id="destination"
@@ -495,6 +495,8 @@
 
 		<div layout="row" layout-align="center center">
 			<br ng-hide="vm.requestForm.requester.check">
+
+			<!---->
 			<md-button ng-click="vm.sendRequest()" ng-disabled="requestForm.$invalid" class="btn-primary"> {{ vm.translatePath + ".send" | translate }} </md-button>
 		</div>
 	</form>
