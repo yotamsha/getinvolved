@@ -287,6 +287,7 @@ angular.module('app.views.helpRequestForm', [
                     .catch(function(error) {
                         console.log('[AskHelp:sendRequest] POST Case FAIL.', error);
                         vm.markErrors(error);
+                        vm.resp = error;
                         $scope.postBtnEnabled = true;
                     });
             };
@@ -317,7 +318,7 @@ angular.module('app.views.helpRequestForm', [
                         'petitioner_id': user.id,
                         'tasks': [
                             {
-                                'volunteer_id': user.id,
+                                //'volunteer_id': user.id,
                                 'description': vm.requestForm.requestDescription,
                                 'title': caseTitle,
                                 'type': vm.requestForm.helpType,
@@ -377,8 +378,9 @@ angular.module('app.views.helpRequestForm', [
                     //},
                     address: {
                         street_name: locationFormObj.street,
-                        street_number: locationFormObj.number,
-                        city: locationFormObj.city
+                        street_number: locationFormObj.number.toString(),
+                        city: locationFormObj.city,
+                        country: 'IL'
                         //country: <optional: string>,
                         //entrance: <optional: string>,
                         //floor: <optional: string>,
@@ -393,6 +395,10 @@ angular.module('app.views.helpRequestForm', [
             function scrollTo(anchor) {
                 $location.hash(anchor);
                 $anchorScroll();
+            }
+
+            vm.logReq = function() {
+                console.log(createCasePostRequest());
             }
         }
     ])

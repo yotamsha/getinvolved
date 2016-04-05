@@ -1,8 +1,6 @@
 <!-- todo: make style adjustments -->
 <!-- todo: keep data on form inputs upon switching forms -->
-<!-- todo: tell user which fields are required -->
-
-<!--<button ng-click="vm.check()">CHECK</button>--> <!-- This is for debug -->
+<!-- todo: tell user which fields are required. HAPPENS WHEN createCasePostRequest() -->
 
 <div class="askHelp" id="container" layout-margin layout-align="space-around start">
 	<br>
@@ -54,6 +52,7 @@
 		</div>
 
 
+	</div>
 
 		<!-- First Row: Drive, Product, Activity -->
 		<!--<div layout="row" layout-margin >
@@ -133,7 +132,6 @@
 
 		<br><br>
 
-	</div>
 
 	<!-- Relevant Request Form -->
 
@@ -543,6 +541,9 @@
 			</div>
 			<br ng-hide="vm.requestForm.requester.check">
 			<md-button ng-click="vm.sendRequest()" ng-disabled="requestForm.$invalid" class="btn-primary"> {{ vm.translatePath + ".send" | translate }} </md-button>
+			<button ng-click="vm.logReq()">Log Request</button>
+			<div flex> <pre>{{ vm.resp }}</pre> </div>
+
 		</div>
 	</form>
 </div>
