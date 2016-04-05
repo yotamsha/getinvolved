@@ -290,5 +290,34 @@
     "description": "גן ילדים מבקשים תרומה של רדיו דיסק וספרים בכל השפות לצורך הקמת ספרייה לפעוטות ותינוקות",
     "title": "תרומה של רדיו דיסק וספרים בכל השפות",
     "img_url": "http://s22.postimg.org/odjki0d5c/image.jpg"
+  },
+  {
+    "state": "__undefined__",
+    "tasks": [
+      {
+        "state": "__undefined__",
+        "type": "GENERAL",
+        "title": "task1",
+        "due_date": "__REPLACE__",
+        "description": "task1 - description"
+      },
+      {
+        "state": "__undefined__",
+        "type": "GENERAL",
+        "title": "task2",
+        "due_date": "__REPLACE__",
+        "description": "task2 - description"
+      },
+      {
+        "state": "__undefined__",
+        "type": "GENERAL",
+        "title": "task3",
+        "due_date": "__REPLACE__",
+        "description": "task3 - description"
+      }
+    ],
+    "petitioner_id": "__REPLACE__",
+    "description": "multiple task case - description",
+    "title": "multiple task case - title"
   }
 ]
