@@ -2,7 +2,7 @@
 <!-- todo: keep data on form inputs upon switching forms -->
 <!-- todo: tell user which fields are required. HAPPENS WHEN createCasePostRequest() -->
 
-<div class="askHelp" id="container" layout-margin layout-align="space-around start">
+<div class="ask-help" id="container" layout-margin layout-align="space-around start">
 	<br>
 
 
@@ -16,12 +16,12 @@
 				<div ng-repeat="sq in vm.helpTypesSquares"
 					 ng-if="sq.row == 1"
 					 flex
-					 class="formPickDiv"
+					 class="form-pick-div"
 					 layout="column"
 					 layout-align="center center"
 					 ng-click="vm.selectForm(sq.form)">
-					<label class="formPickDiv"> {{ sq.translateLabel | translate }} </label>
-					<img class="volImg" ng-src="{{ sq.img }}"/>
+					<label class="form-pick-div"> {{ sq.translateLabel | translate }} </label>
+					<img class="vol-img" ng-src="{{ sq.img }}"/>
 
 				</div>
 			</div>
@@ -29,12 +29,12 @@
 				<div ng-repeat="sq in vm.helpTypesSquares"
 					 ng-if="sq.row == 2"
 					 flex
-					 class="formPickDiv"
+					 class="form-pick-div"
 					 layout="column"
 					 layout-align="center center"
 					 ng-click="vm.selectForm(sq.form)">
-					<label class="formPickDiv"> {{ sq.translateLabel | translate }} </label>
-					<img class="volImg" ng-src="{{ sq.img }}"/>
+					<label class="form-pick-div"> {{ sq.translateLabel | translate }} </label>
+					<img class="vol-img" ng-src="{{ sq.img }}"/>
 
 				</div>
 			</div>
@@ -44,12 +44,12 @@
 			<div layout="row" layout-margin>
 				<div ng-repeat="sq in vm.helpTypesSquares"
 					 flex
-					 class="formPickDiv"
+					 class="form-pick-div"
 					 layout="column"
 					 layout-align="center center"
 					 ng-click="vm.selectForm(sq.form)">
-					<label class="formPickDiv"> {{ sq.translateLabel | translate }} </label>
-					<img class="volImg" ng-src="{{ sq.img }}"/>
+					<label class="form-pick-div"> {{ sq.translateLabel | translate }} </label>
+					<img class="vol-img" ng-src="{{ sq.img }}"/>
 
 				</div>
 			</div>
@@ -61,35 +61,35 @@
 		<!--<div layout="row" layout-margin >
 
 			<div flex
-				 class="formPickDiv"
+				 class="form-pick-div"
 				 layout="column"
 				 layout-align="center center"
 				 ng-click="vm.selectForm(vm.FORM.DRIVE)">
 
-					<label class="formPickDiv"> {{ vm.translatePath + ".driveEscort" | translate }} </label>
-					<img class="volImg" ng-src="{{ vm.img.drive }}"/>
+					<label class="form-pick-div"> {{ vm.translatePath + ".driveEscort" | translate }} </label>
+					<img class="vol-img" ng-src="{{ vm.img.drive }}"/>
 
 			</div>
 
 			<div flex
-				 class="formPickDiv"
+				 class="form-pick-div"
 				 layout="column"
 				 layout-align="center center"
 				 ng-click="vm.selectForm(vm.FORM.PRODUCT)">
 
-					<label class="formPickDiv"> {{ vm.translatePath + ".productDonation" | translate }} </label>
-					<img class="volImg" ng-src="{{ vm.img.product }}"/>
+					<label class="form-pick-div"> {{ vm.translatePath + ".productDonation" | translate }} </label>
+					<img class="vol-img" ng-src="{{ vm.img.product }}"/>
 
 			</div>
 
 			<div flex
-				 class="formPickDiv"
+				 class="form-pick-div"
 				 layout="column"
 				 layout-align="center center"
 				 ng-click="vm.selectForm(vm.FORM.ACTIVITY)">
 
-					<label class="formPickDiv"> {{ vm.translatePath + ".activity" | translate }} </label>
-					<img class="volImg" ng-src="{{ vm.img.activity }}"/>
+					<label class="form-pick-div"> {{ vm.translatePath + ".activity" | translate }} </label>
+					<img class="vol-img" ng-src="{{ vm.img.activity }}"/>
 
 			</div>
 
@@ -99,35 +99,35 @@
 		<!--<div layout="row" layout-margin >
 
 			<div flex
-				 class="formPickDiv"
+				 class="form-pick-div"
 				 layout="column"
 				 layout-align="center center"
 				 ng-click="vm.selectForm(vm.FORM.PROFESSION)">
 
-					<label class="formPickDiv"> {{ vm.translatePath + ".occupationHelp" | translate }} </label>
-					<img class="volImg" ng-src="{{ vm.img.occupation }}"/>
+					<label class="form-pick-div"> {{ vm.translatePath + ".occupationHelp" | translate }} </label>
+					<img class="vol-img" ng-src="{{ vm.img.occupation }}"/>
 
 			</div>
 
 			<div flex
-				 class="formPickDiv"
+				 class="form-pick-div"
 				 layout="column"
 				 layout-align="center center"
 				 ng-click="vm.selectForm(vm.FORM.MAINTENANCE)">
 
-					<label class="formPickDiv"> {{ vm.translatePath + ".lightMaintenance" | translate }} </label>
-					<img class="volImg" ng-src="{{ vm.img.maintenance }}"/>
+					<label class="form-pick-div"> {{ vm.translatePath + ".lightMaintenance" | translate }} </label>
+					<img class="vol-img" ng-src="{{ vm.img.maintenance }}"/>
 
 			</div>
 
 			<div flex
-				 class="formPickDiv"
+				 class="form-pick-div"
 				 layout="column"
 				 layout-align="center center"
 				 ng-click="vm.selectForm(vm.FORM.OTHER)">
 
-					<label class="formPickDiv"> {{ vm.translatePath + ".other" | translate }} </label>
-					<img class="volImg" ng-src="{{ vm.img.other }}"/>
+					<label class="form-pick-div"> {{ vm.translatePath + ".other" | translate }} </label>
+					<img class="vol-img" ng-src="{{ vm.img.other }}"/>
 
 			</div>
 
