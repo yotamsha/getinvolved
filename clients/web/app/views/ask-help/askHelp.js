@@ -94,13 +94,13 @@ angular.module('app.views.helpRequestForm', [
             $mdDateLocale.msgOpenCalendar = 'פתח את לוח השנה';
     }])
 
-    .controller('askHelpCtrl', ['$scope', '$http', 'FORM', '$anchorScroll', '$location', 'AuthService', 'AUTH_EVENTS', '$rootScope', '$translate',
-        function ($scope, $http, FORM, $anchorScroll, $location, srvAuth, AUTH_EVENTS, $rootScope, $translate) {
+    .controller('askHelpCtrl', ['$scope', '$http', 'FORM', '$anchorScroll', '$location', 'AuthService', 'AUTH_EVENTS', '$rootScope', '$translate', 'APP_CONFIG',
+        function ($scope, $http, FORM, $anchorScroll, $location, srvAuth, AUTH_EVENTS, $rootScope, $translate, APP_CONFIG) {
 
             var vm = this;
             vm.requestForm = {}; // this holds all of the form input values
             vm.FORM = FORM;
-            vm.currForm = FORM.DRIVE;
+            vm.currForm = FORM.NONE;
 
             vm.markErrors = function(errorResponse) {
                 // todo
@@ -273,7 +273,7 @@ angular.module('app.views.helpRequestForm', [
 
                 var req = {
                     method: 'POST',
-                    url: 'http://localhost:5000/api/cases',
+                    url:  APP_CONFIG.serverHost + "/api/cases",// 'http://localhost:5000/api/cases',
                     headers: {
                         'access-token': user.facebook_access_token,
                         'me': user.id

@@ -487,20 +487,18 @@
 						<input name="requesterSmsCheck" type="checkbox" ng-model="vm.requestForm.requester.smsOk">
 						<label> {{ vm.translatePath + '.smsOk' | translate }} </label>
 					</div>
-
 				</div>
-
 			</div>
 		</div>
 
 		<br><br>
-		
+
 		<div layout="row" layout-align="center center">
 			<br ng-hide="vm.requestForm.requester.check">
 			<md-button ng-click="vm.sendRequest()" ng-disabled="requestForm.$invalid" class="btn-primary"> {{ vm.translatePath + ".send" | translate }} </md-button>
 		</div>
 	</form>
 
-	<button ng-click="vm.logReq()">Log Request</button>
-	<div flex> <pre>{{ vm.resp }}</pre> </div>
+	<!--<button ng-click="vm.logReq()">Log Request</button>-->
+	<!--<div flex> <pre>{{ vm.resp }}</pre> </div>-->
 </div>
