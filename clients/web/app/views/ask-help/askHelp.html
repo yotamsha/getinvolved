@@ -308,27 +308,35 @@
 			</div>
 
 			<!-- todo: align date and hour divs -->
-			<h3> {{ vm.translatePath + '.wantedDate' | translate }} </h3> <br>
-			<label> {{ vm.translatePath + '.pickTimeAndDate' | translate }} </label>
+
 			<div id="dateTime"
 				 flex
 				 layout-fill
 				 ng-if="vm.currForm == vm.FORM.DRIVE || vm.currForm == vm.FORM.ACTIVITY || vm.currForm == vm.FORM.OTHER"
-				 layout="row"
-				 layout-xs="column"
-				 layout-align-xs="center start"
-				 layout-align="start center">
+				 layout="column"
+				 layout-align="center start">
 
+				<h3> {{ vm.translatePath + '.wantedDate' | translate }} </h3> <br><br>
+				<label> {{ vm.translatePath + '.pickTimeAndDate' | translate }} </label><br>
 
-				<!--<div flex layout-gt-sm="row" layout="column" layout-align="center center">-->
+				<div id="dateTimeInner"
+					 flex
+					 layout-fill
+					 ng-if="vm.currForm == vm.FORM.DRIVE || vm.currForm == vm.FORM.ACTIVITY || vm.currForm == vm.FORM.OTHER"
+					 layout="row"
+					 layout-xs="column"
+					 layout-align-xs="center start"
+					 layout-align="start center">
+
+					<!--<div flex layout-gt-sm="row" layout="column" layout-align="center center">-->
 					<!--<label flex="20">{{ vm.translatePath + ".date" | translate }}</label>-->
 					<!--<div flex="30">-->
-						<md-datepicker name="date" ng-model="vm.requestForm.time.date" ng-required="vm.currForm == vm.FORM.DRIVE"></md-datepicker>
+					<md-datepicker name="date" ng-model="vm.requestForm.time.date" ng-required="vm.currForm == vm.FORM.DRIVE"></md-datepicker>
 					<!--</div>-->
-				<!--</div>-->
-				<div flex="5" flex="nogrow"></div>
-				<!-- todo: maybe get a better hour picker -->
-				<!--<div id="hourPicker" layout-gt-sm="row" layout-align-gt-sm="start center" layout="column" layout-align="center start" flex>-->
+					<!--</div>-->
+					<div flex="5" flex="nogrow"></div>
+					<!-- todo: maybe get a better hour picker -->
+					<!--<div id="hourPicker" layout-gt-sm="row" layout-align-gt-sm="start center" layout="column" layout-align="center start" flex>-->
 					<!-- todo: when gt-sm than too far away from hourPicker -->
 					<!--<label flex="nogrow"> {{ vm.translatePath + ".hour" | translate }} </label>-->
 
@@ -344,9 +352,12 @@
 						</md-select>
 					</div>
 
-				<!--</div>-->
-
+					<!--</div>-->
+				</div>
 			</div>
+
+
+
 
 			<br ng-show="vm.currForm == vm.FORM.DRIVE || vm.currForm == vm.FORM.ACTIVITY || vm.currForm == vm.FORM.OTHER">
 			<!--<br ng-show="vm.currForm == vm.FORM.DRIVE || vm.currForm == vm.FORM.ACTIVITY || vm.currForm == vm.FORM.OTHER">-->
