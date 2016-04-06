@@ -73,7 +73,8 @@ class CaseListApi(Resource):
     @u.web_log
     def get(self):
         try:
-            _filter, projection, sort, page_size_str, page_number_str, _count = u.get_fields_projection_and_filter(request)
+            _filter, projection, sort, page_size_str, page_number_str, _count = u.get_fields_projection_and_filter(
+                request)
             cases = db.cases.find(projection=projection, filter=_filter)
             count = count = cases.count()
             cases = u.handle_sort_and_paging(cases, sort, page_size_str, page_number_str)
@@ -92,3 +93,5 @@ class CaseListApi(Resource):
             return resp
         else:
             return {'count': count}, u.HTTP_OK
+
+

@@ -1,3 +1,5 @@
+from bson.errors import InvalidId
+
 __author__ = 'avishayb'
 
 from bson.objectid import ObjectId
@@ -45,6 +47,13 @@ def web_log(func):
 
     return wrapper
 
+
+def is_valid_db_id(oid):
+    try:
+        ObjectId(oid)
+        return True
+    except (InvalidId, TypeError):
+        return False
 
 def handle_sort_and_paging(cursor, sort, page_size_str, page_number_str):
     if cursor:

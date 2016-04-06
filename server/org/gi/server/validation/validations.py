@@ -108,6 +108,7 @@ def validate_phone_number(phone_number, faults):
         if not valid:
             faults.append(
                 'The phone number %s (country %s) is invalid.' % (phone_number['number'], phone_number['country_code']))
+            return
         number_type = phonenumbers.number_type(number)
         if number_type != PhoneNumberType.MOBILE:
             faults.append('The phone number %s (country %s) is not a mobile number.' % (phone_number['number'], phone_number['country_code']))

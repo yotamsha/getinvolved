@@ -10,6 +10,8 @@ from org.gi.server import utils as u
 from org.gi.server.service.notification.notification import notify
 from org.gi.server.service.scheduler import get_scheduler
 from org.gi.server.api.case_api import CaseApi, CaseListApi
+from org.gi.server.api.case_images_api import CaseImagesApi
+
 from org.gi.server.api.user_api import UserApi, UserListApi
 from org.gi.server.facebook import facebook_bp
 from org.gi.server.local_login import local_login_bp
@@ -57,6 +59,8 @@ api.add_resource(CaseListApi, '/api/cases')
 
 api.add_resource(UserApi, '/api/users/<string:user_id>', '/api/users')
 api.add_resource(CaseApi, '/api/cases/<string:case_id>', '/api/cases')
+api.add_resource(CaseImagesApi, '/api/cases/<string:case_id>/images/<string:image_id>','/api/cases/<string:case_id>/images')
+
 
 if __name__ == '__main__':
     if sys.version_info[0] != 2 or sys.version_info[1] != 7:
@@ -70,7 +74,7 @@ if __name__ == '__main__':
     print('------------------------------------------------------------------------------------')
     start_notification_loop()
     app.run(debug=False, threaded=True, host='0.0.0.0')
-    # app.run(debug=False)
+    app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024 # up to 10MB to upload TODO: read from config
     if not app.debug:
         import logging
         from logging.handlers import RotatingFileHandler
