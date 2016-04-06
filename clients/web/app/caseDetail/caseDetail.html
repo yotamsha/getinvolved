@@ -24,9 +24,6 @@
         <!-- /// TASKS LIST //// -->
         <div layout="row" class="panel-section" layout-align="start center">
             <div layout="column" flex="50" flex-xs="100" class="panel-section-inner">
-                <h2 class="tasks-list-title">
-                    {{"views.caseDetail.tasks_list_title" | translate}}
-                </h2>
                 <div class="task-item" ng-repeat="task in vm.case.tasks">
                     <div layout="row" class="task-title-row">
                         <h5 class="task-title">{{task.title}}</h5>
