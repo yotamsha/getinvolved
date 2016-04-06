@@ -43,6 +43,12 @@ def _load(file_name, folder_name):
     with open('%s/config/%s/%s' % (path, folder_name, file_name)) as data_file:
         return json.load(data_file)
 
+def _load_binary(file_name, folder_name):
+    path = sys.modules[__name__].__file__
+    path = path[:path.rfind(os.path.sep)]
+    with open('%s/config/%s/%s' % (path, folder_name, file_name),mode='rb') as file:
+        return file.read()
+
 ACCESS_TOKEN_AUTH = AccessTokenAuth(generate_access_token(_load('fake_db_user.json', 'auth')))
 
 
