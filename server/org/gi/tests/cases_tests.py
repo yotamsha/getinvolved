@@ -1,9 +1,11 @@
+# coding=utf-8
 import json
 import time
 import unittest
 
 import requests
-from misc import _remove_from_db, _load, _push_to_db, MONGO, SERVER_URL_API, ACCESS_TOKEN_AUTH, validate_server_is_up
+from misc import _remove_from_db, _load, _push_to_db, MONGO, SERVER_URL_API, ACCESS_TOKEN_AUTH, validate_server_is_up, \
+    _get_legal_due_date
 from org.gi.server import utils as utils
 from org.gi.server.model.Task import ALL_TASKS_SAME_STATE_TRANSITION
 from org.gi.server.service.notification.fetch_users_to_notify import fetch_users_with_upto_x_hours_until_task
@@ -84,7 +86,7 @@ class TestGIServerCaseTestCase(unittest.TestCase):
     def test_create_general_task_with_address(self):
         case = _load('case_with_general_task_with_address.json', self.config_folder)
         self._replace(case)
-        stam=ACCESS_TOKEN_AUTH
+        stam = ACCESS_TOKEN_AUTH
         r = requests.post('%s/cases' % SERVER_URL_API, json=case, auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_CREATED)
 
@@ -195,14 +197,14 @@ class TestGIServerCaseTestCase(unittest.TestCase):
 
     def test_cases_count_mix_with_sort(self):
         r = requests.get(
-            '%s/cases?count=1&sort=[(\'first_name\',\'ASCENDING\'),(\'last_name\',\'DESCENDING\')]' % SERVER_URL_API,
-            auth=ACCESS_TOKEN_AUTH)
+                '%s/cases?count=1&sort=[(\'first_name\',\'ASCENDING\'),(\'last_name\',\'DESCENDING\')]' % SERVER_URL_API,
+                auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
 
     def test_cases_invalid_query_args(self):
         r = requests.get(
-            '%s/cases?count=1&zuzu=[(\'first_name\',\'ASCENDING\'),(\'last_name\',\'DESCENDING\')]' % SERVER_URL_API,
-            auth=ACCESS_TOKEN_AUTH)
+                '%s/cases?count=1&zuzu=[(\'first_name\',\'ASCENDING\'),(\'last_name\',\'DESCENDING\')]' % SERVER_URL_API,
+                auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
 
     def test_create_case_with_location(self):
@@ -232,14 +234,14 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         near_query = {
             "location.geo_location":
                 {"$near":
-                     {
-                         "$geometry": {
-                             "type": "Point",
-                             "coordinates": [30.00, 29.5]
-                         },
-                         "$maxDistance": 10000000
-                     }
-                 }
+                    {
+                        "$geometry": {
+                            "type": "Point",
+                            "coordinates": [30.00, 29.5]
+                        },
+                        "$maxDistance": 10000000
+                    }
+                }
         }
         r = requests.get('%s/cases?filter=%s' % (SERVER_URL_API, near_query), auth=ACCESS_TOKEN_AUTH)
         cases = json.loads(r.content)
@@ -280,14 +282,14 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         near_query = {
             "location.geo_location":
                 {"$near":
-                     {
-                         "$geometry": {
-                             "type": "Point",
-                             "coordinates": [40, 40]
-                         },
-                         "$maxDistance": 100
-                     }
-                 }
+                    {
+                        "$geometry": {
+                            "type": "Point",
+                            "coordinates": [40, 40]
+                        },
+                        "$maxDistance": 100
+                    }
+                }
         }
         r = requests.get('%s/cases?filter=%s' % (SERVER_URL_API, near_query), auth=ACCESS_TOKEN_AUTH)
         cases = json.loads(r.content)
@@ -454,8 +456,6 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         r = requests.get('%s/cases' % (SERVER_URL_API), auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_OK)
         self.assertTrue(utils.COUNT_HEADER in r.headers)
-
-
 
     def test_ticket_230(self):
         case_with_tasks = _load('case_with_tasks_ticket_230.json', self.config_folder)

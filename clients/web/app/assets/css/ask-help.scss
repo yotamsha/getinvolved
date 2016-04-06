@@ -1,4 +1,4 @@
-.volImg {
+.vol-img {
   width: 100%;
   height: auto;
 }
@@ -8,6 +8,14 @@
   display: none;
 }
 
-.formPickDiv {
+.form-pick-div {
   cursor: pointer;
+}
+
+.ask-help {
+  font-size: 15px;
+}
+
+#title-container {
+  text-align: center;
 }

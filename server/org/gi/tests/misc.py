@@ -1,3 +1,7 @@
+import time
+
+from org.gi.server.service.notification.notification import SECONDS_IN_HOUR
+
 __author__ = 'avishayb'
 
 from org.gi.config import config
@@ -70,3 +74,6 @@ def _get_ids(mongo, collection_name):
     records = db[collection_name].find()
     return [str(r['_id']) for r in records]
 
+
+def _get_legal_due_date():
+    return int(time.time()) + SECONDS_IN_HOUR * 25
