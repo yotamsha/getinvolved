@@ -17,5 +17,6 @@ setup(
                       'pycountry',
                       'flask-cors',
                       'babel',
-                      'mock==1.0.1']
+                      'mock==1.0.1',
+                      'google-api-python-client==1.3.2']
 )

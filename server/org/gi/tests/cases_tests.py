@@ -4,8 +4,7 @@ import time
 import unittest
 
 import requests
-from misc import _remove_from_db, _load, _push_to_db, MONGO, SERVER_URL_API, ACCESS_TOKEN_AUTH, validate_server_is_up, \
-    _get_legal_due_date
+from misc import _remove_from_db, _load, _push_to_db, MONGO, SERVER_URL_API, ACCESS_TOKEN_AUTH, validate_server_is_up
 from org.gi.server import utils as utils
 from org.gi.server.model.Task import ALL_TASKS_SAME_STATE_TRANSITION
 from org.gi.server.service.notification.fetch_users_to_notify import fetch_users_with_upto_x_hours_until_task

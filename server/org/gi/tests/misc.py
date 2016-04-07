@@ -10,6 +10,8 @@ import requests
 import sys
 import json
 import os
+from os import listdir
+from os.path import isfile, join
 from org.gi.server.web_token import generate_access_token, AccessTokenAuth
 import org.gi.server.utils as utils
 
@@ -46,6 +48,17 @@ def _load(file_name, folder_name):
     path = path[:path.rfind(os.path.sep)]
     with open('%s/config/%s/%s' % (path, folder_name, file_name)) as data_file:
         return json.load(data_file)
+
+def _load_binary(file_name, folder_name):
+    path = sys.modules[__name__].__file__
+    path = path[:path.rfind(os.path.sep)]
+    with open('%s/config/%s/%s' % (path, folder_name, file_name),mode='rb') as file:
+        return file.read()
+
+def list_files(folder_name):
+    path = sys.modules[__name__].__file__
+    path = path[:path.rfind(os.path.sep)] + '/config/' + folder_name
+    return [f for f in listdir(path) if isfile(join(path, f))]
 
 ACCESS_TOKEN_AUTH = AccessTokenAuth(generate_access_token(_load('fake_db_user.json', 'auth')))
 

@@ -10,7 +10,6 @@ import json
 
 __author__ = 'avishayb'
 
-
 CONFIG_DATA_DIRECTORY = 'user_api'
 
 
@@ -145,7 +144,7 @@ class GIServerUsersTestCase(unittest.TestCase):
         self.remove_users_from_db()
         r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH,
                           json=_load('a_user_with_notifications.json', self.config_folder))
-        self.assertEqual(r.status_code, utils.HTTP_CREATED,msg=r.text)
+        self.assertEqual(r.status_code, utils.HTTP_CREATED, msg=r.text)
 
     def test_notifications_wrong_key(self):
         r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH,
@@ -163,92 +162,99 @@ class GIServerUsersTestCase(unittest.TestCase):
         self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
 
     def test_wrong_email(self):
-        r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH, json=_load('wrong_email.json', self.config_folder))
-        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
+        r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH,
+                          json=_load('wrong_email.json', self.config_folder))
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT, msg=r.text)
 
     def test_wrong_phone_number(self):
-        r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH, json=_load('wrong_phone_number.json', self.config_folder))
-        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
+        r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH,
+                          json=_load('wrong_phone_number.json', self.config_folder))
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT, msg=r.text)
 
     def test_create_male_user(self):
+        self.remove_users_from_db()
         user_data = _load('gender.json', self.config_folder)
         user_data['gender'] = 'male'
         r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH, json=user_data)
-        self.assertEqual(r.status_code, utils.HTTP_CREATED)
         self.remove_users_from_db()
-
+        self.assertEqual(r.status_code, utils.HTTP_CREATED, msg=r.text)
 
     def test_create_female_user(self):
+        self.remove_users_from_db()
         user_data = _load('gender.json', self.config_folder)
         user_data['gender'] = 'female'
         r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH, json=user_data)
-        self.assertEqual(r.status_code, utils.HTTP_CREATED)
         self.remove_users_from_db()
+        self.assertEqual(r.status_code, utils.HTTP_CREATED, msg=r.text)
 
 
     def test_create_wrong_gender_user(self):
         user_data = _load('gender.json', self.config_folder)
         user_data['gender'] = 'invalid_gender'
         r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH, json=user_data)
-        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT, msg=r.text)
         self.remove_users_from_db()
 
 
     def test_short_password(self):
-        r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH, json=_load('short_password.json', self.config_folder))
-        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
+        r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH,
+                          json=_load('short_password.json', self.config_folder))
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT, msg=r.text)
 
     def test_long_password(self):
-        r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH, json=_load('long_password.json', self.config_folder))
-        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
+        r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH,
+                          json=_load('long_password.json', self.config_folder))
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT, msg=r.text)
 
     def test_no_first_name(self):
-        r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH, json=_load('no_first_name.json', self.config_folder))
-        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
+        r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH,
+                          json=_load('no_first_name.json', self.config_folder))
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT, msg=r.text)
 
     def test_empty_payload_put(self):
         r = requests.put('%s/users/%s' % (SERVER_URL_API, self.ids[0]), auth=ACCESS_TOKEN_AUTH, json=json.dumps({}))
-        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT, msg=r.text)
         self.remove_users_from_db()
 
     def test_no_payload_put(self):
         r = requests.put('%s/users/%s' % (SERVER_URL_API, self.ids[0]), auth=ACCESS_TOKEN_AUTH)
-        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT, msg=r.text)
         self.remove_users_from_db()
 
     def test_wrong_email_put(self):
         r = requests.put('%s/users/%s' % (SERVER_URL_API, self.ids[0]),
                          auth=ACCESS_TOKEN_AUTH, json=_load('wrong_email.json', self.config_folder))
-        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT, msg=r.text)
         self.remove_users_from_db()
 
     def test_wrong_phone_number_put(self):
         r = requests.put('%s/users/%s' % (SERVER_URL_API, self.ids[0]),
                          auth=ACCESS_TOKEN_AUTH, json=_load('wrong_phone_number.json', self.config_folder))
-        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT, msg=r.text)
         self.remove_users_from_db()
 
     def test_short_password_put(self):
         r = requests.put('%s/users/%s' % (SERVER_URL_API, self.ids[0]),
                          auth=ACCESS_TOKEN_AUTH, json=_load('short_password.json', self.config_folder))
-        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT, msg=r.text)
         self.remove_users_from_db()
 
     def test_long_password_put(self):
         r = requests.put('%s/users/%s' % (SERVER_URL_API, self.ids[0]),
                          auth=ACCESS_TOKEN_AUTH, json=_load('long_password.json', self.config_folder))
-        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT, msg=r.text)
         self.remove_users_from_db()
 
     def test_no_first_name_put(self):
         r = requests.put('%s/users/%s' % (SERVER_URL_API, self.ids[0]),
                          auth=ACCESS_TOKEN_AUTH, json=_load('no_first_name.json', self.config_folder))
-        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT, msg=r.text)
 
     def test_create_a_user(self):
         self.remove_users_from_db()
-        r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH, json=_load('a_user.json', self.config_folder))
-        self.assertEqual(r.status_code, utils.HTTP_CREATED,msg=r.text)
+        r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH,
+                          json=_load('a_user.json', self.config_folder))
+        self.assertEqual(r.status_code, utils.HTTP_CREATED, msg=r.text)
         pushed_to_api = _load('a_user.json', self.config_folder)
         created = r.json()
         for k, v in pushed_to_api.iteritems():
@@ -256,8 +262,9 @@ class GIServerUsersTestCase(unittest.TestCase):
                 self.assertEqual(v, created[k])
 
     def test_create_a_fb_user(self):
-        r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH, json=_load('a_fb_user.json', self.config_folder))
-        self.assertEqual(r.status_code, utils.HTTP_CREATED)
+        r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH,
+                          json=_load('a_fb_user.json', self.config_folder))
+        self.assertEqual(r.status_code, utils.HTTP_CREATED, msg=r.text)
         pushed_to_api = _load('a_fb_user.json', self.config_folder)
         created = r.json()
         for k, v in pushed_to_api.iteritems():
@@ -270,14 +277,15 @@ class GIServerUsersTestCase(unittest.TestCase):
             r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH, json=bad_fb_user)
             if r.status_code == utils.HTTP_CREATED:
                 print(bad_fb_user)
-            self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
+            self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT, msg=r.text)
             self.assertTrue(len(r._content) > 0)
             self.assertTrue('errors' in r._content)
 
     def test_create_a_user_with_roles(self):
         self.remove_users_from_db()
-        r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH, json=_load('a_user_with_roles.json', self.config_folder))
-        self.assertEqual(r.status_code, utils.HTTP_CREATED,msg=r.text)
+        r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH,
+                          json=_load('a_user_with_roles.json', self.config_folder))
+        self.assertEqual(r.status_code, utils.HTTP_CREATED, msg=r.text)
         pushed_to_api = _load('a_user_with_roles.json', self.config_folder)
         created = r.json()
         for k, v in pushed_to_api.iteritems():
@@ -287,43 +295,43 @@ class GIServerUsersTestCase(unittest.TestCase):
     def test_create_a_user_with_wrong_roles(self):
         r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH,
                           json=_load('a_user_with_wrong_roles.json', self.config_folder))
-        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT, msg=r.text)
 
     def test_create_a_user_with_int_pwd(self):
         r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH,
                           json=_load('a_user_with_int_password.json', self.config_folder))
-        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT, msg=r.text)
 
     def test_create_ticket_246(self):
         r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH,
                           json=_load('user_ticket_246.json', self.config_folder))
-        self.assertEqual(r.status_code, utils.HTTP_CREATED)
+        self.assertEqual(r.status_code, utils.HTTP_CREATED, msg=r.text)
         user_from_server = r.json()
-        r = requests.put('%s/users/%s' % (SERVER_URL_API,user_from_server['id']), auth=ACCESS_TOKEN_AUTH,
-                          json=user_from_server)
-        self.assertEqual(r.status_code, utils.HTTP_OK)
+        r = requests.put('%s/users/%s' % (SERVER_URL_API, user_from_server['id']), auth=ACCESS_TOKEN_AUTH,
+                         json=user_from_server)
+        self.assertEqual(r.status_code, utils.HTTP_OK, msg=r.text)
         del user_from_server['email']
-        r = requests.put('%s/users/%s' % (SERVER_URL_API,user_from_server['id']), auth=ACCESS_TOKEN_AUTH,
-                          json=user_from_server)
-        self.assertEqual(r.status_code, utils.HTTP_OK)
+        r = requests.put('%s/users/%s' % (SERVER_URL_API, user_from_server['id']), auth=ACCESS_TOKEN_AUTH,
+                         json=user_from_server)
+        self.assertEqual(r.status_code, utils.HTTP_OK, msg=r.text)
 
     def test_create_a_user_with_str_phone_num(self):
         r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH,
                           json=_load('a_user_with_str_phone_number.json', self.config_folder))
-        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT)
+        self.assertEqual(r.status_code, utils.HTTP_BAD_INPUT, msg=r.text)
 
     def test_doesnt_require_access_anymore(self):
         self.remove_users_from_db()
         _AUTH = AccessTokenAuth('this is fake and should crashhh')
         r = requests.post('%s/users' % SERVER_URL_API, auth=_AUTH,
                           json=_load('a_user.json', self.config_folder))
-        self.assertEqual(r.status_code, utils.HTTP_CREATED,msg=r.text)
+        self.assertEqual(r.status_code, utils.HTTP_CREATED, msg=r.text)
 
     def test_get_me(self):
         self.remove_users_from_db()
         r = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH,
-                json=_load('a_user.json', self.config_folder))
-        self.assertEqual(r.status_code, utils.HTTP_CREATED,msg=r.text)
+                          json=_load('a_user.json', self.config_folder))
+        self.assertEqual(r.status_code, utils.HTTP_CREATED, msg=r.text)
         db_user = json.loads(r.content)
         db_user['_id'] = db_user['id']
         access_token = generate_access_token(db_user)
@@ -347,5 +355,5 @@ class GIServerUsersTestCase(unittest.TestCase):
         _AUTH = HTTPBasicAuth('u_cant_find_me_in_db', self.passwords.get(self.users[0]['user_name']))
         r = requests.post('%s/users' % SERVER_URL_API, auth=_AUTH,
                           json=_load('a_user.json', self.config_folder))
-        self.assertEqual(r.status_code, utils.HTTP_UNAUTHORIZED)
+        self.assertEqual(r.status_code, utils.HTTP_UNAUTHORIZED, msg=r.text)
 
