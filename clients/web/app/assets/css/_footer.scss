@@ -1,4 +1,9 @@
 footer {
   background-color: #565656;
   height: 250px;
+  .footer-container {
+    max-width: 80%;
+    margin: auto;
+    padding: 20px 0;
+  }
 }

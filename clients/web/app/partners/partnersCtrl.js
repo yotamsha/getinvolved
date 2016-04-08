@@ -32,28 +32,33 @@ angular.module('app.partners', [])
             function _init() {
                 $scope.vm = {
                     partners: [
-                    {
-                        imgSrc : "/assets/img/partners_logos/250px-Deloitte.svg.png"
-                    },
-                                     {
-                        imgSrc : "/assets/img/partners_logos/8200-social.png"
-                    },               {
-                        imgSrc : "/assets/img/partners_logos/bigmazhe_logo_09.04.2013.jpg"
-                    },               {
-                        imgSrc : "/assets/img/partners_logos/endemol-logo.png"
-                    },               {
-                        imgSrc : "/assets/img/partners_logos/KPMG.png"
-                    },               {
-                        imgSrc : "/assets/img/partners_logos/ktim.jpg"
-                    },               {
-                        imgSrc : "/assets/img/partners_logos/main-logo.jpg"
-                    },               {
-                        imgSrc : "/assets/img/partners_logos/mccann-logo.png"
-                    },               {
-                        imgSrc : "/assets/img/partners_logos/startop.png"
-                    },               {
-                        imgSrc : "/assets/img/partners_logos/wix_com.png"
-                    }
+                        {
+                            imgSrc: "/assets/img/partners_logos/250px-Deloitte.svg.png"
+                        },
+                        {
+                            imgSrc: "/assets/img/partners_logos/8200-social.png"
+                        },
+                        {
+                            imgSrc: "/assets/img/partners_logos/bigmazhe_logo_09.04.2013.jpg"
+                        },
+                        {
+                            imgSrc: "/assets/img/partners_logos/endemol-logo.png"
+                        },
+                        {
+                            imgSrc: "/assets/img/partners_logos/ktim.jpg"
+                        },
+                        {
+                            imgSrc: "/assets/img/partners_logos/main-logo.jpg"
+                        },
+                        {
+                            imgSrc: "/assets/img/partners_logos/mccann-logo.png"
+                        },
+                        {
+                            imgSrc: "/assets/img/partners_logos/startop.png"
+                        },
+                        {
+                            imgSrc: "/assets/img/partners_logos/wix_com.png"
+                        }
                     ]
                 };
             }

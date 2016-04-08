@@ -19,20 +19,20 @@ angular.module('app', [
         'app.common.constants',
 
         // App views
-        'app.view1',
-        'app.view2',
         'app.views.helpRequestForm',
         'app.caseDetail',
         'app.casesSearch',
         'app.login',
         'app.userProfile',
         'app.partners',
-        'app.about_us',
+        'app.views.about',
+        'app.views.contact',
 
         // Components
         'app.version',
         'app.header',
         'app.userDetails',
+        'app.footer',
 
         // Models
         'app.models.case',
