@@ -14,7 +14,7 @@ angular.module('app.models.case')
 				tasks: TaskMapper.mapCollectionToVM(caseDto.tasks),		
 			};
 			
-            caseVM.imgUrl = caseDto.imgUrl ? caseDto.imgUrl : CaseDefaultImageProvider.getImage();
+            caseVM.imgUrl = caseDto.img_url ? caseDto.img_url : CaseDefaultImageProvider.getImage();
 			
             return caseVM;
         }
