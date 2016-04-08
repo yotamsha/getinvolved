@@ -90,6 +90,7 @@ class TestGIServerCaseTestCase(unittest.TestCase):
         self.assertEqual(r.status_code, utils.HTTP_CREATED)
 
     def test_update_case_with_valid_state(self):
+        case_id = self._get_inserted_case().get('id')
         states = [org.gi.server.validation.case_state_machine.CASE_PENDING_APPROVAL,
                   org.gi.server.validation.case_state_machine.CASE_PENDING_INVOLVEMENT,
                   org.gi.server.validation.case_state_machine.CASE_PARTIALLY_ASSIGNED,
@@ -97,16 +98,15 @@ class TestGIServerCaseTestCase(unittest.TestCase):
                   org.gi.server.validation.case_state_machine.CASE_PARTIALLY_COMPLETED]
         for state in states:
             case = {"state": state}
-            r = requests.put('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]), json=case, auth=ACCESS_TOKEN_AUTH)
+            r = requests.put('%s/cases/%s' % (SERVER_URL_API, case_id), json=case, auth=ACCESS_TOKEN_AUTH)
             self.assertEqual(r.status_code, utils.HTTP_OK)
 
     def test_update_state_transitions(self):
-        case = _load('case_state_transitions_4.json', self.config_folder)
-        self._replace(case)
-        r = requests.put('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]), json=case, auth=ACCESS_TOKEN_AUTH)
+        case = self._get_inserted_case()
+        r = requests.put('%s/cases/%s' % (SERVER_URL_API, case.get('id')), json=case, auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_OK)
         case['state'] = 'cancelled_by_admin'
-        r = requests.put('%s/cases/%s' % (SERVER_URL_API, self.case_ids[0]), json=case, auth=ACCESS_TOKEN_AUTH)
+        r = requests.put('%s/cases/%s' % (SERVER_URL_API, case.get('id')), json=case, auth=ACCESS_TOKEN_AUTH)
         self.assertEqual(r.status_code, utils.HTTP_OK)
 
     def test_inserted_case_and_task_state(self):

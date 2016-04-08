@@ -1,12 +1,16 @@
 # coding=utf-8
+import os
 import time
-import logging
 
-from org.gi.server.service.notification.fetch_users_to_notify import fetch_users_with_tasks_between_x_and_y
-from org.gi.server.service.send_email import send_email
-from org.gi.server.service.send_sms import send_sms
+from org.gi.server.model.Task import Task
+from org.gi.server.service.notification.fetch_users_to_notify import fetch_users_with_tasks_between_x_and_y, \
+    get_petitioner_from_case, get_volunteer_from_case_and_task
+from org.gi.server.service.notification.message_sender import MessageSender
 from org.gi.server.service.templates.templates import load_and_merge
-from org.gi.server.validation.validations import validate_phone_number
+from org.gi.server.validation.case_state_machine import CASE_PENDING_APPROVAL, CASE_PENDING_INVOLVEMENT, \
+    CASE_PARTIALLY_ASSIGNED, CASE_ASSIGNED, CASE_PARTIALLY_COMPLETED, CASE_COMPLETED
+from org.gi.server.validation.task.task_state_machine import TASK_PENDING_USER_APPROVAL, TASK_ASSIGNMENT_IN_PROCESS, \
+    TASK_PENDING, TASK_ASSIGNED
 
 SECONDS_IN_HOUR = 60 * 60
 
@@ -24,38 +28,32 @@ VOLUNTEER = 'volunteer'
 PETITIONER = 'petitioner'
 FIRST_REMINDER_SUBJECT = u"GetInvolved - התראה"
 SECOND_REMINDER_SUBJECT = u"GetInvolved - התראה"
+CASE_APPROVAL_SUBJECT = u"GetInvolved - אישור העלת מקרה"
+CASE_VOLUNTEER_MATCH_SUBJECT = u"GetInvolved - נמצא מתנדב למקרה"
+VOLUNTEER_FEEDBACK_SUBJECT = u"GetInvolved - משוב מתנדבים"
+VOLUNTEER_REGISTER_TO_CASE = u"GetInvolved - נרשמת בהצלחה למקרה"
+
+# Methods are patched at runtime
+global message_sender
+message_sender = MessageSender()
+if os.environ['__MODE'] != 'production':
+    message_sender.patch()
 
 
-def send_sms_to(recipient, sms, sender=GI_PHONE_NUMBER):
-    if recipient.get('phone_number'):
-        faults = []
-        validate_phone_number(recipient.get('phone_number'), faults)
-        if faults:
-            logging.error(faults)
-            return
-    else:
-        logging.error('Cannot send SMS to user with no phonenumber: {}'.format(recipient))
-        return
-    if not (sms and len(sms) > 0 and isinstance(sms, basestring)):
-        logging.error('Cannot send SMS with no message')
-        return
-    try:
-        recipient_phone_number = recipient.get('phone_number').get('number')
-        success, response = send_sms(recipient_phone_number, sender, sms)
-    except Exception:
-        success = False
-    if not success:
-        reason = response.content if response.content else ""
-        logging.error('Failed sending SMS to following user: {},\n Reason: {}'.format(recipient, reason))
+def send_user_notifications(db_case, old_case):
+    if old_case.get('state') in {CASE_PENDING_APPROVAL}:
+        if db_case.get('state') in {CASE_PENDING_INVOLVEMENT}:
+            _send_case_approval_email(old_case)
 
+    if old_case.get('state') in {CASE_PENDING_INVOLVEMENT, CASE_PARTIALLY_ASSIGNED}:
+        if db_case.get('state') in {CASE_ASSIGNED}:
+            _send_petitioner_match_email(old_case)
 
-def send_email_to(recipient, subject, message, sender=GI_EMAIL_ADDRESS):
-    if not recipient.get('email'):
-        logging.error('Cannot send EMAIL to user: {}'.format(recipient))
-        return
-    success, resp_id = send_email(recipient.get('email'), subject, message, sender)
-    if not success:
-        logging.error('Failed sending EMAIL to following user: {},\n Response_ID: {}'.format(recipient, resp_id))
+    if old_case.get('state') in {CASE_ASSIGNED, CASE_PARTIALLY_COMPLETED}:
+        if db_case.get('state') in {CASE_COMPLETED}:
+            _send_volunteers_feedback_email(old_case)
+
+    _send_emails_to_volunteers_register_to_case(db_case, old_case)
 
 
 def add_gi_email_and_phone_to_data(user_data):
@@ -68,10 +66,10 @@ def _send_email_and_sms(user_data, subject, template, user_type, sms=True, email
     notification_settings = NotificationSettings(user_data.get('details').get('notifications'))
     if notification_settings.sms_enabled and sms:
         sms_notfication = load_and_merge('/{}/sms/{}'.format(user_type, template), user_data, lang)
-        send_sms_to(user_data.get('details'), sms_notfication)
+        message_sender.send_sms_to(user_data.get('details'), sms_notfication)
     if notification_settings.email_enabled and email:
         email_notification = load_and_merge('/{}/email/{}'.format(user_type, template), user_data, lang)
-        send_email_to(user_data.get('details'), subject, email_notification)
+        message_sender.send_email_to(user_data.get('details'), subject, email_notification)
 
 
 def _do_first_notifications():
@@ -97,6 +95,36 @@ def notify():
     _do_first_notifications()
     _do_second_notifications()
     last_update_time = current_time
+
+
+def _send_case_approval_email(db_case):
+    petitioner = get_petitioner_from_case(db_case)
+    _send_email_and_sms(petitioner, CASE_APPROVAL_SUBJECT, 'case_approval', 'petitioner', sms=False)
+
+
+def _send_petitioner_match_email(db_case):
+    petitioner = get_petitioner_from_case(db_case)
+    _send_email_and_sms(petitioner, CASE_VOLUNTEER_MATCH_SUBJECT, 'match', 'petitioner', sms=False)
+
+
+def _send_volunteers_feedback_email(db_case):
+    for task in db_case.get('tasks'):
+        volunteer = get_volunteer_from_case_and_task(db_case, task)
+        _send_email_and_sms(volunteer, VOLUNTEER_FEEDBACK_SUBJECT, 'feedback', 'volunteer', sms=False)
+
+
+def _send_volunteer_register_to_case_email(db_case, task):
+    petitioner = get_volunteer_from_case_and_task(db_case, task)
+    _send_email_and_sms(petitioner, VOLUNTEER_REGISTER_TO_CASE, 'register_to_case', 'volunteer', sms=False)
+
+
+def _send_emails_to_volunteers_register_to_case(db_case, old_case):
+    for task in db_case.get('tasks'):
+        if 'id' in task:
+            old_task = Task.get_task_by_id(task.get('id'), old_case.get('tasks'))
+            if old_task.get('state') in {TASK_PENDING, TASK_ASSIGNMENT_IN_PROCESS, TASK_PENDING_USER_APPROVAL}:
+                if task.get('state') in {TASK_ASSIGNED}:
+                    _send_volunteer_register_to_case_email(db_case, task)
 
 
 def _get_current_time():

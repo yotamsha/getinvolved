@@ -1,0 +1,12 @@
+{
+  "tasks": [
+    {
+      "type": "GENERAL",
+      "title": "task title",
+      "due_date": "__REPLACE__",
+      "description": "task description"
+    }
+  ],
+  "description": "case description",
+  "title": "case title"
+}

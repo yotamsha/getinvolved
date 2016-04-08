@@ -9,6 +9,7 @@ from org.gi.server.log import log
 from org.gi.server.model.Case import Case
 
 import org.gi.server.validation.validations as v
+from org.gi.server.service.notification.notification import send_user_notifications
 
 
 class CaseApi(Resource):
@@ -41,6 +42,7 @@ class CaseApi(Resource):
             except Exception as e:
                 log.debug("Failed to update a case. Exception:: %s", str(e))
                 abort(u.HTTP_BAD_INPUT, str(e))
+            send_user_notifications(db.cases.find_one({'_id': u.to_object_id(case_id)}), case)
             return self.get(case_id)
 
     @u.web_log

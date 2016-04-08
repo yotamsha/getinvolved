@@ -3,32 +3,31 @@ import unittest
 import requests
 import time
 from mock import Mock, call
-import org.gi.server.service.notification.notification as notification
+
+from org.gi.server.service.notification import notification
+from org.gi.server.validation.case_state_machine import CASE_PENDING_APPROVAL, CASE_PENDING_INVOLVEMENT, CASE_ASSIGNED, \
+    CASE_COMPLETED
+from org.gi.server.validation.task.task_state_machine import TASK_ASSIGNED, TASK_COMPLETED, TASK_PENDING
 from org.gi.tests.misc import _load, SERVER_URL_API, ACCESS_TOKEN_AUTH, MONGO, _push_to_db, _remove_from_db
 
 
 class GINotificationTests(unittest.TestCase):
     def setUp(self):
+        notification.message_sender = Mock()
         self.real_first_notifications = notification._do_first_notifications
         self.real_second_notifications = notification._do_second_notifications
         self.real_fetch_users = notification.fetch_users_with_tasks_between_x_and_y
-        self.real_logging_error = notification.logging.error
         self.real_send_email_or_sms = notification._send_email_and_sms
-        self.real_send_sms_to = notification.send_sms_to
-        self.real_send_email_to = notification.send_email_to
         self.real_time_time = notification.time.time
-        _remove_from_db(MONGO, 'users')
-        _remove_from_db(MONGO, 'cases')
 
     def tearDown(self):
         notification._do_first_notifications = self.real_first_notifications
         notification._do_second_notifications = self.real_second_notifications
         notification.fetch_users_with_tasks_between_x_and_y = self.real_fetch_users
-        notification.logging.error = self.real_logging_error
         notification._send_email_and_sms = self.real_send_email_or_sms
-        notification.send_sms_to = self.real_send_sms_to
-        notification.send_email_to = self.real_send_email_to
         notification.time.time = self.real_time_time
+        _remove_from_db(MONGO, 'users')
+        _remove_from_db(MONGO, 'cases')
 
     def test_methods_called(self):
         curr_time = 1000
@@ -88,23 +87,21 @@ class GINotificationTests(unittest.TestCase):
         user_data = all_data['data']
         template = 'first_reminder'
         user_type = 'volunteer'
-        notification.send_sms_to = Mock()
-        notification.send_email_to = Mock()
 
         user_data['details']['notifications'] = {
             'sms': False,
             'email': False
         }
         notification._send_email_and_sms(user_data, 'subject', template, user_type)
-        notification.send_sms_to.assert_not_called()
-        notification.send_email_to.assert_not_called()
+        notification.message_sender.send_email_to.assert_not_called()
+        notification.message_sender.send_sms_to.assert_not_called()
         user_data['details']['notifications'] = {
             'sms': True,
             'email': True
         }
         notification._send_email_and_sms(user_data, 'subject', template, user_type)
-        self.assertTrue(notification.send_sms_to.called)
-        self.assertTrue(notification.send_email_to.called)
+        self.assertTrue(notification.message_sender.send_sms_to.called)
+        self.assertTrue(notification.message_sender.send_email_to.called)
 
     def test_last_update_time_saved(self):
         notification._do_first_notifications = Mock()
@@ -113,22 +110,61 @@ class GINotificationTests(unittest.TestCase):
         notification.notify()
         self.assertEqual(100, notification.last_update_time)
 
-    # negatives
-    def test_no_phone_number(self):
-        notification.logging.error = Mock()
-        msg = 'the msg'
-        recipient = {'name': 'nada'}
-        notification.send_sms_to(recipient, msg)
-        notification.logging.error.assert_called_with("Cannot send SMS to user with no phonenumber: {'name': 'nada'}")
-        recipient = {'name': 'nada', 'phone_number': {'number': '030303', 'country_code': 'IL'}}
-        notification.send_sms_to(recipient, msg)
-        notification.logging.error.assert_called_with(['The phone number 030303 (country IL) is invalid.'])
+    def test_send_case_approval(self):
+        old_case = {'state': CASE_PENDING_APPROVAL}
+        db_case = {'state': CASE_PENDING_INVOLVEMENT, 'tasks': []}
+        notification._send_case_approval_email = Mock()
+        notification.send_user_notifications(db_case, old_case)
+        notification._send_case_approval_email.assert_called_once()
 
-    def test_no_msg(self):
-        notification.logging.error = Mock()
-        recipient = {'name': 'nada', 'phone_number': {'number': '0543030303'}}
-        notification.send_sms_to(recipient, None)
-        notification.logging.error.assert_called_with(["phone_number must contain the field 'country_code'"])
+    def test_send_petitioner_match(self):
+        old_case = {'state': CASE_PENDING_INVOLVEMENT}
+        db_case = {'state': CASE_ASSIGNED, 'tasks': []}
+        notification._send_petitioner_match_email = Mock()
+        notification.send_user_notifications(db_case, old_case)
+        notification._send_petitioner_match_email.assert_called_once()
+
+    def test_send_volunteers_feedback(self):
+        old_case = {'state': CASE_ASSIGNED}
+        db_case = {'state': CASE_COMPLETED, 'tasks': []}
+        notification._send_volunteers_feedback_email = Mock()
+        notification.send_user_notifications(db_case, old_case)
+        notification._send_volunteers_feedback_email.assert_called_once()
+
+    def test_send_volunteer_register_to_case(self):
+        old_case = {'state': CASE_ASSIGNED, 'tasks': [{'id': 0, 'state': TASK_PENDING}]}
+        db_case = {'state': CASE_ASSIGNED, 'tasks': [{'id': 0, 'state': TASK_ASSIGNED}]}
+        notification._send_volunteer_register_to_case_email = Mock()
+        notification.send_user_notifications(db_case, old_case)
+        notification._send_volunteer_register_to_case_email.assert_called_once()
+
+    # negatives
+    @unittest.skip("Skipping... This one really sends notifications")
+    def test_send_out_live_emails(self):
+        users = _load('online_notify_users.json', 'notification')
+        nina = users[0]
+        viktor = users[1]
+        # Place your mail to recieve notifications, CANT BE THE SAME MAIL!
+        nina['email'] = "barwachtel@gmail.com"
+        viktor['email'] = "bar@my6sense.com"
+        nina = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH, json=nina).json()
+        viktor = requests.post('%s/users' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH, json=viktor).json()
+        case = _load('online_notify_case.json', 'notification')
+        case['petitioner_id'] = nina['id']
+        case['tasks'][0]['due_date'] = self._replace_due_date()
+        case = requests.post('%s/cases' % SERVER_URL_API, auth=ACCESS_TOKEN_AUTH, json=case).json()
+        task = case.get('tasks')[0]
+        task['volunteer_id'] = viktor['id']
+        # sends petitioner case approval mail (Illegal transition but what the heck)
+        case = requests.put('%s/cases/%s' % (SERVER_URL_API, case['id']), auth=ACCESS_TOKEN_AUTH, json=case).json()
+        case['tasks'][0]['state'] = TASK_ASSIGNED
+        # sends petitioner match mail
+        # sends volunteer register to case mail
+        case = requests.put('%s/cases/%s' % (SERVER_URL_API, case['id']), auth=ACCESS_TOKEN_AUTH, json=case).json()
+        case['tasks'][0]['state'] = TASK_COMPLETED
+        case['tasks'][0]['duration'] = 1000
+        # sends volunteer feedback mail
+        case = requests.put('%s/cases/%s' % (SERVER_URL_API, case['id']), auth=ACCESS_TOKEN_AUTH, json=case).json()
 
     @unittest.skip("Skipping... This one really sends notifications")
     def test_real_notify(self):
@@ -144,8 +180,11 @@ class GINotificationTests(unittest.TestCase):
         case = _load('case.json', "notification")
         case['petitioner_id'] = user_ids[0]
         tasks = case.get('tasks')
-        tasks[0]['due_date'] = int(time.time()) + int(notification.SECONDS_IN_HOUR * 24) + 300
+        tasks[0]['due_date'] = self._replace_due_date()
         tasks[0]['volunteer_id'] = user_ids[1]
         _push_to_db(MONGO, 'cases', [case])
         notification.last_update_time = int(time.time()) - 1000
         notification.notify()
+
+    def _replace_due_date(self):
+        return int(time.time()) + int(notification.SECONDS_IN_HOUR * 24) + 300

@@ -1,3 +1,4 @@
+import copy
 import uuid
 import time
 
@@ -9,6 +10,7 @@ from org.gi.server.validation.case_state_machine import CASE_UNDEFINED, CASE_PEN
 from org.gi.server.validation.task.task_state_machine import TASK_PENDING
 from org.gi.server import utils as u
 from org.gi.server.db import db
+from org.gi.server.validation.validations import CASE_META
 
 
 class Case:

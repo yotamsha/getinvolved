@@ -16,7 +16,7 @@ USER_PROJECTION = {
 DEFAULT_LOCALE = 'he'
 
 
-def _get_petitioner_from_case(case):
+def get_petitioner_from_case(case):
     petitioner = {
         'case_title': case.get('title'),
         'user_id': case.get('petitioner_id'),
@@ -27,12 +27,12 @@ def _get_petitioner_from_case(case):
     return petitioner
 
 
-def _get_volunteer_from_case_and_task(case, task):
+def get_volunteer_from_case_and_task(case, task):
     volunteer = {
         'case_title': case.get('title'),
         'user_id': task.get('volunteer_id'),
         'details': _get_user_from_db(task.get('volunteer_id')),
-        'tasks': [_get_task_details(task)],
+        'tasks': [_get_task_details(task)] if task else [],
     }
     return volunteer
 
@@ -56,10 +56,10 @@ def _get_lists_from_cases(cases, upto_due_date):
     petitioner_list = []
     volunteer_list = []
     for case in cases:
-        petitioner = _get_petitioner_from_case(case)
+        petitioner = get_petitioner_from_case(case)
         for task in case.get('tasks'):
             if task.get('due_date') <= upto_due_date:
-                volunteer_list.append(_get_volunteer_from_case_and_task(case, task))
+                volunteer_list.append(get_volunteer_from_case_and_task(case, task))
                 if not is_a_list(petitioner.get('tasks')):
                     petitioner['tasks'] = []
                 petitioner['tasks'].append(_get_task_details(task))

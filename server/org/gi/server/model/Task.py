@@ -78,6 +78,12 @@ class Task:
                 return True
         return False
 
+    @staticmethod
+    def get_task_by_id(task_id, tasks):
+        for task in tasks:
+            if task.get('id') == task_id:
+                return task
+
     @classmethod
     def get_nearest_due_date(cls, tasks):
         nearest_due_date = sys.maxint

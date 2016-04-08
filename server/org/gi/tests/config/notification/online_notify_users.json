@@ -1,0 +1,24 @@
+[
+  {
+    "first_name": "Nina",
+    "last_name": "Petitioner",
+    "user_name": "Nina_user",
+    "password": "Qwerty123",
+    "email": "Nina@gi.net",
+    "phone_number": {
+      "number": "0544280117",
+      "country_code": "IL"
+    }
+  },
+  {
+    "first_name": "Viktor",
+    "last_name": "Volunteer",
+    "user_name": "Viktor_user",
+    "password": "Qwerty123",
+    "email": "Viktor@gi.net",
+    "phone_number": {
+      "number": "0544280118",
+      "country_code": "IL"
+    }
+  }
+]
