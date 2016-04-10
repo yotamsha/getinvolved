@@ -18,7 +18,7 @@ angular.module('app.footer.footer-ctrl', [])
                 ctrl.footerLinks = [
                     {
                         textKey: "views.main.footer.about_us",
-                        link: "/about",
+                        link: "/about_us",
                         classes: "about-us"
                     },
                     {
@@ -32,18 +32,18 @@ angular.module('app.footer.footer-ctrl', [])
                         classes: "how-it-works"
                     },
                     {
-                        textKey: "views.main.footer.partners",
+                        textKey: "views.main.footer.doners",
                         link: "/partners",
                         classes: "donors"
                     },
                     {
                         textKey: "views.main.footer.success_stories",
-                        link: "/#",
-                        classes: "success-stories"
+                        link: "/success",
+                        classes: "success"
                     },
                     {
-                        textKey: "views.main.footer.contact",
-                        link: "/contact",
+                        textKey: "views.main.footer.contact_us",
+                        link: "/contact_us",
                         classes: "contact-us"
                     }
                 ];

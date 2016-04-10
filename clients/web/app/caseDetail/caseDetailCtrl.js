@@ -12,33 +12,23 @@ angular.module('app.caseDetail', [])
             controller: 'caseDetailCtrl',
             resolve: { // complete the following requests before page is loaded.
                 caseData: ['CaseDao', '$stateParams', function (CaseDao, $stateParams) {
-                    // TODO - add the populateVolunteer when server bug is fixed
-                    return CaseDao.getById($stateParams.caseId ,
-                        {
-/*
-                            populateVolunteer : true
-*/
-                        }
-                    );
+                    return CaseDao.get($stateParams.caseId); // load the case data.
                 }],
                 userSession: ['AuthService', function (AuthService) { // verify that session retrieval is completed.
                     return AuthService.authRetrievalCompleted();
-                }]
+                }],
+                users : ['UserDao', function (UserDao) {
+                    return UserDao.getList(); // load the case data.
+                }],
             }
         });
     }])
 
-    .controller('caseDetailCtrl', ['$scope', 'Restangular', '$stateParams', 'DialogsService',
-        'moment', 'CaseDao', 'caseData', 'AuthService', 'TASK_STATES', 'AUTH_CONTEXTS', 'USER_ACTIONS','AUTH_EVENTS',
-        function ($scope, Restangular, $stateParams, DialogsService,
-                  moment, CaseDao, caseData, AuthService, TASK_STATES, AUTH_CONTEXTS, USER_ACTIONS, AUTH_EVENTS) {
+    .controller('caseDetailCtrl', ['$scope', 'Restangular', '$stateParams', 'DialogsService', 'moment', 'CaseDao', 'caseData', 'AuthService', 'TASK_STATES', 'users',
+        function ($scope, Restangular, $stateParams, DialogsService, moment, CaseDao, caseData, AuthService, TASK_STATES, users) {
             // --- INNER VARIABLES --- //
-/*            CaseDao.getById().then(function(response){
-                _dataReady = true;
-                _caseData = response;
-            });*/
+
             var _authModel = AuthService.model();
-            var _taskInProgress;
             //console.log( Restangular.all('cases'));
 
             // --- INNER FUNCTIONS --- //
@@ -49,68 +39,61 @@ angular.module('app.caseDetail', [])
 
             function _init() {
                 $scope.TASK_STATES = TASK_STATES;
-                $scope.vm = {};
+                $scope.vm = {
+                    /*    case: {
+                     title: "כותרת של המקרה..",
+                     description: "טקסט מגניב בעברית שמתאר משהו",
+                     imgUrl : "assets/img/face1.jpg",
+                     tasks : [
+                     {
+                     title : "הסעה לבת ים",
+                     date : moment().format('LLLL'),
+                     location : "תל אביב"
+                     },
+                     {
+                     title : "עזרה בקניות",
+                     date : moment().format('LLLL'),
+                     location : "תל אביב"
+                     },
+                     {
+                     title : "ניקיון דירה",
+                     date : moment().format('LLLL'),
+                     location : "תל אביב"
+                     }
+                     ]
+                     }*/
+
+                };
                 $scope.vm.case = caseData;
-                $scope.$on(AUTH_EVENTS.volunteerDetailsCompleted,$scope.volunteerDetailsCompleted);
+                $scope.vm.case.transformToClient();
+                $scope.vm.case.populateWithUsersData(users);
             }
 
             function _taskAssignedCb(task) {
                 task.state = TASK_STATES.TASK_ASSIGNED;
                 task.volunteer_id = _authModel.userSession.id;
-                task.volunteer = {
-                    first_name : _authModel.userSession.first_name,
-                    last_name : _authModel.userSession.last_name
-                };
+
                 console.log("task assigned");
             }
 
             // --- SCOPE FUNCTIONS --- //
-            $scope.openLoginDialog = function (context, missingFields) {
-                DialogsService.openDialog({
-                    dialog: 'login',
-                    locals: {
-                        data: {
-                            context : context,
-                            missingFields : missingFields,
-                            userSession : _authModel.userSession,
-                            callback : $scope.volunteerDetailsCompleted
-                        }
-                    }
-                });
+            $scope.openLoginDialog = function (ev) {
+                DialogsService.openDialog({dialog: 'login'});
             };
-            $scope.assignTaskToUserProcess = function (task) {
-                _taskInProgress = task;
-                var sessionMissingDataStatus = AuthService.checkForMissingDetails(USER_ACTIONS.TASK_ASSIGNMENT);
-                var noSession = sessionMissingDataStatus === "*";
-                var partialSession = (sessionMissingDataStatus.length > 0); // some fields are missing.
-                if (noSession) { // no session - login popup (with facebook option only)
-                    $scope.openLoginDialog(AUTH_CONTEXTS.TASK_ASSIGNMENT);
+            $scope.assignTaskToUser = function (task) {
+                if (_authModel.userSession) { // if user is allowed to be assigned a task
+                    $scope.vm.case.assignTaskState(task, TASK_STATES.TASK_ASSIGNED).then(
+                        function () { //success
+                            _taskAssignedCb(task);
+                        }, function () { //error
+
+                        });
                 } else {
-                    if (partialSession) { // missing details - complete details popup
-                        $scope.openLoginDialog(AUTH_CONTEXTS.TASK_ASSIGNMENT_WITH_SESSION, sessionMissingDataStatus );
-                    } else { // if user is allowed to be assigned a task - verify details popup
-                        $scope.openLoginDialog(AUTH_CONTEXTS.TASK_ASSIGNMENT_WITH_SESSION );
-
-                    }
+                    $scope.openLoginDialog();
                 }
 
-            };
-            $scope.assignTaskToUser = function(task){
-                return CaseDao.assignTaskToVolunteer($scope.vm.case, task, _authModel.userSession.id).then(
-                    function () { //success
-                        _taskAssignedCb(task);
-                        _taskInProgress = null;
-                        return true;
-                    }, function () { //error
-                        _taskInProgress = null;
-                        return false;
-                    });
-            };
-            $scope.volunteerDetailsCompleted = function(){
-                if (_taskInProgress){
-                    return $scope.assignTaskToUser(_taskInProgress);
-                }
-            };
+
+            }
             // --- INIT --- //
 
             _init();

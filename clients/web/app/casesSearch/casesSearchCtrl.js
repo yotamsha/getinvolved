@@ -3,7 +3,7 @@
  */
 'use strict';
 
-angular.module('app.casesSearch', ['app.services.share','app.models.case.viewModelExpanders'])
+angular.module('app.casesSearch', [])
 
     .config(['$stateProvider', function ($stateProvider) {
         $stateProvider.state('casesSearch', {
@@ -19,104 +19,45 @@ angular.module('app.casesSearch', ['app.services.share','app.models.case.viewMod
             }
         });
     }])
-    .controller('casesSearchCtrl', ['$scope', 'CaseDao','FbShare',
-	'$anchorScroll','$location','$timeout','$translate','CaseEmailShareExpander',
-        function ($scope, CaseDao, FbShare, 
-		$anchorScroll, $location, $timeout, $translate, CaseEmailShareExpander) {
+    .controller('casesSearchCtrl', ['$scope', 'Restangular', '$stateParams', 'DialogsService', 'moment', '$rootScope',
+        function ($scope, Restangular, $stateParams, DialogsService, moment, $rootScope) {
+
+            // --- INNER FUNCTIONS --- //
+            // function createCasesArr(){
+            //   var arr = [];
+            //   for (var i = 1; i < 24; i++) {
+            //       arr.push({
+            //         title: ' עזרה בהסעה ' + i,
+            //         imgSrc: 'assets/img/face1.jpg',
+            //         order: i,
+            //       });
+            //   }
+            //
+            //   return arr;
+            // }
 
             function _init() {
                 $scope.vm = {
                     cases: [],
-					totalCasesCount: 0,
-					currentCasesPage: 1,
-					casesPerPage: 12,
-					reverse: false,
-					sortTypes: [],
-					selectedSortIndex: 0,
-					resultsShownFrom: 0,
-					resultsShownTo: 0
+                    reverse: false
                 };
-				
-				var vm = $scope.vm;
-				
-				var currentSortType;
-				var sortTypes = [];
-				initCasesGrid(currentSortType, sortTypes);
 
-                vm.onPageChange = function(newPageNumber) {
-					updateCasesListByCurrentPage();
-					
-                  	$timeout(function() {
-						$location.hash('your-oppurtunities-title');
-						$anchorScroll();
-            		});
+                var baseCases = Restangular.all('cases');
+                baseCases.getList().then(function (cases) {
+                    $scope.vm.cases = cases;
+                });
+
+                $scope.vm.changeSort = function (isReversed) {
+                    $scope.vm.reverse = isReversed;
                 }
-				
-				vm.onSortChange = function(newSortType, sortIndex){
-					if (newSortType == currentSortType)
-						return;
-					
-					vm.selectedSortIndex = sortIndex;
-					vm.currentCasesPage = 1;
-					currentSortType = newSortType;
-					updateCasesListByCurrentPage();
-				} 
-				
-				vm.facebookShare = function(_case) {
-				   FbShare.shareCase(_case);
+                $scope.vm.onPageChange = function(){
+                  // We want to scroll to top of the list here
                 }
-				
-				function initCasesGrid(){
-					$translate(['views.casesSearch.sortTypes.newest','views.casesSearch.sortTypes.oldest', 
-					'views.casesSearch.sortTypes.mostUrgent']).then(function (translations) {
-						sortTypes = getSortTypes(translations);
-						
-						vm.sortTypes = sortTypes;
-						currentSortType = sortTypes[0];
-						updateCasesListByCurrentPage();
-					});
-				}
-				
-				function updateCasesListByCurrentPage() {
-										
-					CaseDao
-						.getMany({
-							excludedStates: ["completed", "assigned"],
-							pageNum: vm.currentCasesPage - 1,
-							pageSize: vm.casesPerPage,
-							sort: currentSortType.sortMethod
-						})
-						.then(function (data) {
-							vm.totalCasesCount = data.totalCount;
-							vm.cases = data.results;
-							vm.resultsShownFrom = ((vm.currentCasesPage - 1) * vm.casesPerPage) + 1;
-							var resultsShownTo = vm.currentCasesPage * vm.casesPerPage; 
-							vm.resultsShownTo = resultsShownTo > vm.totalCasesCount ? vm.totalCasesCount : resultsShownTo;  
-							
-							CaseEmailShareExpander.expandCases(vm.cases);
-						});
-				}
-				
-				function getSortTypes(translations){
-					return [{
-							'type': 'newerFirst',
-							'title': translations["views.casesSearch.sortTypes.newest"],
-							'sortMethod': "[('creation_date','DESCENDING')]"
-						},
-						{
-							'type': 'olderFirst',
-							'title': translations["views.casesSearch.sortTypes.oldest"],
-							'sortMethod': "[('creation_date','ASCENDING')]"
-						},
-						{
-							'type': 'urgentFirst',
-							'title': translations["views.casesSearch.sortTypes.mostUrgent"],
-							'sortMethod': "[('due_date','ASCENDING'),('creation_date','DESCENDING')]",
-						}];
-				}
             }
 
             // --- INIT --- //
+
             _init();
         }
+
     ]);

@@ -1,20 +1,18 @@
-<div class="footer-container">
+<div class="footer view-container" style="padding-top:50px;min-height:0px;">
   <div layout="column">
     <div class="joinus-container" style="text-align:center;color:white;" flex-md="50" flex-sm="100" flex-xs="100" flex-lg="50">
       <div style="margin-bottom:10px;">{{"views.main.footer.join-us" | translate}}</div>
-      <a href="https://www.facebook.com/groups/519469054923602/">
-        <img src="assets/img/facebook-logo.png" style="width:50px;height:50px;"/>
-      </a>
+      <img src="assets/img/facebook-logo.png" style="width:50px;height:50px;"/>
       <img src="assets/img/instagram-logo.png" style="width:50px;height:50px;margin-right:10px;margin-left:10px;"/>
       <img src="assets/img/twitter-logo.png" style="width:50px;height:50px;"/>
     </div>
-<!--    <div style="text-align:center;color:white;" class="downloadapp-container" flex-md="50" flex-sm="100" flex-xs="100" flex-lg="50">
+    <div style="text-align:center;color:white;" class="downloadapp-container" flex-md="50" flex-sm="100" flex-xs="100" flex-lg="50">
       <div style="margin-bottom:10px;">{{"views.main.footer.download-app" | translate}}</div>
       <img src="assets/img/appstorebadge.png" style="width:auto;height:44px;"/>
       <img src="assets/img/playstorebadge.png" style="width:auto;height:40px;padding-right:20px;"/>
-    </div>-->
+    </div>
   </div>
-  <div class="section-seperator layout-row"></div>
+  <div class="section-seperator layout-row" style="width:1000px;"></div>
     <div ng-repeat="route in ctrl.footerLinks" layout="row" flex-md="15" flex-sm="25" flex-xs="40" flex-lg="10" style="color:white;">
       <div class="route-link" ng-class="ctrl.navClass(route)" >
         <a href="#{{route.link}}"> {{route.textKey | translate}}</a>

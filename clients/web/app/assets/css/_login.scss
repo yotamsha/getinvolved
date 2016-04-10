@@ -2,41 +2,14 @@
   .dialog-header {
     color: #ffffff;
   }
-  .terms-and-privacy-note {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    text-align: center;
-  }
-  .volunteer-signup-foot-note {
-    margin-top: 20px;
-    font-weight: bold;
-  }
-  .separator {
-    margin: 8px;
-    font-size: 20px;
-  }
   .fb-button {
-    width: 170px;
     height: 50px;
     cursor: pointer;
-    background-image: url("../img/fb-login-button-he.png");
+    background-image: url("../img/fb-login-button.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
   }
-  .success-msg {
-    font-weight: bold;
-    margin: 20px;
-  }
-  .regular-login-form {
-    text-align: center;
-    button {
-      width:160px;
-    }
-    .note {
-      margin-top: 15px;
-    }
-  }
   width: 320px;
-  height: 445px;
+  height: 400px;
 }

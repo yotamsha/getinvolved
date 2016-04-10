@@ -1,101 +1,77 @@
 .cases-search-view {
-	margin-top: 20px;
+  margin-top: 20px;
 
-	.sort-options {
-		margin: 20px 0px 20px 0px;
-		font-size: 14px;
-	}
+  .top-strip {
+    margin: 20px 0px;
+    font-size: 16px;
+  }
 
-	.sort-option {
-		cursor: pointer;
-		
-		&.selected {
-			color: #22A5B9;
-		}		
-	}
+  .case {
+    border: 1px solid #D9D9D9;
+    width: 230px;
+    margin: auto;
+    margin-bottom: 30px;
+  }
 
-	.cases-paging-title{
-		font-size: 14px;
-		margin-bottom: 10px;
-	}
+  .orange-bubble{
+    position: absolute;
+    top: -19px;
+    left: 50%;
+    margin-left: -19px;
+  }
 
-	.case {
-		border: 1px solid #D9D9D9;
-		width: 230px;
-		margin: auto;
-		margin-bottom: 30px;
-		
-		.fb-share-icon {
-			cursor: pointer;
-		}
-	}
+  .case-register-btn {
+    width: 150px;
+  }
 
-	.orange-bubble{
-		position: absolute;
-		top: -19px;
-		left: 50%;
-		margin-left: -19px;
-	}
+  .case-img {
+    width: 100%;
+    height: 150px;
+  }
 
-	.case-register-btn {
-		width: 140px;
-		margin-right: 3px;
-	}
+  .case-details {
+    padding: 15px 10px 10px 10px;
+    position: relative;
+  }
 
-	.email-share-icon {
-		margin-right: -5px;
-	}
+  .case-title {
+    margin-bottom: 10px;
+  }
 
-	.case-img {
-		width: 100%;
-		height: 150px;
-	}
+  .paging-controls-container{
+    text-align: center;
 
-	.case-details {
-		padding: 15px 10px 10px 10px;
-		position: relative;
-	}
+    li {
+      display: inline-block;
+      font-size: 16px;
+      text-decoration: none;
+      border: 1px solid #D9D9D9;
+      color: #22A5B9;
 
-	.case-title {
-		margin-top: 10px;
-		margin-bottom: 10px;
-		height: 28px;
-		overflow: hidden;
-	}
+      &:hover {
+        background-color: #e7e7e7;
+      }
 
-	.paging-controls-container{
-		text-align: center;
+      &.active {
+        background-color: #22A5B9;
+        color: #ffffff;
+      }
 
-		li {
-			display: inline-block;
-			font-size: 16px;
-			text-decoration: none;
-			color: #22A5B9;
+      &.disabled {
+        color: #999;
 
-			&:hover {
-				background-color: #e7e7e7;
-			}
+        &:hover { background-color: #ffffff; }
+        a { cursor: default; }
+      }
 
-			&.active {
-				background-color: #22A5B9;
-				color: #ffffff;
-			}
+      a {
+        display: block;
+        padding: 6px 12px;
+      }
+    }
 
-			&.disabled {
-				color: #999;
-
-				&:hover { background-color: #ffffff; }
-					a { cursor: default; }
-			}
-
-			a {
-				display: block;
-				padding: 6px 12px;
-			}
-		}
-
-		a {
-			text-decoration:none;
-		}
-	}
+    a {
+      text-decoration:none;
+    }
+  }
 }

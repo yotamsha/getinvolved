@@ -1,7 +1,8 @@
 <md-dialog class="login-dialog" aria-label="{{" views.login.title" | translate}}"  ng-cloak>
+<form>
     <md-toolbar>
         <div class="md-toolbar-tools dialog-header">
-            <h2>{{vm.popupTitle | translate}}</h2>
+            <h2>{{"views.login.title" | translate}}</h2>
             <span flex></span>
             <md-button class="md-icon-button" ng-click="cancel()">
                 <md-icon md-svg-src="assets/img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
@@ -10,74 +11,28 @@
     </md-toolbar>
     <md-dialog-content>
         <div class="md-dialog-content" style="overflow: hidden">
-            <div layout="column" layout-align="center center">
-                <div class="terms-and-privacy-note" ng-show="vm.context === AUTH_CONTEXTS.TASK_ASSIGNMENT">
-                    {{"views.login.volunteer_signup_note" | translate}}</br>
-                    {{"views.login.volunteer_terms_and_privacy_note1" | translate}}
-                    <a href="/termsAndConditions">{{"views.login.volunteer_terms_and_privacy_note2" | translate}}</a>
-                    <a href="/privacy">{{"views.login.volunteer_terms_and_privacy_note3" | translate}}</a>.
-                </div>
-                <div ng-show="vm.context === AUTH_CONTEXTS.CASE_CREATION ||
-                vm.context === AUTH_CONTEXTS.HEADER_LOGIN ||
-                vm.context === AUTH_CONTEXTS.TASK_ASSIGNMENT" class="row fb-button" ng-click="fbLogin()">
-                </div>
-                <div ng-show="vm.context === AUTH_CONTEXTS.HEADER_LOGIN" class="separator">{{"views.login.or" | translate}}</div>
-                <form  ng-show="vm.context === AUTH_CONTEXTS.HEADER_LOGIN" name="regularLoginForm" class="regular-login-form">
-                    <md-input-container class="form-input-container">
-                        <label>{{"views.userDetails.username" | translate}}</label>
-                        <input name="username" required type="text" ng-model="vm.user.username">
+            <div class="col">
+                <div class="row fb-button" ng-click="fbLogin()">
 
-                        <div ng-messages="regularLoginForm.username.$error" role="alert" multiple>
-                            <div ng-message="required" class="my-message">{{'views.userDetails.field_required' | translate}}</div>
-<!--
-                            <div ng-message="email" class="my-message">{{'views.userDetails.invalid_email' | translate}}</div>
--->
-                        </div>
-                    </md-input-container>
-                    <md-input-container class="form-input-container">
-                        <label>{{"views.userDetails.password" | translate}}</label>
-                        <input name="password" required type="password" ng-model="vm.user.password">
-
-                        <div ng-messages="regularLoginForm.password.$error" role="alert" multiple>
-                            <div ng-message="required" class="my-message">{{'views.userDetails.field_required' | translate}}</div>
-                        </div>
-                    </md-input-container>
-
-                    <button  class="btn-primary" ng-disabled="!regularLoginForm.$valid" ng-click="login()">
-                        {{"views.login.connect" | translate}}
-                    </button>
-
-                    <div class="note">
-                        * {{"views.login.first_time_login" | translate}}
-                    </div>
-                </form>
-
-                <div ng-show="vm.context === AUTH_CONTEXTS.TASK_ASSIGNMENT_WITH_SESSION">
-                    {{"views.login.volunteer_update_details_note" | translate}}
-
-                </div>
-                <user-details user-data="vm.user" on-update="updateUser"
-                              ng-show="vm.context === AUTH_CONTEXTS.TASK_ASSIGNMENT_WITH_SESSION"></user-details>
-
-                <div class="volunteer-signup-foot-note" ng-show="vm.context === AUTH_CONTEXTS.TASK_ASSIGNMENT">
-                    * {{"views.login.volunteer_signup_foot_note" | translate}}
-                </div>
-                <div class="success-msg" ng-show="vm.context === AUTH_CONTEXTS.TASK_ASSIGNMENT_COMPLETED_AND_PENDING">
-                    {{"views.login.task_assignment_moved_to_pending" | translate}}
                 </div>
             </div>
 
+            <!--            <div class="fb-login-button" data-max-rows="1" data-size="medium" data-show-faces="false" data-auto-logout-link="false"></div>
+
+            &lt;!&ndash;
+                        <fb:login-button show-faces="true" max-rows="1" size="large">Login</fb:login-button>
+            &ndash;&gt;-->
         </div>
-   </md-dialog-content>
-<!--
+    </md-dialog-content>
     <md-dialog-actions layout="row">
 
-        &lt;!&ndash;        <span flex></span>
+        <!--        <span flex></span>
                 <md-button ng-click="answer('not useful')">
                     Not Useful
                 </md-button>
                 <md-button ng-click="answer('useful')" style="margin-right:20px;">
                     Useful
-                </md-button>&ndash;&gt;
-    </md-dialog-actions>-->
+                </md-button>-->
+    </md-dialog-actions>
+</form>
 </md-dialog>

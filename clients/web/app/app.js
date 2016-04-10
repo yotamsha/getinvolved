@@ -10,7 +10,6 @@ angular.module('app', [
         'ngMaterial',
         'ngCookies',
         'ngSanitize',
-        'ngMessages',
         'pascalprecht.translate',// angular-translate
         'restangular',
         'ui.router',
@@ -19,24 +18,24 @@ angular.module('app', [
         'app.common.constants',
 
         // App views
-        'app.views.helpRequestForm',
+        'app.view1',
+        'app.view2',
         'app.caseDetail',
         'app.casesSearch',
+        'app.success',
         'app.login',
-        'app.userProfile',
         'app.partners',
-        'app.views.about',
-        'app.views.contact',
+        'app.about_us',
+        'app.faq',
+        'app.contact_us',
 
         // Components
         'app.version',
         'app.header',
-        'app.userDetails',
         'app.footer',
 
         // Models
         'app.models.case',
-        'app.models.task',
         'app.models.user',
 
         // Services
@@ -49,10 +48,7 @@ angular.module('app', [
         // 3rd-Party Wrappers - We wrap 3rd party libraries that aren't angular modules in order
         // to keep the global window clean. Only these libraries are accessible through a single variable: window._thirdParty
         // more on the method: http://jameshill.io/articles/angular-third-party-injection-pattern/
-        'app.vendors.momentjs',
-
-        // Environment config module
-        'config'
+        'app.vendors.momentjs'
 
     ])
     .constant('LOCALES', {
@@ -63,35 +59,16 @@ angular.module('app', [
         'preferredLocale': 'he_HE'
     })
     .constant('APP_CONFIG', {
-        homeRoute: '/cases',
-        serverPort : 5000,
-        productionServerHost : '104.155.49.192'
+        'homeRoute': '/cases'
     })
-    .config(['$urlRouterProvider', '$translateProvider', '$mdThemingProvider', 'RestangularProvider', 'APP_CONFIG','ENV', 'LOCALES',
-        function ($urlRouterProvider, $translateProvider, $mdThemingProvider, RestangularProvider, APP_CONFIG, ENV, LOCALES) {
+    .config(['$urlRouterProvider', '$translateProvider', '$mdThemingProvider', 'RestangularProvider', 'APP_CONFIG',
+        function ($urlRouterProvider, $translateProvider, $mdThemingProvider, RestangularProvider, APP_CONFIG) {
 
-            function getEnvFromHost(){
-                //TODO change this to be taken out of some parameter set in the grunt release package command.
-                if (location.host === APP_CONFIG.productionServerHost){
-                    return "production";
-                } else {
-                    return "dev";
-                }
-            }
+            RestangularProvider.setBaseUrl('http://127.0.0.1:5000/api');
+            /*            RestangularProvider.setDefaultHeaders({
+             "Authorization": "Basic YWRtaW46YWRtaW4="
+             });*/
 
-            function getServerHost(env){
-                if (env === "production"){
-                    return "http://" + APP_CONFIG.productionServerHost + ":" + APP_CONFIG.serverPort;
-                } else {
-                    return "http://localhost:" + APP_CONFIG.serverPort;
-                }
-            }
-
-            //var env = getEnvFromHost();
-            var serverHost = ENV.apiEndpoint;
-            console.log("using server host: " + serverHost)
-            RestangularProvider.setBaseUrl(serverHost + '/api');
-            APP_CONFIG.serverHost = serverHost;
             $mdThemingProvider.theme('default')
                 .primaryPalette('cyan')
                 .accentPalette('orange');
@@ -101,7 +78,7 @@ angular.module('app', [
                 prefix: 'resources/locale-',// path to translations files
                 suffix: '.json'// suffix, currently- extension of the translations
             });
-            $translateProvider.preferredLanguage(LOCALES.preferredLocale);// is applied on first load // todo: use LOCALES.preferredLocale
+            $translateProvider.preferredLanguage('he_HE');// is applied on first load
             $translateProvider.useLocalStorage();// saves selected language to localStorage
             // App routing is using ui-router module - https://github.com/angular-ui/ui-router
             $urlRouterProvider.otherwise(APP_CONFIG.homeRoute);

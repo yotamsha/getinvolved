@@ -1,17 +1,30 @@
 <div class="header" layout="column">
   <div class="nav-bar" layout="row" hide show-gt-sm>
     <div class="logo"></div>
-    <div ng-repeat="route in ctrl.headerLinks" class="nav-bar-section" ng-mouseleave="route.menuShown=false" ng-class="route.classes" ng-hide="(route.hide && route.hide())">
-        <!-- Regular link -->
-        <div class="nav-bar-main-link nav-bar-link"  ng-class="[ctrl.navClass(route), route.menuShown == true && route.isMenu && 'menu-open']" ng-click="ctrl.handleMenuClick(route)" ng-mouseover="route.menuShown=true"> 
-			{{ctrl.getRouteText(route)}}
-		</div>
-        <!-- Link with sub-menu -->
-        <div class="sub-menu" ng-if="route.isMenu" ng-show="route.menuShown">
-			<div ng-repeat="subMenu in route.menuItems" class="sub-menu-item" ng-click="ctrl.handleMenuClick(subMenu)" ng-class="ctrl.navClass(subMenu)">
-				{{subMenu.routeText | translate}}
-			</div>
-		</div>
+    <div class="user-profile-link route-link" flex-offset="5">
+      <div ng-show="ctrl.authModel.isAuthenticated">
+          <md-menu md-position-mode="target-right target" md-offset="0 35">
+            <a md-menu-origin ng-click="$mdOpenMenu($event)">
+              {{"views.main.header.hello" | translate}}  {{ctrl.authModel.userSession.first_name}}
+            </a>
+            <md-menu-content width="1">
+              <md-menu-item>
+                <md-button md-menu-align-target ng-click="ctrl.authSrv.logout()">
+                  {{"views.main.header.logout" | translate}}
+                </md-button>
+              </md-menu-item>
+            </md-menu-content>
+          </md-menu>
+      </div>
+
+      <div ng-show="!ctrl.authModel.isAuthenticated && !ctrl.authModel.isLoading" ng-click="ctrl.openLoginDialog()">
+          {{"views.main.header.login_or_signup" | translate}}
+      </div>
+    </div>
+    <div ng-repeat="route in ctrl.headerLinks" >
+      <div class="route-link" ng-class="ctrl.navClass(route)" >
+        <a href="#{{route.link}}"> {{route.textKey | translate}}</a>
+      </div>
     </div>
   </div>
   <div class="small-nav-bar" layout="row" layout-align="space-between center" hide show-sm show-xs>
@@ -21,8 +34,8 @@
   <div class="backdrop" ng-show="ctrl.isSideNavOpen" hide show-sm show-xs></div>
   <div class="side-nav-menu" ng-show="ctrl.isSideNavOpen" hide show-sm show-xs>
       <ul>
-        <li ng-repeat="route in ctrl.mobileLinks" ng-hide="(route.hide && route.hide())" ng-class="ctrl.navClass(route)" class="side-nav-option route-link ">
-            <a ng-click="ctrl.handleMenuClick(route)"> {{ctrl.getRouteText(route)}}</a>
+        <li ng-repeat="route in ctrl.headerLinks" ng-class="ctrl.navClass(route)" class="side-nav-option route-link ">
+            <a href="#{{route.link}}"> {{route.textKey | translate}}</a>
         </li>
       </ul>
   </div>
@@ -30,7 +43,7 @@
     <div flex layout="column" layout-align="start center">
       <div class="header-title"> {{ ctrl.headerAttributes.title | translate}} </div>
       <div class="header-subtitle"> {{ ctrl.headerAttributes.subTitle | translate}} </div>
-      <button class="how-it-works-btn" ng-show='ctrl.headerAttributes.shouldShowButton' ng-click='ctrl.onHeaderButtonClick()'>
+      <button class="header-btn" ng-show='ctrl.headerAttributes.shouldShowButton' ng-click='ctrl.onHeaderButtonClick()'>
         {{"views.main.header.how_it_works_button" | translate}}
       </button>
     </div>
